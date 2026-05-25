@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#3c4459",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-background": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "tertiary": "#c5cce6",
+                    "inverse-on-surface": "#263143",
+                    "secondary-container": "#39485a",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline-variant": "#3e484f",
+                    "inverse-primary": "#00668a",
+                    "primary-fixed": "#c4e7ff",
+                    "on-primary": "#00354a",
+                    "surface-container-highest": "#2a3548",
+                    "surface-container-high": "#1f2a3c",
+                    "surface-container": "#152031",
+                    "inverse-surface": "#d8e3fb",
+                    "outline": "#87929a",
+                    "surface-container-lowest": "#040e1f",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2c",
+                    "background": "#081425",
+                    "error": "#ffb4ab",
+                    "surface": "#081425",
+                    "on-primary-container": "#004965",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-dim": "#081425",
+                    "surface-container-low": "#111c2d",
+                    "surface-variant": "#2a3548",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "tertiary-container": "#a9b1ca",
+                    "surface-bright": "#2f3a4c",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "primary-container": "#38bdf8",
+                    "on-surface-variant": "#bdc8d1",
+                    "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "panel-gap": "12px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-primary {
+            box-shadow: 0 0 8px rgba(142, 213, 255, 0.3);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 180, 171, 0.1), transparent);
+            background-size: 200% 100%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24 overflow-x-hidden">
+<!-- Top Navigation -->
+<nav class="flex justify-between items-center px-container-padding w-full sticky top-0 z-40 bg-surface bg-opacity-90 backdrop-blur-md h-16 border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Portal de Operações</span>
+<span class="font-label-caps text-label-caps text-primary uppercase">ID do Ativo: MAR-2024</span>
+</div>
+<div class="flex gap-stack-md">
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</nav>
+<main class="px-container-padding pt-stack-md flex flex-col gap-panel-gap">
+<!-- Quick Stats Bento Grid (Mobile) -->
+<div class="grid grid-cols-2 gap-panel-gap">
+<!-- Engine Status -->
+<div class="glass-panel p-stack-md rounded-xl flex flex-col gap-stack-tight">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">PropulsÃ£o</span>
+<span class="w-2 h-2 rounded-full bg-primary glow-primary"></span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-display-lg text-display-lg text-primary">84</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">% RPM</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden mt-1">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+<!-- Fuel Level -->
+<div class="glass-panel p-stack-md rounded-xl flex flex-col gap-stack-tight">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">CombustÃ­vel</span>
+<span class="material-symbols-outlined text-body-sm text-on-surface-variant">oil_barrel</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-display-lg text-display-lg text-on-surface">62</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">k L</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden mt-1">
+<div class="bg-secondary h-full w-[62%]"></div>
+</div>
+</div>
+</div>
+<!-- Alerts Section -->
+<section class="flex flex-col gap-stack-tight">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-title-sm text-title-sm text-on-surface">Alertas CrÃ­ticos</h2>
+<span class="font-label-caps text-label-caps text-error bg-error-container/20 px-2 py-0.5 rounded-full border border-error/30">3 Ativos</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Alert Card 1 -->
+<div class="glass-panel p-stack-md rounded-xl flex items-center gap-stack-md border-l-4 border-l-error">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-error-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-on-surface font-semibold">PressÃ£o HidrÃ¡ulica Baixa</p>
+<p class="font-body-sm text-on-surface-variant">Sistema de Leme - Deck 2</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-data-mono text-data-mono text-error">CRIT</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant">2m ago</span>
+</div>
+</div>
+<!-- Alert Card 2 -->
+<div class="glass-panel p-stack-md rounded-xl flex items-center gap-stack-md border-l-4 border-l-tertiary-container">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">thermometer</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-on-surface font-semibold">Temperatura Carga</p>
+<p class="font-body-sm text-on-surface-variant">CÃ¢mara FrigorÃ­fica B</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-data-mono text-data-mono text-tertiary">WARN</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant">14m ago</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Vessel Map & Location -->
+<section class="glass-panel rounded-xl overflow-hidden">
+<div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover opacity-60 grayscale brightness-75" data-alt="A dark mode satellite nautical map interface showing a vessel's position in a deep blue ocean near a coastal region. The map uses a sophisticated tech aesthetic with glowing cyan path lines and a triangular boat icon. The lighting is low-key, emphasizing structural maritime efficiency and cold blue tones consistent with a high-stakes maritime operation center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLKvsX490lAbHJ-xhf7z3FTmKNDGaF6iVsu5K_WeUEFyoNM45KafHmOurw-XA8dnkRTEhJWkFbxi4VcJIFl5Zqgd_Q_8fhpMUOjSJ7wyVsCiOMmxnDZkCIgQ4lXdDYWn1Mub02jUEmg2a95CVdHa00gHmQV9Zkv0FIT8IATsSTs7Hvx7zZ93c8qRRPhJ9Ad1mfmr24SZm7d8pHGTJC8lQSp7wtJjKn-EoLoKDaxIYjS1mLkbOLmm4Jjg-nW84dAJnZdActtbDr69Gy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent opacity-60"></div>
+<div class="absolute bottom-3 left-3 flex flex-col gap-0.5">
+<span class="font-label-caps text-label-caps text-primary">POSIÃ‡ÃƒO ATUAL</span>
+<span class="font-data-mono text-data-mono text-on-surface">25Â°04'N 77Â°20'W</span>
+</div>
+<div class="absolute top-3 right-3 bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded border border-white/10">
+<span class="font-label-caps text-label-caps text-on-surface">VEL: 18.4 KN</span>
+</div>
+</div>
+<div class="p-stack-md flex justify-between items-center bg-surface-container-low">
+<div class="flex gap-2">
+<div class="p-2 rounded-lg bg-surface-container-highest border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary">anchor</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface-variant">Destino</span>
+<span class="font-body-md text-on-surface font-semibold">Porto de Santos, BR</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-body-sm text-on-surface-variant">ETA</span>
+<p class="font-body-md text-on-surface font-semibold">12 Out, 08:30</p>
+</div>
+</div>
+</section>
+<!-- Technical Gauges List -->
+<section class="flex flex-col gap-stack-tight mb-4">
+<h2 class="font-title-sm text-title-sm text-on-surface px-1">Sistemas Auxiliares</h2>
+<div class="glass-panel rounded-xl divide-y divide-outline-variant/10">
+<div class="p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-body-md text-on-surface">Geradores (x3)</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-data-mono text-data-mono text-on-surface">94% LOAD</span>
+<div class="w-16 h-1.5 bg-surface-container-highest rounded-full">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+</div>
+</div>
+<div class="p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">water_drop</span>
+<span class="font-body-md text-on-surface">Dessalinizador</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-data-mono text-data-mono text-on-surface">OFFLINE</span>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+<div class="p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">wifi</span>
+<span class="font-body-md text-on-surface">Satcom VSAT</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-data-mono text-data-mono text-on-surface">8.4 Mbps</span>
+<span class="w-2 h-2 rounded-full bg-primary glow-primary"></span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Optimized for Mobile) -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 h-20 flex justify-around items-center px-4 md:hidden shadow-2xl">
+<button class="flex flex-col items-center gap-1 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl border-r-2 border-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-caps text-[10px]">Painel</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-caps text-[10px]">Agenda</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-[10px]">Incidents</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-caps text-[10px]">Manut.</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-[10px]">Ajustes</span>
+</button>
+</nav>
+<!-- Floating Action Button - Comando Rápido (Mobile Context) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center z-40 active:opacity-80 scale-[0.99] transition-all glow-primary">
+<span class="material-symbols-outlined">add</span>
+</button>
+</body></html>
+
+

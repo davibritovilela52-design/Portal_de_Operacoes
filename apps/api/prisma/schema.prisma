@@ -1,0 +1,456 @@
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated"
+  moduleFormat = "cjs"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MaintenanceStatus {
+  pending
+  in_progress
+  frozen
+  payment
+  completed
+  cancelled
+  reopened
+}
+
+enum MaintenanceCategory {
+  preventive
+  corrective
+  emergency
+  improvement
+  inspection
+  warranty
+}
+
+enum MaintenancePriority {
+  P1
+  P2
+  P3
+  P4
+}
+
+enum MaintenanceUrgency {
+  low
+  medium
+  high
+  critical
+}
+
+enum MaintenanceOrigin {
+  asset_field_team
+  yachts_technical_coordination
+  central_operations
+}
+
+enum FrozenReason {
+  awaiting_fiscal_document
+  awaiting_supplier_response
+  awaiting_central_operations_decision
+  awaiting_critical_part
+  awaiting_safe_operational_window
+}
+
+enum MaintenanceEvidenceType {
+  diagnostic
+  financial_document
+  execution_evidence
+  quality_release
+}
+
+enum MaintenanceEvidenceAntivirusStatus {
+  pending
+  clean
+  flagged
+}
+
+enum AgendaEventType {
+  utilization
+  planned_maintenance
+  emergency_maintenance
+  operational_block
+  crew_rest
+}
+
+enum AssetModality {
+  yachts
+  aviation
+  real_estate
+  cars
+}
+
+enum CutoverRunStatus {
+  draft
+  approved
+  blocked
+  completed
+}
+
+enum CutoverDecision {
+  go
+  no_go
+}
+
+enum CutoverCheckpointStatus {
+  pending
+  completed
+  blocked
+}
+
+model MaintenanceTicket {
+  id               String              @id @default(cuid())
+  tenantId         String
+  assetId          String
+  title            String?
+  category         MaintenanceCategory
+  priority         MaintenancePriority
+  urgency          MaintenanceUrgency  @default(medium)
+  description      String
+  notes            String?
+  legacyTicketCode String?
+  legacyMetadata   Json?
+  origin           MaintenanceOrigin
+  openedBy         String
+  openedAt         DateTime
+  status           MaintenanceStatus
+  kanbanSubstatus  String?
+  currentSubstep   String?
+  supplierIds      String[]            @default([])
+  freezeCount      Int                 @default(0)
+  frozenReason     FrozenReason?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  evidences         MaintenanceEvidence[]
+  costs             MaintenanceCost[]
+  statusTransitions MaintenanceStatusTransition[]
+
+  @@index([tenantId, assetId, status])
+  @@index([tenantId, openedAt])
+}
+
+model MaintenanceStatusTransition {
+  id                  String            @id @default(cuid())
+  tenantId            String
+  maintenanceTicketId String
+  fromStatus          MaintenanceStatus?
+  toStatus            MaintenanceStatus
+  transitionedBy      String
+  at                  DateTime
+  createdAt           DateTime          @default(now())
+
+  maintenanceTicket MaintenanceTicket @relation(fields: [maintenanceTicketId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, maintenanceTicketId, at])
+  @@index([tenantId, toStatus, at])
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  cnpj      String
+  address   String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  maintenanceCosts MaintenanceCost[]
+
+  @@index([tenantId, active])
+}
+
+model MaintenanceEvidence {
+  id                  String                             @id @default(cuid())
+  tenantId            String
+  maintenanceTicketId String
+  type                MaintenanceEvidenceType
+  fileName            String
+  mimeType            String
+  fileSizeBytes       Int
+  storageKey          String
+  sha256              String
+  antivirusStatus     MaintenanceEvidenceAntivirusStatus
+  uploadedBy          String
+  uploadedAt          DateTime
+  createdAt           DateTime                           @default(now())
+
+  maintenanceTicket MaintenanceTicket @relation(fields: [maintenanceTicketId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, maintenanceTicketId, type])
+  @@index([tenantId, uploadedAt])
+}
+
+model MaintenanceCost {
+  id                  String   @id @default(cuid())
+  tenantId            String
+  maintenanceTicketId String
+  supplierId          String?
+  description         String
+  amount              Decimal
+  currency            String   @default("BRL")
+  invoiceNumber       String?
+  invoiceDate         DateTime?
+  registeredBy        String
+  registeredAt        DateTime
+  createdAt           DateTime @default(now())
+
+  maintenanceTicket MaintenanceTicket @relation(fields: [maintenanceTicketId], references: [id], onDelete: Cascade)
+  supplier          Supplier?         @relation(fields: [supplierId], references: [id])
+
+  @@index([tenantId, maintenanceTicketId])
+  @@index([tenantId, registeredAt])
+}
+
+model AgendaEvent {
+  id                  String          @id
+  tenantId            String
+  assetId             String
+  type                AgendaEventType
+  title               String?
+  description         String?
+  legacyMetadata      Json?
+  startsAt            DateTime
+  endsAt              DateTime
+  safeMinimumBreached Boolean         @default(false)
+  provisional         Boolean         @default(false)
+  validatedAt         DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@index([tenantId, assetId, startsAt, endsAt])
+}
+
+model AssetRegistryItem {
+  id            String        @id @default(cuid())
+  tenantId      String
+  assetId       String
+  displayName   String
+  modality      AssetModality
+  legacyAssetId String?
+  timezone      String
+  active        Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([tenantId, assetId])
+  @@index([tenantId, modality, active])
+}
+
+model AccessAssignment {
+  id             String    @id @default(cuid())
+  tenantId       String
+  userId         String
+  displayName    String
+  email          String
+  role           String
+  assetIds       String[]  @default([])
+  mfaEnabled     Boolean   @default(false)
+  lastReviewedAt DateTime
+  revokedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([tenantId, userId, role])
+  @@index([tenantId, role, revokedAt])
+}
+
+model AuditRectification {
+  id            String   @id @default(cuid())
+  tenantId      String
+  recordId      String
+  sourceVersion Int
+  targetVersion Int
+  changedBy     String
+  reason        String
+  afterSnapshot Json
+  createdAt     DateTime @default(now())
+
+  @@index([tenantId, recordId, targetVersion])
+}
+
+model AuditDecisionMemo {
+  id                     String   @id @default(cuid())
+  tenantId               String
+  action                 String
+  aggregateType          String
+  aggregateId            String
+  assetId                String?
+  context                String
+  decision               String
+  decidedBy              String
+  alternativesConsidered Json
+  expectedImpact         String
+  status                 String
+  createdAt              DateTime @default(now())
+
+  @@index([tenantId, aggregateType, aggregateId])
+  @@index([tenantId, action, createdAt])
+}
+
+model OutboxEvent {
+  id            String    @id @default(cuid())
+  tenantId      String
+  aggregateType String
+  aggregateId   String
+  eventType     String
+  payload       Json
+  occurredAt    DateTime  @default(now())
+  processedAt   DateTime?
+
+  @@index([tenantId, processedAt])
+  @@index([aggregateType, aggregateId])
+}
+
+model CutoverRun {
+  id                           String           @id @default(cuid())
+  tenantId                     String
+  label                        String
+  status                       CutoverRunStatus @default(draft)
+  goLiveDecision               CutoverDecision?
+  decisionAt                   DateTime?
+  decidedBy                    String?
+  futureAgendaDaysMigrated     Int
+  finalFreezeApplied           Boolean
+  invalidCriticalAttachmentIds String[]         @default([])
+  approvalsJson                Json
+  lastEvaluationApproved       Boolean?
+  lastEvaluationBlockers       Json?
+  createdBy                    String
+  createdAt                    DateTime         @default(now())
+  updatedAt                    DateTime         @updatedAt
+
+  entityCounts CutoverEntityReconciliation[]
+  evidences    CutoverEvidence[]
+  checkpoints  CutoverCheckpoint[]
+
+  @@index([tenantId, status, updatedAt])
+  @@index([tenantId, decisionAt])
+}
+
+model CutoverEntityReconciliation {
+  id            String @id @default(cuid())
+  cutoverRunId  String
+  entity        String
+  sourceCount   Int
+  migratedCount Int
+
+  cutoverRun CutoverRun @relation(fields: [cutoverRunId], references: [id], onDelete: Cascade)
+
+  @@index([cutoverRunId])
+}
+
+model CutoverEvidence {
+  id           String   @id @default(cuid())
+  cutoverRunId String
+  type         String
+  title        String
+  detail       String
+  reference    String
+  valid        Boolean
+  createdAt    DateTime @default(now())
+
+  cutoverRun CutoverRun @relation(fields: [cutoverRunId], references: [id], onDelete: Cascade)
+
+  @@index([cutoverRunId, createdAt])
+}
+
+model CutoverCheckpoint {
+  id           String                  @id @default(cuid())
+  cutoverRunId String
+  checkpoint   String
+  status       CutoverCheckpointStatus
+  notes        String
+  recordedBy   String
+  recordedAt   DateTime
+  createdAt    DateTime                @default(now())
+
+  cutoverRun CutoverRun @relation(fields: [cutoverRunId], references: [id], onDelete: Cascade)
+
+  @@unique([cutoverRunId, checkpoint])
+  @@index([cutoverRunId, recordedAt])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  role          String    @default("TECNICO")
+  emailVerified Boolean   @default(false)
+  twoFactorEnabled Boolean @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  twoFactor     TwoFactor?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model TwoFactor {
+  id          String  @id
+  secret      String
+  backupCodes String
+  userId      String  @unique
+  verified    Boolean @default(true)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("twoFactor")
+}

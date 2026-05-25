@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maintenance Ticket Detail - #TK-4402</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#39485a",
+                        "on-secondary-container": "#a7b6cc",
+                        "on-primary-container": "#004965",
+                        "background": "#081425",
+                        "surface-container-high": "#1f2a3c",
+                        "primary-fixed-dim": "#7bd0ff",
+                        "outline": "#87929a",
+                        "error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004c69",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "on-tertiary": "#283044",
+                        "inverse-on-surface": "#263143",
+                        "tertiary": "#c5cce6",
+                        "primary": "#8ed5ff",
+                        "on-surface-variant": "#bdc8d1",
+                        "on-surface": "#d8e3fb",
+                        "on-background": "#d8e3fb",
+                        "surface-dim": "#081425",
+                        "surface-bright": "#2f3a4c",
+                        "inverse-primary": "#00668a",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed": "#001e2c",
+                        "on-tertiary-fixed": "#131b2e",
+                        "on-primary": "#00354a",
+                        "surface-container": "#152031",
+                        "inverse-surface": "#d8e3fb",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "on-secondary-fixed-variant": "#39485a",
+                        "surface-container-low": "#111c2d",
+                        "surface-container-highest": "#2a3548",
+                        "outline-variant": "#3e484f",
+                        "tertiary-fixed": "#dae2fd",
+                        "primary-fixed": "#c4e7ff",
+                        "on-secondary-fixed": "#0d1c2d",
+                        "surface-variant": "#2a3548",
+                        "surface-container-lowest": "#040e1f",
+                        "secondary-fixed-dim": "#b9c8de",
+                        "on-secondary": "#233143",
+                        "on-error": "#690005",
+                        "secondary": "#b9c8de",
+                        "surface-tint": "#7bd0ff",
+                        "surface": "#081425",
+                        "secondary-fixed": "#d4e4fa",
+                        "primary-container": "#38bdf8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "max-width": "1600px",
+                        "stack-tight": "4px",
+                        "grid-columns": "12",
+                        "unit": "4px",
+                        "panel-gap": "12px",
+                        "stack-md": "16px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .status-glow-red { box-shadow: 0 0 12px rgba(255, 180, 171, 0.2); }
+        .status-glow-blue { box-shadow: 0 0 12px rgba(142, 213, 255, 0.2); }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 min-h-screen flex overflow-hidden">
+<!-- Left Sidebar: SideNavBar -->
+<aside class="h-screen w-64 flex-shrink-0 bg-surface-container-lowest border-r border-outline-variant/10 flex flex-col py-container-padding">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Operations Portal</h1>
+<p class="font-body-sm text-on-surface-variant opacity-70">Vessel ID: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="px-4 mb-2 text-on-surface-variant/50 font-label-caps uppercase text-[10px]">Command Center</div>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">calendar_today</span>
+                Agenda
+            </a>
+<!-- Active State: Maintenance -->
+<a class="flex items-center px-6 py-3 bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">build</span>
+                Maintenance
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">warning</span>
+                Incidents
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">gavel</span>
+                Audit &amp; Governance
+            </a>
+</nav>
+<div class="px-4 py-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded font-title-sm text-sm uppercase tracking-wider flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined mr-2 text-sm">bolt</span> Quick Command
+            </button>
+</div>
+<div class="border-t border-outline-variant/10 pt-4">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined mr-3">settings</span> Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined mr-3">help</span> Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col overflow-hidden">
+<!-- TopNavBar -->
+<header class="w-full h-16 flex justify-between items-center px-container-padding sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Operations Portal</span>
+<div class="flex gap-6">
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Fleet</a>
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Logistics</a>
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Safety</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-3">
+<button class="text-on-surface-variant hover:text-primary transition-all p-2"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-all p-2"><span class="material-symbols-outlined">history</span></button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/20"></div>
+<div class="flex items-center gap-3">
+<span class="text-right">
+<p class="font-body-sm text-[12px] font-bold leading-none">Vance Sterling</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant">Chief Engineer</p>
+</span>
+<img alt="User profile with role visibility" class="w-8 h-8 rounded-full border border-primary/30" data-alt="A professional portrait of a senior maritime chief engineer in a navy blue uniform. The lighting is crisp and cinematic with a cool blue hue. He has a focused and authoritative expression, suitable for a technical high-stakes leadership role in yacht operations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOiqbz2MPk2wfpwJzkGnooLLV-1HYfSEKLvsBbB-Dy6Uy4qmhinKDyY2TDkP_-tXwqlgMuz1Att9rjYeKSM8ioD1Dxk1pquCCulw_YqJhRpTdN9jxBZDEnNf1SusOP7zm7M6JgMLzfzjEZ8IScrle6MZ-gsTwDj_9tARMTrYEgSYPfbujognzGjVhQzUmDbY6IEJ7xlFJ5vaG1F6tgXXJgSQnByFoycTxvB-OT5i9M_wx6rzWhG8trpf84-ilslq7tDO2ydJRKLkDZ"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="flex-1 overflow-y-auto bg-surface-dim p-container-padding">
+<div class="max-w-[1600px] mx-auto grid grid-cols-12 gap-panel-gap">
+<!-- Header & Breadcrumbs -->
+<div class="col-span-12 mb-4">
+<nav class="flex items-center text-on-surface-variant text-[12px] mb-2 font-label-caps uppercase tracking-widest">
+<span>Maintenance</span>
+<span class="material-symbols-outlined mx-2 text-[14px]">chevron_right</span>
+<span class="text-primary">Ticket Detail</span>
+</nav>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h2 class="font-display-lg text-display-lg">#TK-4402 - STBD Engine Overhaul</h2>
+<span class="px-3 py-1 bg-secondary-container/30 border border-primary/20 text-primary rounded-full text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                                Em andamento
+                            </span>
+<span class="px-3 py-1 bg-error-container/20 border border-error/30 text-error rounded-full text-[11px] font-bold uppercase tracking-widest">
+                                P1 Critical
+                            </span>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-[10px] font-label-caps text-on-surface-variant uppercase">Asset</p>
+<p class="font-data-mono text-primary">MAR-2024</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-label-caps text-on-surface-variant uppercase">Category</p>
+<p class="font-body-md text-on-surface">Propulsion</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Macro Status Progress -->
+<div class="col-span-12 glass-panel p-4 rounded-lg mb-4">
+<div class="flex items-center justify-between relative mb-8 px-8">
+<div class="absolute top-1/2 left-0 right-0 h-[2px] bg-outline-variant/20 -translate-y-1/2 z-0 mx-20"></div>
+<!-- Completed: Pendente -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="mt-2 text-[11px] font-label-caps uppercase text-on-surface-variant">Pendente</span>
+</div>
+<!-- Active: Em Andamento -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-background border-2 border-primary flex items-center justify-center text-primary status-glow-blue">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill">play_arrow</span>
+</div>
+<span class="mt-2 text-[11px] font-label-caps uppercase text-primary font-bold">Em andamento</span>
+<!-- Substeps Tooltip-like element -->
+<div class="absolute -bottom-12 w-64 flex justify-around items-center px-4 py-2 glass-panel rounded border border-primary/20">
+<span class="text-[10px] text-on-surface/60">Diagnostic</span>
+<span class="material-symbols-outlined text-[10px] text-primary">chevron_right</span>
+<span class="text-[10px] text-primary font-bold">Execution</span>
+<span class="material-symbols-outlined text-[10px] text-on-surface-variant/40">chevron_right</span>
+<span class="text-[10px] text-on-surface-variant/40">Quality</span>
+</div>
+</div>
+<!-- Inactive: Pagamento -->
+<div class="relative z-10 flex flex-col items-center opacity-40">
+<div class="w-8 h-8 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<span class="mt-2 text-[11px] font-label-caps uppercase">Pagamento</span>
+</div>
+<!-- Inactive: Concluído -->
+<div class="relative z-10 flex flex-col items-center opacity-40">
+<div class="w-8 h-8 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<span class="mt-2 text-[11px] font-label-caps uppercase">Concluído</span>
+</div>
+</div>
+</div>
+<!-- Central Column: Technical Details -->
+<div class="col-span-9 grid grid-cols-2 gap-panel-gap">
+<!-- Description Block -->
+<div class="col-span-2 glass-panel p-stack-md rounded-lg">
+<div class="flex items-center gap-2 mb-4 border-b border-outline-variant/10 pb-2">
+<span class="material-symbols-outlined text-primary text-sm">description</span>
+<h3 class="font-label-caps uppercase text-on-surface">Technical breakdown</h3>
+</div>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                            Anomalous vibration detected in the starboard main propulsion assembly during cruise at 22 knots. Initial diagnostic indicates high thermal variance on cylinder head #4 and potential cavitation damage on the propeller shaft coupling. Requires a full teardown of the turbocharger unit and recalibration of the electronic fuel injection system. Operational risk: High. Potential for thermal runaway if left unaddressed.
+                        </p>
+</div>
+<!-- Evidence Section - BLOCKED STATE -->
+<div class="col-span-1 glass-panel p-stack-md rounded-lg relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">attach_file</span>
+<h3 class="font-label-caps uppercase text-on-surface">Execution Evidence</h3>
+</div>
+<button class="text-[11px] font-label-caps text-primary hover:underline">Attach Evidence</button>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="aspect-square bg-surface-container-highest rounded border border-outline-variant/30 flex items-center justify-center group cursor-pointer overflow-hidden">
+<img class="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" data-alt="A high-contrast macro photograph of a complex marine engine component with visible metallic wear and oil residue. The lighting is focused and technical, highlighting the industrial textures of steel and the precision engineering of the yacht's propulsion system. The aesthetic is gritty but professional, emphasizing technical documentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaQ2h26YEcPAzw1DnutwwelCDwl9UChf_7v26t1VvnXieF64BU4kKCVXxFWbTxSmFHPeJqZ8uzlhMdaJqbXBBS0ofkHy5C7sSYI3ws6Kk74co_-qtpSFi5ExPRRxLLo1QsBUbcoxJkrpRqOrzpWHUjObd_6rE_wVRrHMrp9qeF3sz5Z1sQq9cQHWzviAjaHqhh5nvnpoyGLMqqA6fFYp1VJ5HUORFUhyX7L8eJhsp9a0Tsbey3eNImm1-H_nRa_r-pqNlZRKVqDNFY"/>
+</div>
+<div class="aspect-square bg-surface-container-highest rounded border border-outline-variant/30 flex items-center justify-center group cursor-pointer overflow-hidden">
+<img class="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" data-alt="A detailed technical schematic of a yacht engine's hydraulic system shown on a digital tablet screen. The background is a dimly lit engine room with blurred pipes and machinery. The focus is sharp on the glowing blue interface of the tablet, reflecting a high-tech maritime maintenance environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKkdtGrUBxrrESmdukeG4oQvNWQxstTNICBwQC7tFhLE5Kdy6lvyEHGyKL9NSqmwwBt6DVfpTA2WhIaZoVnsWcCTW71xVAOo0W5rgCl4E9XvpzuDkVFJh4qAiRaS0UNQqRhUsb6HD3GMeCbnZ9kZgCIPnsQbPw8pCOd6mBL7TxxMVKnl7QoIE9oRrHFEobq4HIW9Jzp4PX5t8i6v98p5oNxNFjSC1bPDLdcmPFRvh4t-i3qUdVla228r7X5suZpX2LNbqh1_eiB2Dr"/>
+</div>
+<div class="aspect-square border-2 border-dashed border-error/50 rounded flex flex-col items-center justify-center bg-error-container/5">
+<span class="material-symbols-outlined text-error text-[20px]">block</span>
+<p class="text-[9px] text-error font-bold uppercase mt-1">Missing</p>
+</div>
+</div>
+<div class="mt-4 p-2 bg-error-container/10 border border-error/20 rounded">
+<p class="text-error text-[11px] font-medium flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">warning</span> BLOCKED: Final report evidence required for closure.</p>
+</div>
+</div>
+<!-- Third-Party Section -->
+<div class="col-span-1 glass-panel p-stack-md rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">engineering</span>
+<h3 class="font-label-caps uppercase text-on-surface">Third-Party (SkyNav Tech)</h3>
+</div>
+<span class="px-2 py-0.5 bg-tertiary-container/20 text-tertiary text-[9px] rounded font-bold uppercase">Maker-Checker</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-on-surface-variant">Primary Technician</span>
+<span class="text-[12px] font-data-mono text-on-surface">Mark J. Sorenson</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-on-surface-variant">Validation Status</span>
+<span class="text-[11px] font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+                                    Validated
+                                </span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/10">
+<span class="text-[12px] text-on-surface-variant">Labor Est.</span>
+<span class="text-[12px] font-data-mono">48.5 Hours</span>
+</div>
+</div>
+</div>
+<!-- Budget & Cost -->
+<div class="col-span-1 glass-panel p-stack-md rounded-lg">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">payments</span>
+<h3 class="font-label-caps uppercase text-on-surface">Budget &amp; Cost</h3>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-on-surface-variant">Estimated Cost</span>
+<span class="text-[12px] font-data-mono">$12,400.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-on-surface-variant">Current Cost</span>
+<span class="text-[12px] font-data-mono text-error font-bold">$13,888.00</span>
+</div>
+<div class="p-2 bg-error-container/20 border border-error/40 rounded flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] text-error font-bold uppercase">Variation</span>
+<span class="text-error font-data-mono text-[14px]">+12.0% Variance</span>
+</div>
+<button class="px-2 py-1 bg-error text-on-error text-[10px] font-bold rounded uppercase tracking-tighter">Extra Approval</button>
+</div>
+</div>
+</div>
+<!-- Freeze History -->
+<div class="col-span-1 glass-panel p-stack-md rounded-lg">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-warning text-sm text-[#f9bc00]">ac_unit</span>
+<h3 class="font-label-caps uppercase text-on-surface">Freeze History</h3>
+</div>
+<div class="space-y-3">
+<div class="border-l-2 border-warning/50 pl-3 py-1">
+<div class="flex justify-between text-[10px] mb-1">
+<span class="text-warning font-bold uppercase">Congelado</span>
+<span class="text-on-surface-variant/60 font-data-mono">2024-03-12 14:20</span>
+</div>
+<p class="text-[12px] text-on-surface leading-tight">Waiting for parts delivery (Main Bearing SKU-882).</p>
+</div>
+<div class="border-l-2 border-primary/30 pl-3 py-1 opacity-60">
+<div class="flex justify-between text-[10px] mb-1">
+<span class="text-primary font-bold uppercase">Unfrozen</span>
+<span class="text-on-surface-variant/60 font-data-mono">2024-03-14 09:15</span>
+</div>
+<p class="text-[12px] text-on-surface-variant leading-tight">Parts received and inventoried.</p>
+</div>
+</div>
+</div>
+<!-- Technical Release / Quality -->
+<div class="col-span-2 glass-panel p-stack-md rounded-lg">
+<div class="flex items-center justify-between mb-4 border-b border-outline-variant/10 pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">assignment_turned_in</span>
+<h3 class="font-label-caps uppercase text-on-surface">Quality Assurance Checklist</h3>
+</div>
+<span class="text-[11px] font-data-mono text-primary">2/4 Completed</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-3 p-2 hover:bg-white/5 transition-colors rounded cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-weight="fill">check_box</span>
+<span class="text-[12px] text-on-surface">System Pressure Test (3000 PSI)</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-white/5 transition-colors rounded cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-weight="fill">check_box</span>
+<span class="text-[12px] text-on-surface">Thermal Imaging Calibration</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-white/5 transition-colors rounded cursor-pointer">
+<span class="material-symbols-outlined text-outline">check_box_outline_blank</span>
+<span class="text-[12px] text-on-surface-variant">Full Sea Trial Validation</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-white/5 transition-colors rounded cursor-pointer">
+<span class="material-symbols-outlined text-outline">check_box_outline_blank</span>
+<span class="text-[12px] text-on-surface-variant">Lube Oil Sample Analysis</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Sticky Action Rail -->
+<div class="col-span-3 space-y-panel-gap">
+<!-- Actions Panel -->
+<div class="glass-panel p-stack-md rounded-lg sticky top-4">
+<h3 class="font-label-caps uppercase text-on-surface-variant mb-4 tracking-widest text-[10px]">Command Actions</h3>
+<div class="space-y-3">
+<button class="w-full bg-primary text-on-primary py-3 rounded font-bold text-[13px] uppercase tracking-wider flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all status-glow-blue">
+<span class="material-symbols-outlined text-[18px]">double_arrow</span>
+                                Transition to Quality
+                            </button>
+<button class="w-full border border-outline-variant hover:bg-surface-container-highest py-2.5 rounded font-bold text-[12px] uppercase text-on-surface tracking-wider flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">ac_unit</span>
+                                Freeze Ticket
+                            </button>
+<button class="w-full border border-outline-variant hover:bg-surface-container-highest py-2.5 rounded font-bold text-[12px] uppercase text-on-surface tracking-wider flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                                Request Payment
+                            </button>
+<button class="w-full border border-outline-variant hover:bg-surface-container-highest py-2.5 rounded font-bold text-[12px] uppercase text-on-surface tracking-wider flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">domain_add</span>
+                                Register Third-Party
+                            </button>
+<button class="w-full border border-outline-variant/30 text-on-surface-variant/40 py-2.5 rounded font-bold text-[12px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[18px]">build_circle</span>
+                                Create Rectification
+                            </button>
+</div>
+<!-- Audit Timeline -->
+<div class="mt-8">
+<h3 class="font-label-caps uppercase text-on-surface-variant mb-4 tracking-widest text-[10px]">Audit Timeline</h3>
+<div class="space-y-6 relative before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-0 before:w-[1px] before:bg-outline-variant/20"><div class="relative pl-8"><div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-error-container/20 border border-error/30 flex items-center justify-center z-10"><span class="material-symbols-outlined text-[14px] text-error">block</span></div><p class="text-[12px] text-on-surface leading-snug"><span class="font-bold">Central Ops</span> initiated emergency block.</p><p class="text-[10px] text-on-surface-variant font-data-mono mt-1">Today, 10:15 AM</p></div>
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-primary">edit</span>
+</div>
+<p class="text-[12px] text-on-surface leading-snug">
+<span class="font-bold">Chief Eng. Vance</span> updated diagnostic evidence.
+                                    </p>
+<p class="text-[10px] text-on-surface-variant font-data-mono mt-1">Today, 09:45 AM</p>
+</div>
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-error-container/20 border border-error/30 flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-error">warning</span>
+</div>
+<p class="text-[12px] text-on-surface leading-snug">
+<span class="font-bold">System</span> flagged 12% cost variance.
+                                    </p>
+<p class="text-[10px] text-on-surface-variant font-data-mono mt-1">Today, 08:30 AM</p>
+</div>
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span>
+</div>
+<p class="text-[12px] text-on-surface leading-snug">
+<span class="font-bold">SkyNav Tech</span> uploaded initial labor quote.
+                                    </p>
+<p class="text-[10px] text-on-surface-variant font-data-mono mt-1">Yesterday, 04:12 PM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

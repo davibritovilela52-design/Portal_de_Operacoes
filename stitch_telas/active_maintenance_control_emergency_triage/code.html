@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Operations Portal - Maintenance Control</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .shimmer-urgent {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-urgent::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 180, 171, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            100% { left: 200%; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#2a3548",
+                      "surface-container-lowest": "#040e1f",
+                      "secondary": "#b9c8de",
+                      "secondary-fixed-dim": "#b9c8de",
+                      "on-secondary": "#233143",
+                      "on-error": "#690005",
+                      "surface-tint": "#7bd0ff",
+                      "surface": "#081425",
+                      "secondary-fixed": "#d4e4fa",
+                      "primary-container": "#38bdf8",
+                      "surface-container": "#152031",
+                      "inverse-surface": "#d8e3fb",
+                      "tertiary-fixed-dim": "#bec6e0",
+                      "on-secondary-fixed-variant": "#39485a",
+                      "surface-container-low": "#111c2d",
+                      "surface-container-highest": "#2a3548",
+                      "outline-variant": "#3e484f",
+                      "on-secondary-fixed": "#0d1c2d",
+                      "tertiary-fixed": "#dae2fd",
+                      "primary-fixed": "#c4e7ff",
+                      "surface-bright": "#2f3a4c",
+                      "surface-dim": "#081425",
+                      "inverse-primary": "#00668a",
+                      "on-error-container": "#ffdad6",
+                      "on-tertiary-container": "#3c4459",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed": "#001e2c",
+                      "on-primary": "#00354a",
+                      "tertiary-container": "#a9b1ca",
+                      "on-tertiary-fixed": "#131b2e",
+                      "on-primary-container": "#004965",
+                      "background": "#081425",
+                      "secondary-container": "#39485a",
+                      "on-secondary-container": "#a7b6cc",
+                      "on-primary-fixed-variant": "#004c69",
+                      "surface-container-high": "#1f2a3c",
+                      "primary-fixed-dim": "#7bd0ff",
+                      "outline": "#87929a",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#3f465c",
+                      "on-tertiary": "#283044",
+                      "inverse-on-surface": "#263143",
+                      "tertiary": "#c5cce6",
+                      "primary": "#8ed5ff",
+                      "on-surface-variant": "#bdc8d1",
+                      "on-surface": "#d8e3fb",
+                      "on-background": "#d8e3fb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-tight": "4px",
+                      "max-width": "1600px",
+                      "stack-md": "16px",
+                      "container-padding": "24px",
+                      "unit": "4px",
+                      "panel-gap": "12px",
+                      "grid-columns": "12"
+              },
+              "fontFamily": {
+                      "label-caps": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "title-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "data-mono": ["JetBrains Mono"],
+                      "body-sm": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar Navigation -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest h-screen w-64 flex-shrink-0 border-r border-outline-variant/10 flex flex-col py-container-padding">
+<div class="px-6 mb-8">
+<div class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">MAR-2024</div>
+<div class="font-body-sm text-on-surface-variant opacity-70">Operations Portal</div>
+</div>
+<nav class="flex-grow space-y-1 px-3">
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="calendar_today">calendar_today</span> Agenda
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 bg-secondary-container text-on-secondary-container border-r-2 border-primary font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="build">build</span> Maintenance
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="warning">warning</span> Incidents
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="gavel">gavel</span> Audit &amp; Governance
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="admin_panel_settings">admin_panel_settings</span> Access &amp; Admin
+                </a>
+<a class="flex items-center px-3 py-2 transition-colors duration-200 text-on-surface-variant hover:bg-surface-container-highest rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="pumping_unit">CookingPot</span> Cutover
+                </a>
+</nav>
+<div class="mt-auto px-3 pt-6 space-y-1">
+<button class="w-full bg-primary text-on-primary-container px-4 py-2 rounded font-label-caps text-label-caps mb-4 uppercase tracking-widest hover:brightness-110 active:scale-[0.98] transition-all">
+                    Quick Command
+                </button>
+<a class="flex items-center px-3 py-2 text-on-surface-variant hover:text-on-surface font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span> Settings
+                </a>
+<a class="flex items-center px-3 py-2 text-on-surface-variant hover:text-on-surface font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span> Support
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col min-w-0">
+<!-- Top Navigation Bar -->
+<header class="bg-surface dark:bg-surface w-full h-16 border-b border-outline-variant/10 flex justify-between items-center px-container-padding sticky top-0 z-40 bg-opacity-90 backdrop-blur-md">
+<div class="flex items-center space-x-6">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Operations Portal</h1>
+<div class="h-8 w-px bg-outline-variant/20"></div>
+<div class="flex space-x-4">
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Fleet</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Logistics</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Safety</a>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex space-x-2">
+<button class="px-4 py-1.5 rounded-lg border border-primary text-primary font-label-caps text-label-caps uppercase hover:bg-primary/10 transition-all">Export Data</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary text-on-primary font-label-caps text-label-caps uppercase hover:brightness-110 transition-all">New Incident</button>
+</div>
+<div class="flex items-center space-x-3 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-on-surface" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-on-surface" data-icon="history">history</span>
+<div class="flex items-center space-x-2 pl-2 border-l border-outline-variant/20">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+<div class="text-right leading-none">
+<div class="text-xs font-bold text-on-surface">Cpt. Sterling</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Senior Officer</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-grow overflow-y-auto p-container-padding space-y-6">
+<!-- Summary Metrics Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Active Maintenance Control</h2>
+<p class="text-on-surface-variant font-body-sm">Fleet-wide asset management for Vessel ID: MAR-2024</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-panel-gap">
+<div class="glass-panel px-4 py-3 rounded-lg border-l-4 border-error">
+<div class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">P1 CRITICAL</div>
+<div class="font-display-lg text-display-lg text-error">03</div>
+</div>
+<div class="glass-panel px-4 py-3 rounded-lg border-l-4 border-primary">
+<div class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">ACTIVE</div>
+<div class="font-display-lg text-display-lg text-primary">12</div>
+</div>
+<div class="glass-panel px-4 py-3 rounded-lg border-l-4 border-yellow-500">
+<div class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">CONGELADO</div>
+<div class="font-display-lg text-display-lg text-yellow-500">05</div>
+</div>
+<div class="glass-panel px-4 py-3 rounded-lg border-l-4 border-outline">
+<div class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">PENDENTE</div>
+<div class="font-display-lg text-display-lg text-on-surface">18</div>
+</div>
+</div>
+</div>
+<!-- Controls & Filters -->
+<div class="space-y-4">
+<div class="flex flex-col lg:flex-row gap-4">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg pl-10 pr-4 py-2.5 text-body-md focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search Asset ID, Ticket, or Category..." type="text"/>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="flex items-center px-4 py-2 rounded bg-error-container/20 border border-error/30 text-error font-label-caps text-label-caps uppercase hover:bg-error-container/40 transition-all">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="bolt">bolt</span> P1 Emergency
+                            </button>
+<button class="flex items-center px-4 py-2 rounded bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 font-label-caps text-label-caps uppercase hover:bg-yellow-500/20 transition-all">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="pause_circle">pause_circle</span> Blocked
+                            </button>
+<button class="flex items-center px-4 py-2 rounded bg-surface-container-highest border border-outline-variant/30 text-on-surface font-label-caps text-label-caps uppercase hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="contract">contract</span> Missing Evidence
+                            </button>
+<button class="flex items-center px-4 py-2 rounded bg-surface-container-highest border border-outline-variant/30 text-on-surface font-label-caps text-label-caps uppercase hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="groups">groups</span> Third-Party
+                            </button>
+</div>
+</div>
+<!-- Status Tabs -->
+<div class="flex items-center border-b border-outline-variant/20 overflow-x-auto no-scrollbar">
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Pendente</button>
+<button class="px-6 py-3 text-primary border-b-2 border-primary font-label-caps text-label-caps uppercase whitespace-nowrap">Em andamento</button>
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Congelado</button>
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Pagamento</button>
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Concluído</button>
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Cancelado</button>
+<button class="px-6 py-3 text-on-surface-variant border-b-2 border-transparent font-label-caps text-label-caps uppercase whitespace-nowrap hover:text-on-surface">Reaberto</button>
+</div>
+</div>
+<!-- Main Data Table -->
+<div class="glass-panel rounded-xl overflow-hidden shadow-2xl">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high text-on-surface-variant border-b border-outline-variant/30">
+<tr class="font-label-caps text-[10px] uppercase tracking-widest">
+<th class="px-6 py-4">Ticket ID / Asset</th>
+<th class="px-6 py-4">Description / Category</th>
+<th class="px-6 py-4">Priority</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Owner / Date</th>
+<th class="px-6 py-4 text-center">Frozen</th>
+<th class="px-6 py-4">SLA Risk</th>
+<th class="px-6 py-4 text-center">Evidence</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: P1 Emergency -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="px-6 py-4">
+<div class="font-data-mono text-primary">MAR-2024-089</div>
+<div class="text-[11px] font-bold text-on-surface/60">Starboard Engine A1</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-semibold text-on-surface">Engine Overhaul &amp; Gasket Replacement</div>
+<div class="text-[11px] text-on-surface-variant">Propulsion • Technical</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center text-error font-bold text-xs bg-error/10 border border-error/30 px-2 py-0.5 rounded shadow-[0_0_8px_rgba(255,180,171,0.3)]">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="priority_high" data-weight="fill">priority_high</span> P1
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2 shadow-[0_0_5px_#38bdf8]"></span> Em andamento
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs font-medium">J. Vandermeer</div>
+<div class="text-[10px] text-on-surface-variant">Oct 24, 2023</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="font-data-mono text-on-surface-variant">00</span>
+</td>
+<td class="px-6 py-4">
+<div class="w-full bg-surface-container-lowest h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full shimmer-urgent" style="width: 85%"></div>
+</div>
+<div class="text-[9px] text-error mt-1 uppercase font-bold">2h 45m left</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="check_circle" data-weight="fill">check_circle</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Frozen / Congelado -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors bg-error-container/10">
+<td class="px-6 py-4">
+<div class="font-data-mono text-primary">YCH-102-142</div>
+<div class="text-[11px] font-bold text-on-surface/60">Stabilizer Unit B-Left</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-semibold text-on-surface">Calibration &amp; Hydraulic Pressure Test</div>
+<div class="text-[11px] text-on-surface-variant">Hull • Stability</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center text-secondary font-bold text-xs bg-secondary/10 border border-secondary/30 px-2 py-0.5 rounded">
+                                        P2
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="space-y-1">
+<div class="flex items-center text-yellow-500 font-bold text-xs border border-yellow-500/40 bg-yellow-500/10 px-2 py-1 rounded shadow-[0_0_10px_rgba(234,179,8,0.2)]">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="lock_clock">lock_clock</span> Congelado
+                                        </div>
+<div class="text-[9px] bg-error text-on-error px-1.5 py-0.5 rounded-sm font-bold uppercase tracking-tighter inline-block">BLOCKING INCIDENT</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs font-medium">External: MarineFlow</div>
+<div class="text-[10px] text-yellow-500 font-bold uppercase">Awaiting Parts</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="font-data-mono text-yellow-500 font-bold">04</span>
+</td>
+<td class="px-6 py-4">
+<div class="w-full bg-surface-container-lowest h-1 rounded-full overflow-hidden">
+<div class="bg-yellow-500 h-full" style="width: 40%"></div>
+</div>
+<div class="text-[9px] text-yellow-500 mt-1 uppercase font-bold">Stalled</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-error text-xl" data-icon="warning">warning</span>
+<div class="text-[8px] text-error font-bold uppercase">Missing</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Standard Maintenance -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="px-6 py-4">
+<div class="font-data-mono text-primary">MAR-2024-211</div>
+<div class="text-[11px] font-bold text-on-surface/60">HVAC Zone 04 (Main Deck)</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-semibold text-on-surface">Filter Replacement &amp; Duct Sanitization</div>
+<div class="text-[11px] text-on-surface-variant">Utility • Air Quality</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center text-on-surface-variant font-medium text-xs bg-surface-container-highest border border-outline-variant/30 px-2 py-0.5 rounded">
+                                        P3
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-on-surface-variant font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant mr-2"></span> Pendente
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs font-medium">Crew: Maintenance Team</div>
+<div class="text-[10px] text-on-surface-variant">Scheduled: Oct 28</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="font-data-mono text-on-surface-variant">00</span>
+</td>
+<td class="px-6 py-4">
+<div class="w-full bg-surface-container-lowest h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 10%"></div>
+</div>
+<div class="text-[9px] text-on-surface-variant mt-1 uppercase font-bold">Healthy</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-on-surface-variant/40 text-xl" data-icon="pending">pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Complex Maintenance 3rd Party -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="px-6 py-4">
+<div class="font-data-mono text-primary">MAR-2024-004</div>
+<div class="text-[11px] font-bold text-on-surface/60">Nav-Comm Suite G5</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-semibold text-on-surface">Radar Magnetron Calibration</div>
+<div class="text-[11px] text-on-surface-variant">Safety • Communication</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center text-secondary font-bold text-xs bg-secondary/10 border border-secondary/30 px-2 py-0.5 rounded">
+                                        P2
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2 shadow-[0_0_5px_#38bdf8]"></span> Em andamento
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<div class="text-xs font-medium">External: SkyNav Tech</div>
+<div class="text-[10px] text-primary/80 font-bold uppercase flex items-center">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="groups">groups</span> 3P Vendor
+                                    </div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="font-data-mono text-on-surface-variant">01</span>
+</td>
+<td class="px-6 py-4">
+<div class="w-full bg-surface-container-lowest h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 75%"></div>
+</div>
+<div class="text-[9px] text-error mt-1 uppercase font-bold">High Risk (5h left)</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="check_circle" data-weight="fill">check_circle</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer / Status Bar -->
+<div class="flex items-center justify-between text-[10px] font-bold text-on-surface-variant uppercase tracking-widest px-2 mt-4">
+<div class="flex items-center space-x-4">
+<div class="flex items-center"><span class="w-2 h-2 rounded-full bg-error mr-2"></span> System Critical: High</div>
+<div class="flex items-center"><span class="w-2 h-2 rounded-full bg-primary mr-2"></span> Comms: Online</div>
+<div class="flex items-center"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Sync: 0.2ms ago</div>
+</div>
+<div>Page 1 of 12 • Total Entries: 142 Assets</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Background Decoration (Glassmorphism Context) -->
+<div class="fixed top-0 right-0 -z-10 w-1/3 h-1/2 bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 -z-10 w-1/4 h-1/3 bg-error/5 blur-[100px] rounded-full pointer-events-none"></div>
+</body></html>

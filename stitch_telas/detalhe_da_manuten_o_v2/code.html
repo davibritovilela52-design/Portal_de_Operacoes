@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#3c4459",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-background": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "tertiary": "#c5cce6",
+                    "inverse-on-surface": "#263143",
+                    "secondary-container": "#39485a",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline-variant": "#3e484f",
+                    "inverse-primary": "#00668a",
+                    "primary-fixed": "#c4e7ff",
+                    "on-primary": "#00354a",
+                    "surface-container-highest": "#2a3548",
+                    "surface-container-high": "#1f2a3c",
+                    "surface-container": "#152031",
+                    "inverse-surface": "#d8e3fb",
+                    "outline": "#87929a",
+                    "surface-container-lowest": "#040e1f",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2c",
+                    "background": "#081425",
+                    "error": "#ffb4ab",
+                    "surface": "#081425",
+                    "on-primary-container": "#004965",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-dim": "#081425",
+                    "surface-container-low": "#111c2d",
+                    "surface-variant": "#2a3548",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "tertiary-container": "#a9b1ca",
+                    "surface-bright": "#2f3a4c",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "primary-container": "#38bdf8",
+                    "on-surface-variant": "#bdc8d1",
+                    "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "panel-gap": "12px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-glow {
+            box-shadow: 0 0 12px rgba(142, 213, 255, 0.2);
+        }
+        .error-glow {
+            box-shadow: 0 0 12px rgba(255, 180, 171, 0.15);
+        }
+        .shimmer-bar {
+            background: linear-gradient(90deg, #38bdf8 0%, #7bd0ff 50%, #38bdf8 100%);
+            background-size: 200% 100%;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30 min-h-screen flex overflow-hidden">
+<!-- Sidebar (Shared Component SideNavBar) -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant/10 h-screen w-64 flex-shrink-0 flex flex-col py-container-padding">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal de OperaÃ§Ãµes</h1>
+<p class="text-on-surface-variant text-xs mt-1">ID da EmbarcaÃ§Ã£o: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-body-md">Painel</span>
+</a>
+<a class="flex items-center px-6 py-3 bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">build</span>
+<span class="font-body-md">Maintenance</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">calendar_today</span>
+<span class="font-body-md">Agenda</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">warning</span>
+<span class="font-body-md">Incidents</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">gavel</span>
+<span class="font-body-md">Audit &amp; Governance</span>
+</a>
+</nav>
+<div class="mt-auto px-6 space-y-4">
+<button class="w-full bg-primary text-on-primary py-3 px-4 font-title-sm rounded-lg flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">bolt</span>
+                Comando Rápido
+            </button>
+<div class="pt-4 border-t border-outline-variant/10 space-y-1">
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-body-md">Configurações</span>
+</a>
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="font-body-md">Suporte</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto bg-background">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center px-container-padding w-full h-16 sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Chamado MNT-8829</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#">Frota</a>
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Logística</a>
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-all p-2">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/20"></div>
+<button class="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded text-body-sm font-medium hover:bg-primary/20 transition-all">
+                    Exportar Dados
+                </button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="Perfil" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a maritime technical officer in a dark navy uniform, lit by cold cinematic lighting that highlights facial features and technical authority. The background is a blurred high-tech bridge of a luxury vessel with glowing blue control panels. The overall aesthetic is professional, sharp, and focused, aligning with a corporate modern maritime operations environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMeAB9GP4X78uY093QUYH2TJR9SH3Idx5sbOcPG-eXSdJtTzdYvxugnVAiSUpk4ghS40B8wBTaGWwrUiWuEPN4Ga_cueDVZxcO9Fvm2mANvTHyezlXEMB_Xh91wfhUdYzByfOOSviP_iAbUDnkZid_KtuvVHSZhSaxYwCZYml35S1QxLjNo9Bzsv1a9pjjT9ComahSrIo1pIX8UahOVa9DikQHkveycLXOZGmmPbYl2AYjnxIE1k_3GWxJou4gdT9kC66nWdCq-rmb"/>
+</div>
+</div>
+</header>
+<!-- Content Area: Bento Grid Layout -->
+<div class="p-container-padding max-w-max-width mx-auto w-full grid grid-cols-12 gap-panel-gap">
+<!-- Header Info Card -->
+<section class="col-span-12 glass-panel p-6 rounded-xl flex flex-wrap justify-between items-start gap-4">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-label-caps uppercase">InspeÃ§Ã£o</span>
+<h2 class="font-display-lg text-display-lg">SubstituiÃ§Ã£o do Atuador de EstabilizaÃ§Ã£o HidrÃ¡ulica</h2>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="flex items-center gap-1.5 font-data-mono">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                            Deck 0 - Sala de MÃ¡quinas SecundÃ¡ria
+                        </span>
+<span class="flex items-center gap-1.5 font-data-mono">
+<span class="material-symbols-outlined text-sm">person</span>
+                            Eng. AndrÃ© Santos
+                        </span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="flex items-center gap-2 bg-error-container/20 border border-error/30 px-4 py-2 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-error font-bold uppercase tracking-widest text-label-caps">Congelado</span>
+</div>
+<span class="text-on-surface-variant text-xs">Bloqueado por: Falta de DocumentaÃ§Ã£o</span>
+</div>
+</section>
+<!-- Left Column: Details & Audit -->
+<div class="col-span-12 lg:col-span-8 space-y-panel-gap">
+<!-- Description Card -->
+<article class="glass-panel p-6 rounded-xl">
+<h3 class="text-on-surface-variant text-label-caps uppercase mb-4 tracking-tighter">Detalhes TÃ©cnicos</h3>
+<p class="text-on-surface font-body-md leading-relaxed">
+                        Detectada falha intermitente no atuador hidrÃ¡ulico B2 durante manobra de cruzeiro. A pressÃ£o de retenÃ§Ã£o estÃ¡ 15% abaixo do nominal de seguranÃ§a. Requer substituiÃ§Ã£o imediata antes do prÃ³ximo trÃ¢nsito transatlÃ¢ntico. O componente jÃ¡ foi retirado do estoque central, mas a ordem de instalaÃ§Ã£o estÃ¡ suspensa atÃ© a validaÃ§Ã£o do certificado de teste de pressÃ£o.
+                    </p>
+</article>
+<!-- Audit Trail -->
+<section class="glass-panel p-6 rounded-xl">
+<h3 class="text-on-surface-variant text-label-caps uppercase mb-6 tracking-tighter">Trilha de Auditoria &amp; GovernanÃ§a</h3>
+<div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-outline-variant/30">
+<!-- Audit Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-error">lock</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-title-sm text-on-surface">Status alterado para: Congelado</p>
+<p class="text-body-sm text-on-surface-variant mt-1">Motivo: AusÃªncia do Certificado de CalibraÃ§Ã£o (ISO 9001:2015) exigido pelo protocolo de seguranÃ§a marÃ­tima.</p>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-xs text-on-surface">14 MAI 2024, 09:42</p>
+<p class="text-body-sm text-primary">Sistema Central</p>
+</div>
+</div>
+</div>
+<!-- Audit Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">add_circle</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-title-sm text-on-surface">PeÃ§a Vinculada: Atuador B2 (S/N: 991823)</p>
+<p class="text-body-sm text-on-surface-variant mt-1">Componente alocado do estoque secundÃ¡rio da frota.</p>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-xs text-on-surface">13 MAI 2024, 16:15</p>
+<p class="text-body-sm text-on-surface">Eng. Roberto Lima</p>
+</div>
+</div>
+</div>
+<!-- Audit Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">edit</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="font-title-sm text-on-surface">Chamado Aberto: Alta Prioridade</p>
+<p class="text-body-sm text-on-surface-variant mt-1">InspeÃ§Ã£o de rotina identificou desgaste prematuro.</p>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-xs text-on-surface">13 MAI 2024, 15:00</p>
+<p class="text-body-sm text-on-surface">Eng. AndrÃ© Santos</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Status & Evidence -->
+<div class="col-span-12 lg:col-span-4 space-y-panel-gap">
+<!-- SLA Indicator -->
+<section class="glass-panel p-6 rounded-xl">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-on-surface-variant text-label-caps uppercase tracking-tighter">ValidaÃ§Ã£o SLA Central</h3>
+<span class="text-primary font-data-mono">24h Limite</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden mb-2">
+<div class="h-full w-3/4 shimmer-bar shadow-[0_0_8px_rgba(123,208,255,0.4)]"></div>
+</div>
+<div class="flex justify-between text-xs font-data-mono text-on-surface-variant">
+<span>Tempo Decorrido: 18h 12m</span>
+<span class="text-error">05h 48m Restantes</span>
+</div>
+</section>
+<!-- Evidence Section (Locked State) -->
+<section class="glass-panel p-6 rounded-xl border-dashed border-outline-variant/30">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-on-surface-variant text-label-caps uppercase tracking-tighter">EvidÃªncias Bloqueadas</h3>
+<span class="material-symbols-outlined text-error">lock_person</span>
+</div>
+<div class="aspect-video rounded-lg bg-surface-container-lowest flex flex-col items-center justify-center text-center p-6 border border-outline-variant/20 relative group overflow-hidden">
+<div class="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant/50">description</span>
+<p class="text-body-sm text-on-surface font-medium max-w-[180px]">Certificado de Teste Pendente</p>
+<button class="bg-surface-bright text-on-surface px-4 py-2 rounded text-xs font-bold uppercase tracking-widest border border-outline/30 hover:bg-surface-container-highest transition-all">
+                                Anexar EvidÃªncia
+                            </button>
+</div>
+<img alt="Technical blueprint placeholder" class="w-full h-full object-cover opacity-30" data-alt="A macro photograph of a technical engineering document with complex schematics and blueprints, lying on a brushed metal surface in a dimly lit industrial laboratory. The scene is illuminated by cold cyan LED lights, casting deep shadows and highlighting the texture of the paper and the metallic grain. The atmosphere is technical, precise, and high-security, reflecting a critical maritime maintenance environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmpahMOAYBP9bRWH76DHe6i3KJDlZWulrt-CiYxWFrIuIoAb39tGMUDV-vzDVPqQH6uje4vkJTRnKUlg-4veNTIzCvmOsd2FqAJ04OEbMZaEN1w-b0KneU8iH23H0omZFAd5D4HPzuCXfDvWG0jPIFLW-TJN3_CCdOaUkglBDAPc6JqRRK59VXo_WvqZ0pEb5dufI8GB4wBxOFWRvXQ-wXqzAxRu0kHuR0ZLen0iG3iATWcH2DN3yVWzaeroGe35Yn6APren7QPR6M"/>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-4 leading-snug">
+                        O envio de provas fotogrÃ¡ficas e documentaÃ§Ã£o tÃ©cnica estÃ¡ desabilitado atÃ© o upload do Certificado de Conformidade.
+                    </p>
+</section>
+<!-- Primary Actions -->
+<div class="space-y-3">
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-lg flex items-center justify-center gap-3 hover:brightness-110 status-glow transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined">verified_user</span>
+                        Solicitar ValidaÃ§Ã£o
+                    </button>
+<button class="w-full py-3 bg-surface-container-high border border-outline-variant/30 text-on-surface font-semibold rounded-lg flex items-center justify-center gap-3 hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined">print</span>
+                        Gerar RelatÃ³rio de Auditoria
+                    </button>
+<button class="w-full py-3 bg-transparent text-error font-semibold rounded-lg flex items-center justify-center gap-3 hover:bg-error/5 transition-all">
+<span class="material-symbols-outlined">cancel</span>
+                        Escalonar Incidente
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>
+
+

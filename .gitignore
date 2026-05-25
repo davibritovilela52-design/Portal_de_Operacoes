@@ -1,0 +1,15 @@
+node_modules
+.next
+dist
+coverage
+.turbo
+.env
+apps/api/src/generated
+.DS_Store
+*.log
+*.pid
+*.tsbuildinfo
+.claude/
+.tmp/
+outputs/
+test-results/

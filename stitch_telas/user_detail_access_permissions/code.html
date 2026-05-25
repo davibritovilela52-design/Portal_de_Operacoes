@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Detail &amp; Permission Mapping | MARITIME COMMAND</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#081425",
+                    "on-tertiary-container": "#3c4459",
+                    "primary-container": "#38bdf8",
+                    "outline": "#87929a",
+                    "inverse-primary": "#00668a",
+                    "secondary-container": "#39485a",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-container": "#a7b6cc",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#263143",
+                    "tertiary-container": "#a9b1ca",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "surface-container-lowest": "#040e1f",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#c4e7ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary": "#00354a",
+                    "on-surface-variant": "#bdc8d1",
+                    "surface-tint": "#7bd0ff",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "inverse-surface": "#d8e3fb",
+                    "surface-container-high": "#1f2a3c",
+                    "primary": "#8ed5ff",
+                    "surface-container-low": "#111c2d",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "surface-container": "#152031",
+                    "outline-variant": "#3e484f",
+                    "on-primary-container": "#004965",
+                    "secondary-fixed": "#d4e4fa",
+                    "secondary": "#b9c8de",
+                    "surface-bright": "#2f3a4c",
+                    "tertiary-fixed": "#dae2fd",
+                    "tertiary": "#c5cce6",
+                    "surface-dim": "#081425",
+                    "on-tertiary": "#283044",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "surface-container-highest": "#2a3548",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "background": "#081425",
+                    "on-primary-fixed": "#001e2c",
+                    "surface-variant": "#2a3548",
+                    "on-surface": "#d8e3fb",
+                    "on-primary-fixed-variant": "#004c69",
+                    "on-secondary": "#233143",
+                    "on-background": "#d8e3fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding": "24px",
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "panel-gap": "12px",
+                    "max-width": "1600px"
+            },
+            "fontFamily": {
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .shimmer-emergency {
+            background: linear-gradient(90deg, rgba(147, 0, 10, 0.2), rgba(255, 180, 171, 0.2), rgba(147, 0, 10, 0.2));
+            background-size: 200% 100%;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface/80 backdrop-blur-md border-b border-white/10 shadow-[0_0_15px_rgba(142,213,255,0.1)]">
+<div class="flex items-center gap-6">
+<span class="font-display-lg text-display-lg tracking-tight text-primary">MARITIME COMMAND</span>
+<div class="hidden md:flex gap-4">
+<nav class="flex items-center gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Fleet Operations</a>
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary cursor-pointer" href="#">Security Center</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Logistics</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">settings</span>
+<div class="h-8 w-8 rounded bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Chief Officer Profile" data-alt="Close up portrait of a senior maritime officer in a dark navy uniform with gold braided rank insignia, looking professional and authoritative against a blurred command bridge background with blue ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKGLyOEbBaJFSibCBZi_U0noIhtN4TbG_l5tcCdGEiRBcpq6vEX3QQvyBBcBbwxIH0fsDkR93m3a52m3JK9K0fQvpNTaQRPgQK6YNCvtvHRQRyoK57Z2lT355AEqJPHzjlzPhBkiTtn3f_HhNwD4zKW4DMnT40-oD7JNaykHt2xomWRJOWZp_jte7WPFSmaX6RNKgtN4s8GlVKnIjeUXtMq35nyulywT53ZK2UrKp197wNvJ7r-hNdyL0hq9GsUcGx9NfTSOFE3Wau"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Active: Access & Admin) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container flex flex-col pt-20 pb-4 border-r border-white/10 hidden md:flex">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 bg-primary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_boat</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Fleet Alpha</h2>
+<p class="font-label-caps text-label-caps text-primary">Vessel Status: Active</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-caps text-label-caps">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-caps text-label-caps">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-label-caps">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-caps text-label-caps">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container/20 text-primary border-r-4 border-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-caps text-label-caps">Access &amp; Admin</span>
+</a>
+</nav>
+<div class="px-4 pt-4 border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-64 pt-24 px-container-padding pb-12 max-w-[1600px] mx-auto">
+<!-- User Profile Header -->
+<header class="glass-panel p-6 rounded-lg mb-6 flex flex-col md:flex-row items-center justify-between gap-6 border-l-4 border-primary">
+<div class="flex items-center gap-5">
+<div class="relative">
+<img alt="Captain J. Rivers" class="w-20 h-20 rounded border-2 border-primary/20" data-alt="A portrait of a seasoned maritime captain with graying hair and intense, focused blue eyes, wearing a command uniform, set in a low-light environment with glowing blue and amber instrument panel reflections illuminating one side of his face." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrFZHeQXkC1a4v5yYYUTjUc6hkgfDJEEYNEzQ033TDhJnwMv9NJK4GSTbKjNr7xzmitYGuAWfrPbWjBFPyhaRp7BcLoQ_0j7bWyJowSWv6wlaJl5ljAHjIAqEQG9zzGUmFrm0nHb_L_vlrZcFZINSddNF_ON8bR-KxX9QWeTzGkbGgGzhIO0b658DqvO55FTS4kshUxkLEeODsy5WoGK9l_RfLB5nr2lhv9vkqtygBXXbmhmuvG3PQbT92-wTi-mf722p-SR8aSy5r"/>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Active</div>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h1 class="font-headline-md text-headline-md text-on-surface">Captain J. Rivers</h1>
+<span class="bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 text-[10px] font-bold rounded uppercase">Global Asset Master</span>
+</div>
+<p class="font-body-md text-on-surface-variant mt-1">Personnel ID: <span class="font-data-mono text-data-mono">MC-ALPHA-0922</span></p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center gap-2 bg-surface-container-highest px-3 py-1 rounded">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-caps text-label-caps text-on-surface">MFA: ENFORCED (FIDO2)</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-highest px-3 py-1 rounded">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span>
+<span class="font-label-caps text-label-caps text-on-surface">Last Access: 04:12 UTC</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-caps text-label-caps transition-colors border border-white/10 rounded">CANCEL</button>
+<button class="px-6 py-2 bg-primary hover:bg-primary-fixed text-on-primary-container font-label-caps text-label-caps transition-colors rounded shadow-[0_0_10px_rgba(142,213,255,0.3)]">SAVE CHANGES</button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-panel-gap">
+<!-- Section 1: Role Assignment (Left Column) -->
+<section class="lg:col-span-8 flex flex-col gap-panel-gap">
+<div class="glass-panel p-6 rounded-lg">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">security</span>
+                            Role Assignment
+                        </h3>
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px]">AUTHORITY_LEVEL: 04</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Role Card: Active -->
+<div class="p-4 rounded border-2 border-primary bg-primary/5 cursor-pointer flex gap-4 items-start relative overflow-hidden group">
+<div class="bg-primary/20 p-2 rounded">
+<span class="material-symbols-outlined text-primary">shield_person</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-primary mb-1">Portal Admin</p>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">Full system governance, identity management, and root-level configuration across all tenants.</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Role Card: Inactive -->
+<div class="p-4 rounded border border-white/10 hover:border-white/20 bg-surface-container-low cursor-pointer flex gap-4 items-start transition-colors group">
+<div class="bg-white/5 p-2 rounded group-hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">hub</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface mb-1">Central Operations</p>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">Fleet-wide monitoring, scheduling, and logistical coordination for active operational assets.</p>
+</div>
+</div>
+<!-- Role Card: Inactive -->
+<div class="p-4 rounded border border-white/10 hover:border-white/20 bg-surface-container-low cursor-pointer flex gap-4 items-start transition-colors group">
+<div class="bg-white/5 p-2 rounded group-hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">construction</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface mb-1">Technical Coordination</p>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">Maintenance management, engine telemetry access, and component lifecycle oversight.</p>
+</div>
+</div>
+<!-- Role Card: Inactive -->
+<div class="p-4 rounded border border-white/10 hover:border-white/20 bg-surface-container-low cursor-pointer flex gap-4 items-start transition-colors group">
+<div class="bg-white/5 p-2 rounded group-hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">explore</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface mb-1">Asset Field Team</p>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">On-vessel operational inputs, incident reporting, and real-time sensor verification.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Explicit Scope Mapping -->
+<div class="glass-panel p-6 rounded-lg">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">map</span>
+                        Explicit Scope Mapping
+                    </h3>
+<div class="space-y-6">
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-3">TENANT HIERARCHY</label>
+<div class="flex flex-wrap gap-2">
+<div class="bg-primary/10 border border-primary/30 px-3 py-1.5 rounded flex items-center gap-2 group">
+<span class="font-body-sm text-body-sm text-primary">Aura Fleet (Parent)</span>
+<span class="material-symbols-outlined text-[14px] cursor-pointer text-primary/50 hover:text-primary">close</span>
+</div>
+<button class="border border-white/10 border-dashed px-3 py-1.5 rounded flex items-center gap-2 hover:bg-white/5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span class="font-body-sm text-body-sm">Add Tenant</span>
+</button>
+</div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-3">ASSET ALLOCATION</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="bg-surface-container-lowest p-3 rounded border border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary">Chair</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">MAR-2024</p>
+<p class="text-[10px] text-on-surface-variant">Super-Yacht Alpha Class</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-error">delete</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary">Chair</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">YCH-102</p>
+<p class="text-[10px] text-on-surface-variant">Expedition Support Vessel</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-error">delete</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-white/5 border-dashed flex items-center justify-center cursor-pointer hover:bg-white/5">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps">Map New Asset</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Audit Trail -->
+<div class="glass-panel p-6 rounded-lg">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                            Permission Audit Trail
+                        </h3>
+<button class="text-primary font-label-caps text-label-caps hover:underline">Export Logs</button>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 border-l-2 border-white/10 pl-6 relative">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface-container border-2 border-white/20"></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="font-body-md text-on-surface">Elevated to <span class="text-primary">Portal Admin</span></p>
+<span class="font-data-mono text-data-mono text-[11px] text-on-surface-variant">2024-05-12 14:22:01</span>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-1 italic">Initiated by: Admin_K_Chen (Fleet Director)</p>
+</div>
+</div>
+<div class="flex gap-4 border-l-2 border-white/10 pl-6 relative">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface-container border-2 border-white/20"></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="font-body-md text-on-surface">Asset <span class="text-secondary">YCH-102</span> Mapping Created</p>
+<span class="font-data-mono text-data-mono text-[11px] text-on-surface-variant">2024-05-10 09:15:44</span>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-1 italic">System Auto-Update: Seasonal Rotation Protocol</p>
+</div>
+</div>
+<div class="flex gap-4 border-l-2 border-white/10 pl-6 relative">
+<div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-surface-container border-2 border-white/20"></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="font-body-md text-on-surface">MFA Configuration Validated</p>
+<span class="font-data-mono text-data-mono text-[11px] text-on-surface-variant">2024-04-28 11:02:12</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Security & High-Gravity Actions -->
+<section class="lg:col-span-4 flex flex-col gap-panel-gap">
+<!-- Security & Compliance -->
+<div class="glass-panel p-6 rounded-lg bg-surface-container-high/50">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">security_update_good</span>
+                        Security Status
+                    </h3>
+<div class="space-y-4">
+<div class="p-3 bg-surface rounded border border-white/5">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">MFA CONFIGURATION</p>
+<div class="flex items-center gap-3 mb-2">
+<span class="status-dot bg-primary shadow-[0_0_8px_rgba(142,213,255,0.6)]"></span>
+<span class="font-body-md text-on-surface">FIDO2 Hardware Key</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="status-dot bg-secondary shadow-[0_0_8px_rgba(185,200,222,0.6)]"></span>
+<span class="font-body-md text-on-surface">Authenticator App (Backup)</span>
+</div>
+</div>
+<div class="p-3 bg-surface rounded border border-white/5">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">ACCESS REVIEW</p>
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-on-surface">Next Audit Due:</span>
+<span class="font-data-mono text-data-mono text-primary">IN 18 DAYS</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 mt-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[70%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Emergency Revocation (High Gravity) -->
+<div class="glass-panel p-6 rounded-lg border-2 border-error/30 shimmer-emergency">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h3 class="font-title-sm text-title-sm text-error">Emergency Protocol</h3>
+</div>
+<div class="bg-error-container/20 p-4 rounded mb-6">
+<p class="font-label-caps text-label-caps text-error mb-2">TIME UNTIL AUTO-REVOCATION</p>
+<div class="flex items-baseline gap-2">
+<span class="font-data-mono text-[32px] text-error font-bold leading-none">14:52</span>
+<span class="font-label-caps text-label-caps text-error">min</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-3 leading-tight">Revocation will trigger if current session heartbeat fails or 'Clearance Alpha' signal is received.</p>
+</div>
+<button class="w-full py-4 bg-error hover:bg-error-container text-on-error font-headline-md text-[14px] font-bold rounded flex items-center justify-center gap-3 transition-colors shadow-[0_0_20px_rgba(147,0,10,0.4)] uppercase tracking-widest">
+<span class="material-symbols-outlined">gpp_bad</span>
+                        Immediate Revocation
+                    </button>
+<p class="text-[10px] text-on-surface-variant text-center mt-4">CRITICAL: This action kills all active sessions and wipes cryptographic access tokens immediately across the fleet network.</p>
+</div>
+<!-- Technical Details Gauge (Placeholder for maritime feel) -->
+<div class="glass-panel p-6 rounded-lg">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4">NETWORK TRUST SCORE</p>
+<div class="relative h-24 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container" cx="50%" cy="50%" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary shadow-[0_0_10px_rgba(142,213,255,0.5)]" cx="50%" cy="50%" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="25.12" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-data-mono text-headline-md text-on-surface">0.92</span>
+<span class="font-label-caps text-[9px] text-primary">SECURE</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Success Feedback (Hidden by default, shown for structure) -->
+<div class="hidden fixed bottom-8 right-8 bg-surface-container-highest border border-primary/40 px-6 py-4 rounded-lg shadow-2xl flex items-center gap-4 z-[100]">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<div>
+<p class="font-title-sm text-on-surface">Permissions Updated</p>
+<p class="text-[12px] text-on-surface-variant">Changes propagated to 2 assets successfully.</p>
+</div>
+</div>
+</body></html>

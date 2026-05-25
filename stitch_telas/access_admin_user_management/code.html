@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .status-shimmer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            100% { left: 200%; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#081425",
+                        "on-tertiary-container": "#3c4459",
+                        "primary-container": "#38bdf8",
+                        "outline": "#87929a",
+                        "inverse-primary": "#00668a",
+                        "secondary-container": "#39485a",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-container": "#a7b6cc",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#263143",
+                        "tertiary-container": "#a9b1ca",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface-container-lowest": "#040e1f",
+                        "on-tertiary-fixed": "#131b2e",
+                        "primary-fixed": "#c4e7ff",
+                        "on-secondary-fixed-variant": "#39485a",
+                        "on-primary": "#00354a",
+                        "on-surface-variant": "#bdc8d1",
+                        "surface-tint": "#7bd0ff",
+                        "secondary-fixed-dim": "#b9c8de",
+                        "inverse-surface": "#d8e3fb",
+                        "surface-container-high": "#1f2a3c",
+                        "primary": "#8ed5ff",
+                        "surface-container-low": "#111c2d",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "surface-container": "#152031",
+                        "outline-variant": "#3e484f",
+                        "on-primary-container": "#004965",
+                        "secondary-fixed": "#d4e4fa",
+                        "secondary": "#b9c8de",
+                        "surface-bright": "#2f3a4c",
+                        "tertiary-fixed": "#dae2fd",
+                        "tertiary": "#c5cce6",
+                        "surface-dim": "#081425",
+                        "on-tertiary": "#283044",
+                        "primary-fixed-dim": "#7bd0ff",
+                        "on-error": "#690005",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#2a3548",
+                        "on-secondary-fixed": "#0d1c2d",
+                        "background": "#081425",
+                        "on-primary-fixed": "#001e2c",
+                        "surface-variant": "#2a3548",
+                        "on-surface": "#d8e3fb",
+                        "on-primary-fixed-variant": "#004c69",
+                        "on-secondary": "#233143",
+                        "on-background": "#d8e3fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "unit": "4px",
+                        "stack-md": "16px",
+                        "stack-tight": "4px",
+                        "grid-columns": "12",
+                        "panel-gap": "12px",
+                        "max-width": "1600px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface/80 backdrop-blur-md border-b border-white/10 shadow-[0_0_15px_rgba(142,213,255,0.1)]">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-display-lg tracking-tight text-primary">MARITIME COMMAND</span>
+<div class="h-8 w-px bg-white/10 mx-2"></div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-lowest border border-white/10 rounded px-10 py-1.5 text-body-sm focus:ring-1 focus:ring-primary outline-none w-64" placeholder="Quick search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">help</span>
+</div>
+<div class="flex items-center gap-3 border-l border-white/10 pl-6 cursor-pointer active:opacity-80 transition-all">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface">CHIEF OFFICER</p>
+<p class="text-[10px] text-primary">Alpha Fleet Admin</p>
+</div>
+<img alt="Chief Officer Profile" class="w-10 h-10 rounded-full border border-primary/30" data-alt="A portrait of a professional maritime officer in a dark blue naval uniform, standing on the deck of a modern vessel during twilight. The background shows blurred industrial ship hardware and a deep blue oceanic sky. The lighting is crisp and cinematic, emphasizing a professional and authoritative atmosphere aligned with high-tech maritime operations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0awrlORSx2R-_7o1d61saReZ30kTsgT_wAYtbqv3FDI0n8xKc_-AfyhnKGD0MKaiz0OUXRcPHPTYFSNRDU-9sQa_XIyCCCkKBH6LRpLcE4-xzPkCQKvttNvgMVBYf5VqO3X3nGZJAztqsNiLppyyY7K88Fcyh5HpLKAuRuQ8xw6tJoKsBppr-RHzHH-pjK2r6yJOBi5NdlP8_-OQ4NUSgNtK7kS2P01QpAu0QutOYhlxkAEIUwhPN4ks7JNDlESSE-CZ7lXWDnxeF"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container flex flex-col pt-20 pb-4 border-r border-white/10 z-40">
+<div class="px-6 py-4 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">anchor</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Fleet Alpha</h2>
+<p class="font-label-caps text-[10px] text-primary">Vessel Status: Active</p>
+</div>
+</div>
+<nav class="mt-6 flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-caps text-label-caps">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-caps text-label-caps">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-label-caps">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-caps text-label-caps">Audit &amp; Governance</span>
+</a>
+<!-- Active State: Access & Admin -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/20 text-primary border-r-4 border-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-caps text-label-caps">Access &amp; Admin</span>
+</a>
+</nav>
+<div class="px-4 space-y-1 mt-auto pt-4 border-t border-white/5">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pl-64 pt-16 h-screen overflow-hidden flex bg-surface">
+<!-- Action Rail / Sub-Navigation Area -->
+<div class="w-72 bg-surface-container-low border-r border-white/10 flex flex-col">
+<div class="p-container-padding space-y-6">
+<div>
+<h3 class="font-label-caps text-label-caps text-outline mb-4">MANAGEMENT</h3>
+<nav class="space-y-2">
+<button class="w-full flex items-center justify-between p-3 rounded bg-primary-container/10 border border-primary/20 text-primary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">User Directory</span>
+</div>
+<span class="bg-primary/20 text-[10px] px-1.5 py-0.5 rounded">42</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">shield_person</span>
+<span class="font-body-md text-body-md">Roles</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-body-md text-body-md">Audit Logs</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 text-on-surface-variant hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">policy</span>
+<span class="font-body-md text-body-md">Policy Settings</span>
+</button>
+</nav>
+</div>
+<div class="pt-6 border-t border-white/5">
+<h3 class="font-label-caps text-label-caps text-outline mb-4">QUICK FILTERS</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 glass-panel border-l-4 border-error hover:bg-error/10 cursor-pointer transition-all">
+<span class="font-body-sm text-body-sm text-error">Overdue Review</span>
+<span class="font-data-mono text-data-mono bg-error/20 px-2 rounded">08</span>
+</div>
+<div class="flex items-center justify-between p-3 glass-panel border-l-4 border-primary hover:bg-primary/10 cursor-pointer transition-all">
+<span class="font-body-sm text-body-sm text-primary">Critical Roles</span>
+<span class="font-data-mono text-data-mono bg-primary/20 px-2 rounded">12</span>
+</div>
+<div class="flex items-center justify-between p-3 glass-panel border-l-4 border-tertiary hover:bg-tertiary/10 cursor-pointer transition-all">
+<span class="font-body-sm text-body-sm text-tertiary">MFA Incomplete</span>
+<span class="font-data-mono text-data-mono bg-tertiary/20 px-2 rounded">04</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-container-padding bg-surface-container-highest/30">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">verified_user</span>
+<span class="font-label-caps text-[10px] text-outline">SECURITY SCORE</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[88%] status-shimmer"></div>
+</div>
+<p class="mt-2 font-data-mono text-[10px] text-on-surface-variant text-right">88% OPERATIONAL HEALTH</p>
+</div>
+</div>
+<!-- Main Workspace Area -->
+<section class="flex-1 overflow-y-auto p-container-padding">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Access &amp; Admin Management</h1>
+<p class="text-on-surface-variant font-body-md mt-1">Manage personnel clearance, role-based controls, and security auditing.</p>
+</div>
+<button class="bg-primary text-on-primary-container px-6 py-2 rounded flex items-center gap-2 font-label-caps text-label-caps hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-sm">person_add</span>
+                    INVITE OPERATOR
+                </button>
+</div>
+<!-- Management Table -->
+<div class="glass-panel rounded-lg overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-highest/50 border-b border-white/10">
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline">USER NAME / AVATAR</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline">ROLE</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline">MFA STATUS</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline">PERMISSION SCOPE</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline">ACCESS REVIEW</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-outline text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- User Row 1 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Operator Avatar" class="w-10 h-10 rounded border border-white/10" data-alt="A close-up headshot of a technical fleet coordinator with glasses, working in a dimly lit server room environment. The blue light from server racks reflects on their face. The overall mood is focused and highly professional, utilizing the 'glass and steel' aesthetic of a high-tech control center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6b_T6PHgcWob1LoJrvhBmi9lYU81oycx43oQG9qxx6H1lmhL4_2JhfHPbHy1xYIw5t0zPj63rKAwJL0WLTDpG9HPlbGmxyjwsaT49sjMhiridHesnPvIqPiOtasS_bCF-33c_3MvViTUe95H2_r1qKaEbz2lypfDWB1BPfWuGEx_fMgX_GUw-f_dsUUpOK3x9twXlL17qe_uXOtOMjEH0dGsXbnj6WxooKwdTvs3Y4cbIrnHkYfl_BTspjVNvS89RFDB67T32P2l1"/>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Capt. Elena Vance</p>
+<p class="font-data-mono text-[10px] text-outline">UID: OP-8821-X</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-primary/10 border border-primary/30 text-primary text-[10px] font-bold rounded-full">PORTAL ADMIN</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-data-mono text-data-mono">Enforced</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1 max-w-[200px]">
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">MAR-2024</span>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">YCH-102</span>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">+4 Global</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="space-y-1">
+<p class="font-data-mono text-data-mono text-on-surface">24 OCT 2024</p>
+<div class="flex items-center gap-1.5 text-outline">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="text-[10px] font-label-caps">SCHEDULED</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-error hover:bg-error/10 rounded transition-colors group-hover:opacity-100 opacity-0">
+<span class="material-symbols-outlined">lock_reset</span>
+</button>
+<button class="px-4 py-1.5 bg-error/10 border border-error/50 text-error hover:bg-error text-[10px] font-bold rounded-lg transition-all hover:text-on-error">REVOKE ACCESS</button>
+</td>
+</tr>
+<!-- User Row 2 (Critical Alert) -->
+<tr class="hover:bg-white/[0.02] transition-colors group bg-error/5">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Operator Avatar" class="w-10 h-10 rounded border border-error/30" data-alt="A portrait of a maritime engineer in the engine room of a luxury yacht. The lighting is dominated by orange and blue industrial LEDs. The engineer is wearing protective gear and looking directly at the camera with a serious expression. The style is industrial and data-heavy, reflecting the steel and glass aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGPC0smclkLZKPa5FJGG7D6OHRi96ZjLpxZyyG8rTRBFe2tWNQLZdg6E0XuCIMKXY6CYP64j2Lf8Vpddoeq_mt7rCO57Fq6KbZdje68uIwuq5twkmXsTEOwDK3VCcCfXL0Ji8XfkmRlLvATcUEET0eGHpRTAPX43UcdiiMpUbvEsjxBwNDxZSHUPKdyzw7kLCl6-eNH61Rz2eCDdRpC6v8p8StsUyMBG5CCi1rQxVGex0mJaV5U2nOn13A6Dp3_4mhbCIHTHYZPIV2"/>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-outline border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Markus J. Solen</p>
+<p class="font-data-mono text-[10px] text-error font-bold">CRITICAL REVIEW REQ.</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-tertiary-container/10 border border-tertiary-container/30 text-tertiary-container text-[10px] font-bold rounded-full">CENTRAL OPS</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-[18px]">report</span>
+<span class="font-data-mono text-data-mono">Pending Setup</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1 max-w-[200px]">
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">YCH-102</span>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">OPS-ALFA</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="space-y-1">
+<p class="font-data-mono text-data-mono text-error font-bold">02 AUG 2024</p>
+<div class="flex items-center gap-1.5 text-error animate-pulse">
+<span class="material-symbols-outlined text-xs">warning</span>
+<span class="text-[10px] font-label-caps">OVERDUE 14D</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-1.5 bg-error text-on-error text-[10px] font-bold rounded-lg transition-all shadow-[0_0_15px_rgba(255,180,171,0.3)]">REVOKE ACCESS</button>
+</td>
+</tr>
+<!-- User Row 3 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Operator Avatar" class="w-10 h-10 rounded border border-white/10" data-alt="A portrait of a technical coordination expert in a bright, modern office with large windows overlooking a shipyard. The desk is filled with high-resolution monitors displaying maritime charts. The lighting is natural and crisp. The aesthetic is clean corporate modernism with maritime hardware influences." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDljDbjsW94Fw-38LtWcbP8rfh1N73GJzuAa-L61jOaurVp0HV11JWge9KzXyGYTxwZoy4usWwNYnluzYeN5FpPPGYhVCYymRDpj5atQBScwKbaD9uHpiP7ok7nNVJ-zBhI4ci8nZcDL5qwUeUpyExKkHfWfP5XyMg6QebQC5ICNpbf6SJ9XuGVXfmdWljU_3KauqOX_9QgfJTpcvVnmxlm5u3tnaNed0uCYn3OmqJtg57576VopJjErKk90Qfsdj1CAbzseBjhCP1"/>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Julian Ross</p>
+<p class="font-data-mono text-[10px] text-outline">UID: OP-4402-A</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-container/20 border border-secondary-container/50 text-secondary text-[10px] font-bold rounded-full">TECHNICAL COORD</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-data-mono text-data-mono">Enforced</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1 max-w-[200px]">
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">MAR-2024</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="space-y-1">
+<p class="font-data-mono text-data-mono text-on-surface">15 NOV 2024</p>
+<div class="flex items-center gap-1.5 text-outline">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="text-[10px] font-label-caps">SCHEDULED</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline hover:bg-white/5 rounded transition-colors group-hover:opacity-100 opacity-0">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="px-4 py-1.5 bg-error/10 border border-error/50 text-error hover:bg-error text-[10px] font-bold rounded-lg transition-all hover:text-on-error">REVOKE ACCESS</button>
+</td>
+</tr>
+<!-- User Row 4 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Operator Avatar" class="w-10 h-10 rounded border border-white/10" data-alt="A portrait of a field team technician wearing a high-visibility tactical vest, holding a ruggedized tablet. They are standing on the pier of a busy commercial port during dawn. The cool morning light creates long shadows and a focused, ready-for-action mood. Dark-themed interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG5XkZO4xFOSdneu5XXpliGmBrbzaUgHCi9iwC4L0bZ0HOfFBkrWOpyklXNnYSuF5srZmZ4JPfyBeQYP_akhcXXZxd0IgRouKQfTfAk0Nqt-vZbtWf6tc7q4zZdMeOzKX83shZjNKEcpSLEbeOMWGfK3N0SFjP1ecuZ8gOO9nkcTSkCuthc8sMLwtL0No6kPGX4v182D5j_1pA1SmppgW2giqTiyp0CMMHCl9lvl9dx4R8KTzOltSjmBQ3hvjWG_kfeF4eBAe2b3Ws"/>
+<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-yellow-500 border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">Sarah Kim</p>
+<p class="font-data-mono text-[10px] text-outline">UID: OP-1192-M</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-outline/10 border border-outline/30 text-on-surface-variant text-[10px] font-bold rounded-full">FIELD TEAM</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-data-mono text-data-mono">Enforced</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1 max-w-[200px]">
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-[10px] font-data-mono border border-white/10">YCH-102</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="space-y-1">
+<p class="font-data-mono text-data-mono text-on-surface">30 SEP 2024</p>
+<div class="flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-xs">event</span>
+<span class="text-[10px] font-label-caps uppercase">DUE SOON</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline hover:bg-white/5 rounded transition-colors group-hover:opacity-100 opacity-0">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="px-4 py-1.5 bg-error/10 border border-error/50 text-error hover:bg-error text-[10px] font-bold rounded-lg transition-all hover:text-on-error">REVOKE ACCESS</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="bg-surface-container-high/50 p-4 border-t border-white/10 flex justify-between items-center">
+<p class="text-[10px] font-label-caps text-outline">SHOWING 4 OF 42 TOTAL OPERATORS</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-white/10 rounded text-[10px] font-bold text-outline hover:text-on-surface">PREVIOUS</button>
+<button class="px-3 py-1 border border-primary/30 rounded text-[10px] font-bold text-primary hover:bg-primary/10">NEXT PAGE</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Bottom Widgets -->
+<div class="grid grid-cols-3 gap-panel-gap mt-8">
+<div class="glass-panel p-4 rounded-lg border-l-4 border-primary">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-label-caps text-label-caps text-outline">POLICIES</h4>
+<span class="material-symbols-outlined text-primary text-lg">shield</span>
+</div>
+<p class="text-display-lg font-headline-md text-on-surface">14 <span class="text-body-sm font-normal text-outline">Active Policies</span></p>
+<div class="mt-4 space-y-2">
+<div class="flex justify-between text-[10px] font-data-mono">
+<span class="text-outline">MFA Enforcement</span>
+<span class="text-primary">ENABLED</span>
+</div>
+<div class="flex justify-between text-[10px] font-data-mono">
+<span class="text-outline">Session Timeout</span>
+<span class="text-on-surface">240m</span>
+</div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-lg border-l-4 border-tertiary">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-label-caps text-label-caps text-outline">SLA BREACHES</h4>
+<span class="material-symbols-outlined text-tertiary text-lg">history</span>
+</div>
+<p class="text-display-lg font-headline-md text-on-surface">02 <span class="text-body-sm font-normal text-outline">Open Audits</span></p>
+<div class="mt-4">
+<div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[15%]"></div>
+</div>
+<p class="text-[10px] mt-2 text-tertiary font-bold">15% OF ALL ASSETS REQUIRE REVIEW</p>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-lg border-l-4 border-error">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-label-caps text-label-caps text-outline">RISK ALERT</h4>
+<span class="material-symbols-outlined text-error text-lg">gpp_maybe</span>
+</div>
+<p class="text-display-lg font-headline-md text-error">HIGH <span class="text-body-sm font-normal text-outline">Security Tier</span></p>
+<p class="mt-2 text-[10px] text-on-surface-variant italic font-body-sm">8 over-privileged users detected in Asset YCH-102. Migration required.</p>
+</div>
+</div>
+</section>
+</main>
+</body></html>

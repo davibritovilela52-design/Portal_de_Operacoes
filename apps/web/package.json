@@ -1,0 +1,25 @@
+{
+  "name": "@ops-portal/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node ../../scripts/clean-dev-artifacts.mjs web",
+    "prebuild": "node ../../scripts/clean-dev-artifacts.mjs web",
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@better-auth/prisma-adapter": "^1.6.11",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "better-auth": "^1.6.11",
+    "next": "^15.0.0",
+    "pg": "^8.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-qr-code": "^2.0.21"
+  }
+}

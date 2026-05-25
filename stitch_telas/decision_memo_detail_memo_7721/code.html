@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-tertiary-container": "#3c4459",
+                    "surface-container": "#152031",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#a9b1ca",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline": "#87929a",
+                    "secondary-container": "#39485a",
+                    "primary-container": "#38bdf8",
+                    "on-secondary": "#233143",
+                    "inverse-surface": "#d8e3fb",
+                    "on-primary-container": "#004965",
+                    "surface-dim": "#081425",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-variant": "#2a3548",
+                    "tertiary": "#c5cce6",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-primary": "#00354a",
+                    "inverse-primary": "#00668a",
+                    "surface-container-highest": "#2a3548",
+                    "on-background": "#d8e3fb",
+                    "outline-variant": "#3e484f",
+                    "background": "#081425",
+                    "on-surface-variant": "#bdc8d1",
+                    "surface-bright": "#2f3a4c",
+                    "surface": "#081425",
+                    "surface-container-high": "#1f2a3c",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-primary-fixed": "#001e2c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "inverse-on-surface": "#263143",
+                    "surface-container-low": "#111c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "error-container": "#93000a",
+                    "secondary": "#b9c8de",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "primary-fixed": "#c4e7ff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-primary-fixed-variant": "#004c69",
+                    "on-tertiary": "#283044",
+                    "surface-container-lowest": "#040e1f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-tight": "4px",
+                    "panel-gap": "12px",
+                    "max-width": "1600px",
+                    "stack-md": "16px",
+                    "container-padding": "24px",
+                    "unit": "4px",
+                    "grid-columns": "12"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .parchment-surface {
+            background-color: #f8fafc;
+            color: #0f172a;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        .glass-steel-border {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-accent-primary {
+            box-shadow: 0 0 8px 0 rgba(142, 213, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/10 bg-surface-container-lowest flex flex-col py-stack-md z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Operations Portal</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Vessel ID: MAR-7700</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="report_problem">report_problem</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold bg-primary-container/10 border-r-2 border-primary transition-all rounded" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-body-md text-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Access &amp; Admin</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 border-b border-outline-variant/10 bg-surface-container/80 backdrop-blur-md flex items-center justify-between px-container-padding z-40">
+<div class="flex items-center gap-4">
+<span class="font-title-sm text-title-sm text-on-surface">Decision Memo Detail</span>
+<div class="h-4 w-px bg-outline-variant/30"></div>
+<span class="font-data-mono text-data-mono text-primary bg-primary-container/10 px-2 py-0.5 rounded">MEMO-ID: DM-2023-0882-P1</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="search">search</span>
+</span>
+<input class="bg-surface-container-low border border-outline-variant/20 rounded-lg pl-10 pr-4 py-1.5 text-body-sm w-64 focus:outline-none focus:ring-1 focus:ring-primary/50" placeholder="Search archives..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span></button>
+<div class="flex items-center gap-2 pl-2">
+<img alt="User profile" class="w-8 h-8 rounded-full border border-primary/30" data-alt="A professional headshot of a marine operations director in a navy blue uniform, set against a blurred background of a modern yacht bridge with glowing displays. The lighting is crisp and cinematic, emphasizing authority and high-tech expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK0tOZ28t_VPat-soVxRw4bfrV-amyz42RX8kh9YOdvULItTJYdj1KiRa6eI8dvoXHDXL0V_yrTci7jYst6oumDZThH7EZrQvUL-BREuqT9xPW9Jk4bjQCq2xhkN_BAKIqTbmXmQUiaGmOqT1KG_vFkuTDKtKCbEK-xBbKabQzLVhge0cggmQnd7PQFOnvLniQQUb8srORMbh7XgLR-yEmwr0anzrU1JIM2lnaJ14crFN7qDfBzz176tpaecTVUBQutcX1E_GxKnK3"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-16 px-container-padding min-h-screen">
+<div class="max-w-max-width mx-auto">
+<!-- Actions Bar -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-2">
+<span>Governance</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span>Decision Memos</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">DM-2023-0882-P1</span>
+</nav>
+<h2 class="font-display-lg text-display-lg text-on-surface">Emergency P1 Maintenance Bypass</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-high border border-outline-variant/30 text-on-surface hover:bg-surface-variant transition-colors rounded">
+<span class="material-symbols-outlined text-[20px]" data-icon="print">print</span>
+<span class="font-label-caps text-label-caps">PRINT PDF</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary-fixed hover:bg-primary-fixed-dim transition-colors glow-accent-primary rounded font-bold">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps">REFERENCE FOR RECTIFICATION</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-panel-gap">
+<!-- The Immutable Memo (The "Parchment") -->
+<div class="col-span-12 lg:col-span-9">
+<div class="parchment-surface rounded-xl p-12 relative overflow-hidden">
+<!-- Immutability Watermark -->
+<div class="absolute top-8 right-8 pointer-events-none opacity-20 rotate-12">
+<div class="border-4 border-error px-6 py-2 rounded-lg">
+<span class="font-display-lg text-display-lg text-error font-extrabold uppercase">IMMUTABLE</span>
+</div>
+</div>
+<!-- Header Info -->
+<div class="border-b-2 border-slate-900/10 pb-8 mb-10 flex justify-between items-start">
+<div>
+<div class="text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase mb-2">Document Identifier</div>
+<div class="font-data-mono text-xl font-bold text-slate-900">MEMO-ID: DM-2023-0882-P1</div>
+</div>
+<div class="text-right">
+<div class="text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase mb-2">Security Hash</div>
+<div class="font-data-mono text-xs text-slate-400">SHA-256: 8f3c...a92b</div>
+</div>
+</div>
+<!-- Grid for Meta -->
+<div class="grid grid-cols-3 gap-8 mb-12">
+<div>
+<label class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase block mb-1">Status</label>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="font-body-md font-bold text-slate-900">CLOSED &amp; LOCKED</span>
+</div>
+</div>
+<div>
+<label class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase block mb-1">Timestamp (UTC)</label>
+<div class="font-body-md text-slate-900">2023-11-24 14:22:09</div>
+</div>
+<div>
+<label class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase block mb-1">Severity Context</label>
+<div class="font-body-md text-error font-bold italic">PRIORITY 1 - SAFETY CRITICAL</div>
+</div>
+</div>
+<!-- Section 1: Context -->
+<section class="mb-12">
+<h3 class="font-title-sm text-title-sm text-slate-900 border-l-4 border-primary pl-4 mb-4">1. Context &amp; Problem Description</h3>
+<div class="font-body-md text-slate-700 leading-relaxed max-w-3xl">
+                                At 14:05 UTC, Engine Room 2 reported a catastrophic failure of the cooling pump secondary valve. Under standard Operating Procedure (SOP-99), this requires an immediate vessel-wide power down for component replacement. However, current positioning is within the High Traffic Corridor (HTC-Beta) with a Category 4 storm front approaching within 45 minutes. A full power down would leave the vessel without propulsion or stabilized heading in extreme weather conditions.
+                            </div>
+</section>
+<!-- Section 2: Decision -->
+<section class="mb-12 bg-slate-900/5 p-6 rounded-lg border border-slate-900/10">
+<h3 class="font-title-sm text-title-sm text-slate-900 mb-4">2. Final Decision &amp; Action Taken</h3>
+<div class="font-body-md text-slate-900 font-semibold leading-relaxed">
+                                AUTHORIZE bypass of the automated P1 Safety Shutdown interlock on Engine 2. Engine will continue operation at 65% load to maintain dynamic positioning. Cooling will be supplemented by manual cross-connection to Auxiliary System 4. This bypass is granted for a maximum of 120 minutes or until the vessel clears the HTC-Beta corridor.
+                            </div>
+</section>
+<!-- Section 3: Alternatives -->
+<section class="mb-12">
+<h3 class="font-title-sm text-title-sm text-slate-900 mb-4">3. Alternatives Considered</h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-slate-400 text-[18px] mt-0.5" data-icon="close">close</span>
+<span class="font-body-md text-slate-700"><strong>Full Shutdown:</strong> Rejected due to immediate threat to hull integrity from sea state and collision risk in high-density traffic.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-slate-400 text-[18px] mt-0.5" data-icon="close">close</span>
+<span class="font-body-md text-slate-700"><strong>Tug Assistance:</strong> Requested, but response time is 90 minutes. Rejected as insufficient for the 45-minute storm window.</span>
+</li>
+</ul>
+</section>
+<!-- Section 4: Impact -->
+<section class="mb-12">
+<h3 class="font-title-sm text-title-sm text-slate-900 mb-4">4. Expected Impact</h3>
+<div class="grid grid-cols-2 gap-6">
+<div class="p-4 border border-slate-200 rounded">
+<span class="font-label-caps text-slate-400 block mb-1">TECHNICAL</span>
+<p class="font-body-sm text-slate-700">Increased thermal stress on Engine 2 manifold. Potential 15% reduction in total component lifespan. Risk of seal failure in Aux System 4.</p>
+</div>
+<div class="p-4 border border-slate-200 rounded">
+<span class="font-label-caps text-slate-400 block mb-1">OPERATIONAL</span>
+<p class="font-body-sm text-slate-700">Maintained vessel control. Safety of crew guaranteed during storm transit. Post-transit downtime increased by 48 hours for deep-inspect.</p>
+</div>
+</div>
+</section>
+<!-- Footer: Signature -->
+<div class="mt-16 pt-8 border-t border-slate-900/10 flex justify-between items-end">
+<div>
+<label class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase block mb-4">Authorized By</label>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-slate-900 text-white flex items-center justify-center rounded">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<div class="font-body-md font-bold text-slate-900">Capt. Alexander Sterling</div>
+<div class="font-body-sm text-slate-500 italic">Fleet Operations Commander</div>
+</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-data-mono text-[10px] text-slate-400 mb-2">DIGITAL SIGNATURE VERIFIED</div>
+<img alt="Signature" class="h-12 mix-blend-multiply opacity-80" data-alt="A high-contrast, black and white close-up of a digital signature script, rendered with a slight textured ink effect on a light background. The style is minimalist and official, reflecting a formal document authentication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUSBYHhJTUqKWbC5h4M2hio4p-t0yj-TNlMdXgRs6KHLPqG0Fy1of43pa7ozXjJVu5LU1vGIpOgCAX-HRCfuvEZXZzoNMrfL6_4GDcGxBthE9YWkvK3WB4wbZv2u3kCe3OXCWA8HI4_OZgZ9-kd_GlV4ZpFZDZsQWkiiOz2ElOgfgEeOS32Jles9MaHK0UkvPWA8K1uznCMWqVJhsL00oQkYVkiq6--dkbYOhwIgcnjTuVU13xCk7ScwGDgi2hGyakDrDF4hNOuA-Q"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Panel: Artifacts & Logs -->
+<div class="col-span-12 lg:col-span-3 space-y-panel-gap">
+<!-- Section 5: Linked Artifacts -->
+<div class="bg-surface-container-high rounded-xl p-6 glass-steel-border">
+<h4 class="font-label-caps text-label-caps text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="link">link</span>
+                            LINKED ARTIFACTS
+                        </h4>
+<div class="space-y-3">
+<div class="p-3 bg-surface-container-low rounded border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex justify-between mb-1">
+<span class="font-data-mono text-[10px] text-error">INCIDENT-4492</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="font-body-sm text-on-surface">Cooling Pump Failure - E2</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex justify-between mb-1">
+<span class="font-data-mono text-[10px] text-primary">TICKET-8812</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="font-body-sm text-on-surface">Emergency Parts Request</div>
+</div>
+</div>
+</div>
+<!-- Audit Trail -->
+<div class="bg-surface-container-high rounded-xl p-6 glass-steel-border">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-6">AUDIT TRAIL</h4>
+<div class="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/30">
+<div class="relative">
+<span class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-primary border-4 border-surface-container-high"></span>
+<div class="font-body-sm text-on-surface font-semibold">Memo Locked</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">Today, 14:25 UTC</div>
+</div>
+<div class="relative">
+<span class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-outline border-4 border-surface-container-high"></span>
+<div class="font-body-sm text-on-surface">Signature Appended</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">Today, 14:22 UTC</div>
+</div>
+<div class="relative">
+<span class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-outline border-4 border-surface-container-high"></span>
+<div class="font-body-sm text-on-surface text-on-surface-variant/80">Draft Created</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">Today, 14:15 UTC</div>
+</div>
+</div>
+</div>
+<!-- Technical Gauge -->
+<div class="bg-surface-container-high rounded-xl p-6 glass-steel-border">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4">ENGINE 2 THERMAL STATUS</h4>
+<div class="flex items-center gap-4 mb-4">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full rotate-[-90deg]" viewbox="0 0 36 36">
+<circle class="stroke-surface-variant" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-error" cx="18" cy="18" fill="none" r="16" stroke-dasharray="85, 100" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-data-mono text-xs text-error">85°C</div>
+</div>
+<div>
+<div class="font-body-sm text-on-surface font-bold">Critical Threshold</div>
+<p class="text-[11px] text-on-surface-variant">Running +12°C over safety spec due to bypass.</p>
+</div>
+</div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-error w-[85%] animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

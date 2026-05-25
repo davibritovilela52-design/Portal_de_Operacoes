@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#38bdf8",
+                    "on-tertiary-container": "#3c4459",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed": "#c4e7ff",
+                    "on-surface": "#d8e3fb",
+                    "surface-variant": "#2a3548",
+                    "surface-bright": "#2f3a4c",
+                    "primary": "#8ed5ff",
+                    "error-container": "#93000a",
+                    "surface-dim": "#081425",
+                    "surface-container-highest": "#2a3548",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "surface-container-lowest": "#040e1f",
+                    "on-background": "#d8e3fb",
+                    "on-primary-fixed": "#001e2c",
+                    "secondary": "#b9c8de",
+                    "outline": "#87929a",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-container": "#004965",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary": "#c5cce6",
+                    "inverse-primary": "#00668a",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#a9b1ca",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-tertiary": "#283044",
+                    "on-primary": "#00354a",
+                    "surface": "#081425",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "on-surface-variant": "#bdc8d1",
+                    "surface-container-high": "#1f2a3c",
+                    "on-secondary-container": "#a7b6cc",
+                    "inverse-surface": "#d8e3fb",
+                    "surface-container-low": "#111c2d",
+                    "outline-variant": "#3e484f",
+                    "background": "#081425",
+                    "secondary-fixed": "#d4e4fa",
+                    "surface-tint": "#7bd0ff",
+                    "secondary-container": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "inverse-on-surface": "#263143",
+                    "surface-container": "#152031"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "unit": "4px",
+                    "panel-gap": "12px",
+                    "container-padding": "24px",
+                    "grid-columns": "12",
+                    "stack-tight": "4px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-error {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.15);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest h-screen w-64 flex-shrink-0 border-r border-outline-variant/10 flex flex-col py-container-padding">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Operations Portal</h1>
+<p class="text-on-surface-variant font-body-sm">Vessel ID: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-body-md text-body-md">Audit &amp; Governance</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Access &amp; Admin</span>
+</div>
+<!-- Active State -->
+<div class="px-3 py-2 bg-secondary-container text-on-secondary-container border-r-2 border-primary flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="pumping_unit">CookingPot</span>
+<span class="font-body-md text-body-md">Cutover</span>
+</div>
+</nav>
+<div class="px-3 mt-auto space-y-1">
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</div>
+<div class="px-3 py-2 text-on-surface-variant hover:text-on-surface transition-colors duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col overflow-hidden bg-surface-dim">
+<!-- TopNavBar (Shared Component) -->
+<header class="w-full h-16 flex justify-between items-center px-container-padding sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Operations Portal</span>
+<div class="hidden md:flex items-center space-x-6">
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Fleet</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Logistics</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Safety</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 bg-surface-container text-on-surface font-title-sm text-title-sm rounded-lg hover:brightness-125 transition-all">Export Data</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:brightness-125 transition-all">New Incident</button>
+<div class="flex items-center gap-2 border-l border-outline-variant/20 ml-2 pl-4">
+<span class="material-symbols-outlined p-2 text-on-surface-variant cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined p-2 text-on-surface-variant cursor-pointer" data-icon="history">history</span>
+<img alt="User profile with role visibility" class="w-8 h-8 rounded-full bg-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdL_Xcoxb2HIQiJYVclwuccPma-B2m020aytvf3rDlV9WagwlQ1oUlwVWrQzNZ5bSRRX_xZZCDL0DkSDmyST_seWUEnadQbK3iMo_BpFst0fPsMcMPJYy-OnEPlBgvJjnVOcDxL7x7-Th-y2ml7U18ML7qXl1gSpi8_xVC57Y-AnE3AENOEQAlFWk95BjbTHW4v0AeZrRHgMHWkvcFnnV4vy482Ci4257ycg-NyDhGkoODHLFpZ9y6u6w6HF83WmujdsRQtEfrfvS0"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-container-padding space-y-6 max-w-max-width mx-auto w-full">
+<!-- Header Section with Global Block Alert -->
+<div class="glass-panel p-6 rounded-xl border-l-4 border-l-error glow-error">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-error text-[32px]" data-icon="block">block</span>
+<h2 class="font-display-lg text-display-lg text-error">Cutover Governance: BLOCKED</h2>
+</div>
+<p class="text-on-surface-variant max-w-2xl font-body-md">System migration and vessel handover sequence halted. Multiple critical validation failures detected in entity synchronization, documentation, and operational approval chains.</p>
+</div>
+<div class="text-right">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Target Window</span>
+<p class="font-data-mono text-title-sm text-on-surface">2024-10-12 08:00 UTC</p>
+<div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded bg-error/10 border border-error/20">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-error">FAILED PREREQUISITES</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-panel-gap">
+<!-- Data Sync Status -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-5 rounded-xl space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="sync_problem">sync_problem</span>
+                            Entity Count Sync
+                        </h3>
+<span class="font-data-mono text-error">98.2%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error w-[98.2%]"></div>
+</div>
+<p class="text-on-surface-variant font-body-sm">Requirement: 100% parity before execution. 154 entities remaining in queue.</p>
+<div class="space-y-2">
+<div class="flex justify-between font-data-mono text-body-sm p-2 bg-surface-container-low rounded border border-white/5">
+<span class="text-on-surface-variant">Vessel Inventory</span>
+<span class="text-primary">SYNCED</span>
+</div>
+<div class="flex justify-between font-data-mono text-body-sm p-2 bg-surface-container-low rounded border border-white/5">
+<span class="text-on-surface-variant">Maintenance Logs</span>
+<span class="text-error">FAILURE (142)</span>
+</div>
+<div class="flex justify-between font-data-mono text-body-sm p-2 bg-surface-container-low rounded border border-white/5">
+<span class="text-on-surface-variant">Crew Records</span>
+<span class="text-error">FAILURE (12)</span>
+</div>
+</div>
+</div>
+<!-- Documentation Vault -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-5 rounded-xl space-y-4">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+                        Critical Attachments
+                    </h3>
+<div class="flex items-center gap-4 py-2">
+<div class="text-4xl font-display-lg text-error">12</div>
+<div class="font-body-md text-on-surface-variant">Missing Mandatory<br/>Documents</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-3 bg-error-container/20 border border-error/30 rounded flex flex-col">
+<span class="font-label-caps text-error">SAFETY CERT</span>
+<span class="font-body-sm text-on-surface">MISSING</span>
+</div>
+<div class="p-3 bg-error-container/20 border border-error/30 rounded flex flex-col">
+<span class="font-label-caps text-error">FUEL MANIFEST</span>
+<span class="font-body-sm text-on-surface">INVALID</span>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container-highest hover:bg-surface-container-high transition-colors font-body-md text-primary flex items-center justify-center gap-2 rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="cloud_upload">cloud_upload</span>
+                        Upload Missing Docs
+                    </button>
+</div>
+<!-- Agenda Migration -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-5 rounded-xl space-y-4">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="event_note">event_note</span>
+                        Agenda Forecast
+                    </h3>
+<div class="relative pt-6">
+<div class="flex justify-between mb-2">
+<span class="font-label-caps text-on-surface-variant">Current: 45 Days</span>
+<span class="font-label-caps text-primary">Required: 90 Days</span>
+</div>
+<div class="h-4 w-full bg-surface-container rounded border border-white/5 relative">
+<div class="h-full bg-error w-1/2 relative">
+<div class="absolute inset-0 shimmer animate-[shimmer_2s_infinite]"></div>
+</div>
+<div class="absolute top-[-8px] left-1/2 w-[2px] h-[20px] bg-primary"></div>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded border border-outline-variant/20">
+<p class="font-body-sm text-on-surface-variant italic">"Future scheduling buffer insufficient for deep-sea operations protocol. Extension required."</p>
+</div>
+</div>
+<!-- Central Ops Approval -->
+<div class="col-span-12 lg:col-span-8 glass-panel p-6 rounded-xl flex flex-col md:flex-row gap-6">
+<div class="w-full md:w-1/3 flex flex-col justify-center items-center p-4 border-r border-outline-variant/10">
+<span class="material-symbols-outlined text-error text-[48px] mb-2" data-icon="cancel">cancel</span>
+<span class="font-headline-md text-headline-md text-error">Declined</span>
+<span class="font-label-caps text-on-surface-variant">Central Operations</span>
+</div>
+<div class="flex-1 space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-title-sm text-title-sm text-on-surface">Governance Review Comments</h4>
+<span class="font-data-mono text-body-sm text-on-surface-variant">Reviewed: 2h ago</span>
+</div>
+<div class="space-y-3">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="Ops Officer" data-alt="Close up profile picture of a maritime operations officer in a clean professional uniform, set against a blurred command center background with cool blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8wSRspabQotr6qve6hjjuDtZ03MeHgNPYwMhl5UN8_b5SRvUsa1MjqqAKRgB73G-I3_7yScry2QVr2D4uXwRRgEhe6M22HRZyzSSvtQqR3M_B7UY10JTZRs7VDFpD5RIouSDCSsi9xjTSpHQ3jpBOmff0ViSMI9E53HC6-ZSqTeDhHYa3-8G0P8xufz_Voz49ZuWTVZ0cPFlm-n3er6RyPnZm6TLC7Xg1VUm6ynKhUBEo3k75BK5YOEKclUb7PLfT-UfCYxsl77wb"/>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-on-surface"><span class="font-bold">Chief Officer Vance:</span> Cutover cannot proceed while safety certifications are pending. The 98% entity sync includes critical engine spare parts which are not accounted for in the new system.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="Auditor" data-alt="Professional avatar of a corporate auditor, wearing a modern business suit with a neutral expression, positioned in a high-tech office with glass walls and steel accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9i4jk256POxrfyBVndIT3HMhTpMzqQmBhRi1IULDinBhMyXgJfEgLYXh9u4pdSR-vc-H0_4EB5AiLhfvjlwBrgIHUGkozQjVHwyN7sUeWym5ln0dl9ZAR92zcz59qO067rgMtsNN9l8LrXqjrAZUw76TMrh-7gykiAGPkI31xCovwHZm4r8T8jqhLc6KZq7Tms1DH4Pp98DRKmHHa_RJBhz6ZZPJ8TLbLeBQWX-tGr7hNl0jvWi2BxnisZzF6KDdXUYBgkZTVGIcs"/>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-on-surface"><span class="font-bold">Compliance Audit:</span> Flagged. 45-day agenda migration fails the MARPOL Annex VI compliance checklist for long-range vessel transit planning.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Final Execution Control -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-6 rounded-xl flex flex-col justify-between border-2 border-error/20">
+<div class="space-y-4">
+<h4 class="font-title-sm text-title-sm text-on-surface">Execution Command</h4>
+<div class="p-4 bg-error-container/10 border border-error/20 rounded">
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-error font-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                                    Full Entity Parity Required
+                                </li>
+<li class="flex items-center gap-2 text-error font-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                                    Mandatory Attachments Missing
+                                </li>
+<li class="flex items-center gap-2 text-error font-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                                    90-Day Forecast Mandatory
+                                </li>
+<li class="flex items-center gap-2 text-error font-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+                                    Ops Approval Required
+                                </li>
+</ul>
+</div>
+</div>
+<div class="mt-6">
+<button class="w-full py-4 bg-surface-container text-on-surface-variant font-headline-md text-headline-md rounded-lg flex items-center justify-center gap-3 cursor-not-allowed opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+                            Execute Cutover
+                        </button>
+<p class="text-center font-label-caps text-error mt-3 uppercase tracking-widest">Unauthorized: Missing Prerequisites</p>
+</div>
+</div>
+</div>
+<!-- Technical Detail Table -->
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm text-on-surface">Sub-System Migration Audit</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded bg-surface-container-high border border-outline-variant/20 font-data-mono text-body-sm text-on-surface">Vessel_ID: MAR-2024</span>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">
+<th class="px-6 py-3 border-b border-outline-variant/10">Module ID</th>
+<th class="px-6 py-3 border-b border-outline-variant/10">Process Owner</th>
+<th class="px-6 py-3 border-b border-outline-variant/10">Status</th>
+<th class="px-6 py-3 border-b border-outline-variant/10">Integrity</th>
+<th class="px-6 py-3 border-b border-outline-variant/10">Action</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-body-sm">
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 text-on-surface">PROP-CTRL-01</td>
+<td class="px-6 py-4 text-on-surface-variant">Eng. Sarah Chen</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary">COMPLETED</span>
+</td>
+<td class="px-6 py-4 text-on-surface">100%</td>
+<td class="px-6 py-4"><span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="more_vert">more_vert</span></td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 text-on-surface">NAV-LOG-04</td>
+<td class="px-6 py-4 text-on-surface-variant">Capt. Miller</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded bg-error/10 border border-error/20 text-error">FAILED</span>
+</td>
+<td class="px-6 py-4 text-error">92.4%</td>
+<td class="px-6 py-4"><span class="material-symbols-outlined text-primary cursor-pointer" data-icon="rebase_edit">rebase_edit</span></td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 text-on-surface">SUPPLY-INV-22</td>
+<td class="px-6 py-4 text-on-surface-variant">Logistics Core</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded bg-error/10 border border-error/20 text-error">BLOCKED</span>
+</td>
+<td class="px-6 py-4 text-error">--</td>
+<td class="px-6 py-4"><span class="material-symbols-outlined text-primary cursor-pointer" data-icon="rebase_edit">rebase_edit</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+        }
+        .shimmer-sla {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-sla::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-low": "#111c2d",
+                "surface-variant": "#2a3548",
+                "surface-container": "#152031",
+                "on-secondary-fixed": "#0d1c2d",
+                "secondary-container": "#39485a",
+                "primary": "#8ed5ff",
+                "primary-fixed": "#c4e7ff",
+                "on-secondary-fixed-variant": "#39485a",
+                "surface-container-lowest": "#040e1f",
+                "on-tertiary-container": "#3c4459",
+                "on-secondary": "#233143",
+                "primary-fixed-dim": "#7bd0ff",
+                "on-error-container": "#ffdad6",
+                "on-tertiary": "#283044",
+                "error": "#ffb4ab",
+                "tertiary": "#c5cce6",
+                "on-surface-variant": "#bdc8d1",
+                "on-background": "#d8e3fb",
+                "on-tertiary-fixed": "#131b2e",
+                "surface-tint": "#7bd0ff",
+                "on-tertiary-fixed-variant": "#3f465c",
+                "on-primary": "#00354a",
+                "on-primary-container": "#004965",
+                "inverse-primary": "#00668a",
+                "on-primary-fixed-variant": "#004c69",
+                "surface-container-highest": "#2a3548",
+                "outline-variant": "#3e484f",
+                "background": "#081425",
+                "tertiary-container": "#a9b1ca",
+                "outline": "#87929a",
+                "tertiary-fixed": "#dae2fd",
+                "primary-container": "#38bdf8",
+                "inverse-on-surface": "#263143",
+                "surface-bright": "#2f3a4c",
+                "secondary": "#b9c8de",
+                "on-primary-fixed": "#001e2c",
+                "error-container": "#93000a",
+                "surface-container-high": "#1f2a3c",
+                "secondary-fixed": "#d4e4fa",
+                "inverse-surface": "#d8e3fb",
+                "on-error": "#690005",
+                "tertiary-fixed-dim": "#bec6e0",
+                "surface-dim": "#081425",
+                "secondary-fixed-dim": "#b9c8de",
+                "surface": "#081425",
+                "on-secondary-container": "#a7b6cc",
+                "on-surface": "#d8e3fb"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "stack-md": "16px",
+                "grid-columns": "12",
+                "unit": "4px",
+                "stack-tight": "4px",
+                "panel-gap": "12px",
+                "max-width": "1600px",
+                "container-padding": "24px"
+            },
+            "fontFamily": {
+                "data-mono": ["JetBrains Mono"],
+                "title-sm": ["Inter"],
+                "headline-md": ["Inter"],
+                "display-lg": ["Inter"],
+                "label-caps": ["Inter"],
+                "body-md": ["Inter"],
+                "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-white/10 bg-surface-container-lowest flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2">
+<h1 class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">AURA FLEET</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">Maritime Command</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-body-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-primary bg-primary/10 border-l-4 border-primary font-bold opacity-90 scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="report_problem">report_problem</span>
+<span class="font-body-md">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-body-md">Audit</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5 space-y-2">
+<button class="w-full mb-4 py-3 px-4 bg-primary text-on-primary font-label-caps text-label-caps rounded flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="sync">sync</span>
+                OPERATIONAL SYNC
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface-container/80 backdrop-blur-md border-b border-white/10 flex justify-between items-center px-8 z-40 shadow-sm">
+<div class="flex items-center gap-6">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">INCIDENT COMMAND</span>
+<div class="flex bg-surface-container-lowest border border-white/5 rounded h-10 items-center px-3 gap-2 w-80">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm text-on-surface w-full placeholder:text-on-surface-variant/40" placeholder="Search by ID, Asset, or Commander..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span></button>
+<div class="h-8 w-[1px] bg-white/10 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface leading-none">CHIEF ENGINEER</p>
+<p class="text-[10px] text-primary">STATION 04</p>
+</div>
+<img class="h-10 w-10 rounded bg-surface-variant object-cover" data-alt="Close-up professional portrait of a senior maritime chief engineer in a dark navy uniform, featuring sharp lighting and a high-tech control room background. The aesthetic is clean, industrial, and authoritative, consistent with a high-end corporate command center interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNsEwV4ukM9PECfJ6BupKenbeizJmXT0wQNLWnt6KtWycoQJ2uPvZtase5y4Y6YHLktA9p-7_9-KP58nCJ-XkasX-s1CmH6H5qL-tqptP-gM6JeVRabVzlgJrIscEg4TbvcZMFpGhjOl3PLZSeEdaQZNFaY0M7fo7iZ2ZkbDcE5vUkUdShNEmkMH2Pph10zn-woDNNPapJWeyqN4R0lXLPuhSvyFuQSQXH_7JyLi77FyZCjr148EAsDFFXb0K0CQYzB9plK5GwJCY2"/>
+</div>
+</div>
+</header>
+<div class="pt-24 px-8 pb-12 max-w-[1600px] mx-auto">
+<!-- Global Status Tabs -->
+<div class="flex items-center gap-8 border-b border-white/10 mb-8">
+<button class="pb-4 text-primary font-bold border-b-2 border-primary font-label-caps text-label-caps tracking-widest">ALL INCIDENTS</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors font-label-caps text-label-caps tracking-widest">ACTIVE (14)</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors font-label-caps text-label-caps tracking-widest flex items-center gap-2">
+                    UNDER VALIDATION
+                    <span class="bg-primary/20 text-primary px-1.5 rounded text-[10px]">3</span>
+</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors font-label-caps text-label-caps tracking-widest">RESOLVED</button>
+</div>
+<!-- Triage Summary Cards (Bento Style) -->
+<div class="grid grid-cols-12 gap-panel-gap mb-8">
+<div class="col-span-3 glass-panel bg-surface-container-low p-4 rounded-lg border-l-4 border-error shadow-[0_0_15px_rgba(255,180,171,0.1)]">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-error">P1 CRITICAL</span>
+<span class="material-symbols-outlined text-error" data-icon="emergency" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div class="text-4xl font-bold font-display-lg text-on-surface">02</div>
+<div class="text-xs text-on-surface-variant mt-1">Life Safety &amp; Critical Propulsion</div>
+</div>
+<div class="col-span-3 glass-panel bg-surface-container-low p-4 rounded-lg border-l-4 border-[#ffb400]">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-[#ffb400]">P2 HIGH</span>
+<span class="material-symbols-outlined text-[#ffb400]" data-icon="warning">warning</span>
+</div>
+<div class="text-4xl font-bold font-display-lg text-on-surface">05</div>
+<div class="text-xs text-on-surface-variant mt-1">Operational Impairment</div>
+</div>
+<div class="col-span-3 glass-panel bg-surface-container-low p-4 rounded-lg border-l-4 border-primary">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-primary">P3 MEDIUM</span>
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+</div>
+<div class="text-4xl font-bold font-display-lg text-on-surface">12</div>
+<div class="text-xs text-on-surface-variant mt-1">Degraded Performance</div>
+</div>
+<div class="col-span-3 glass-panel bg-surface-container-low p-4 rounded-lg border-l-4 border-outline">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">P4 LOW</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="help">help</span>
+</div>
+<div class="text-4xl font-bold font-display-lg text-on-surface">24</div>
+<div class="text-xs text-on-surface-variant mt-1">Minor / Aesthetic Issues</div>
+</div>
+</div>
+<!-- Quick Filters & Actions -->
+<div class="flex justify-between items-center mb-6">
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-full border border-primary/30 bg-primary/5 text-primary text-body-sm font-medium hover:bg-primary/10 transition-all flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                        Needs Central Validation
+                    </button>
+<button class="px-4 py-2 rounded-full border border-error/30 bg-error/5 text-error text-body-sm font-medium hover:bg-error/10 transition-all flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                        SLA at Risk
+                    </button>
+<button class="px-4 py-2 rounded-full border border-white/10 bg-surface-variant/20 text-on-surface-variant text-body-sm font-medium hover:bg-surface-variant/40 transition-all">
+                        Unlinked Maintenance
+                    </button>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-white/10 rounded hover:bg-white/5 text-on-surface-variant"><span class="material-symbols-outlined" data-icon="filter_list">filter_list</span></button>
+<button class="p-2 border border-white/10 rounded hover:bg-white/5 text-on-surface-variant"><span class="material-symbols-outlined" data-icon="download">download</span></button>
+</div>
+</div>
+<!-- Incident Table -->
+<div class="glass-panel bg-surface-container-low rounded-lg overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-highest/30 border-b border-white/10">
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">SEVERITY</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">INCIDENT ID</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">TITLE &amp; ASSET</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">COMMANDER</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant text-right">DURATION / SLA</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant text-center">TICKETS</th>
+<th class="px-6 py-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- P1 Row -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded border border-error/50 bg-error/10 text-error font-bold text-[10px] shadow-[0_0_8px_rgba(255,180,171,0.2)]">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span> P1
+                                </span>
+</td>
+<td class="px-6 py-5 font-data-mono text-data-mono text-primary">MAR-2024</td>
+<td class="px-6 py-5">
+<p class="text-on-surface font-semibold group-hover:text-primary transition-colors">Fire in Galley</p>
+<p class="text-[11px] text-on-surface-variant/60 uppercase tracking-tighter">Main Deck | M/Y MARINA</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white">CO</div>
+<span class="text-body-sm text-on-surface">Central Ops (Lead)</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="inline-block w-32">
+<div class="flex justify-between text-[10px] font-data-mono text-error mb-1">
+<span>BREACHED</span>
+<span>02:44:12</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-error w-full shimmer-sla"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] font-bold text-on-surface-variant">12</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</td>
+</tr>
+<!-- P2 Row -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded border border-[#ffb400]/50 bg-[#ffb400]/10 text-[#ffb400] font-bold text-[10px]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#ffb400] mr-1.5"></span> P2
+                                </span>
+</td>
+<td class="px-6 py-5 font-data-mono text-data-mono text-primary">YCH-102</td>
+<td class="px-6 py-5">
+<p class="text-on-surface font-semibold group-hover:text-primary transition-colors">Nav-Comm Failure</p>
+<p class="text-[11px] text-on-surface-variant/60 uppercase tracking-tighter">Bridge | Y-CENTRIC 01</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white">AS</div>
+<span class="text-body-sm text-on-surface">A. Sterling</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="inline-block w-32">
+<div class="flex justify-between text-[10px] font-data-mono text-[#ffb400] mb-1">
+<span>88%</span>
+<span>00:12:45 LEFT</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-[#ffb400] w-[88%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] font-bold text-on-surface-variant">04</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</td>
+</tr>
+<!-- P3 Row -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded border border-primary/50 bg-primary/10 text-primary font-bold text-[10px]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></span> P3
+                                </span>
+</td>
+<td class="px-6 py-5 font-data-mono text-data-mono text-primary">MAR-044</td>
+<td class="px-6 py-5">
+<p class="text-on-surface font-semibold group-hover:text-primary transition-colors">Minor Hull Scrape</p>
+<p class="text-[11px] text-on-surface-variant/60 uppercase tracking-tighter">Port Aft | M/Y MARINA</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white">JK</div>
+<span class="text-body-sm text-on-surface">J. Kowalski</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="inline-block w-32">
+<div class="flex justify-between text-[10px] font-data-mono text-on-surface-variant mb-1">
+<span>OK</span>
+<span>24H TARGET</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[15%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] font-bold text-on-surface-variant">01</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-highest/20 flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">Showing 1-15 of 43 incidents</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-sm" data-icon="first_page">first_page</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-sm" data-icon="navigate_before">navigate_before</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary/10 text-primary font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary text-xs">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-sm" data-icon="navigate_next">navigate_next</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-white/5 bg-surface-container-low text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-sm" data-icon="last_page">last_page</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Only on relevant screens) -->
+<button class="fixed bottom-8 right-8 h-14 px-6 bg-primary text-on-primary rounded-full shadow-[0_4px_20px_rgba(142,213,255,0.4)] flex items-center gap-3 hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined" data-icon="add_alert">add_alert</span>
+<span class="font-label-caps text-label-caps tracking-widest">LOG NEW INCIDENT</span>
+</button>
+</body></html>

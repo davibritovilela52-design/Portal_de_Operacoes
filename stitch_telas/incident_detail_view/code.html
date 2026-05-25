@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#b9c8de",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "on-surface": "#d8e3fb",
+                        "surface-container-highest": "#2a3548",
+                        "primary-container": "#38bdf8",
+                        "on-primary-container": "#004965",
+                        "on-background": "#d8e3fb",
+                        "primary": "#8ed5ff",
+                        "outline-variant": "#3e484f",
+                        "surface-bright": "#2f3a4c",
+                        "on-primary-fixed": "#001e2c",
+                        "on-primary": "#00354a",
+                        "surface-container": "#152031",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#7bd0ff",
+                        "on-surface-variant": "#bdc8d1",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#87929a",
+                        "surface-container-low": "#111c2d",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#040e1f",
+                        "on-secondary-container": "#a7b6cc",
+                        "tertiary-container": "#a9b1ca",
+                        "inverse-on-surface": "#263143",
+                        "secondary-container": "#39485a",
+                        "on-tertiary-fixed": "#131b2e",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#dae2fd",
+                        "on-tertiary-container": "#3c4459",
+                        "on-primary-fixed-variant": "#004c69",
+                        "primary-fixed": "#c4e7ff",
+                        "on-tertiary": "#283044",
+                        "surface": "#081425",
+                        "secondary-fixed": "#d4e4fa",
+                        "surface-tint": "#7bd0ff",
+                        "surface-variant": "#2a3548",
+                        "tertiary": "#c5cce6",
+                        "on-secondary-fixed-variant": "#39485a",
+                        "background": "#081425",
+                        "on-secondary-fixed": "#0d1c2d",
+                        "on-secondary": "#233143",
+                        "surface-dim": "#081425",
+                        "inverse-surface": "#d8e3fb",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "surface-container-high": "#1f2a3c",
+                        "inverse-primary": "#00668a",
+                        "secondary-fixed-dim": "#b9c8de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "max-width": "1600px",
+                        "unit": "4px",
+                        "container-padding": "24px",
+                        "grid-columns": "12",
+                        "stack-tight": "4px",
+                        "panel-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .shimmer-sla {
+            background: linear-gradient(90deg, #ffb4ab 0%, #93000a 50%, #ffb4ab 100%);
+            background-size: 200% 100%;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #081425; }
+        ::-webkit-scrollbar-thumb { background: #3e484f; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden font-body-md">
+<!-- Predicted SideNavBar -->
+<aside class="h-screen w-64 flex-shrink-0 border-r border-outline-variant/10 bg-surface-container-lowest flex flex-col py-24">
+<div class="px-6 mb-10">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">OPERATIONS PORTAL</h1>
+<p class="font-body-sm text-on-surface-variant">Vessel ID: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1 px-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-body-md">Maintenance</span>
+</a>
+<!-- Active State for Incidents -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-body-md">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md">Access &amp; Admin</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="pumping_unit">CookingPot</span>
+<span class="font-body-md">Cutover</span>
+</a>
+</nav>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary text-on-primary-fixed py-3 rounded-lg font-title-sm hover:brightness-110 active:scale-[0.99] transition-all">
+                Quick Command
+            </button>
+</div>
+<div class="px-4 pt-4 border-t border-outline-variant/10 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md">Support</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<!-- Predicted TopNavBar with Breadcrumbs -->
+<header class="w-full h-16 flex justify-between items-center px-6 sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span>Incidents</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-surface font-medium">INC-8829-X</span>
+</div>
+<div class="h-6 w-[1px] bg-outline-variant/30"></div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Operations Portal</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48 text-on-surface" placeholder="Search systems..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User profile" data-alt="A professional headshot of a maritime operations officer with a stern yet calm expression, wearing a navy blue uniform. The background is a softly blurred high-tech bridge control room with glowing blue interface lights. The lighting is crisp and cool-toned, fitting a corporate modern maritime aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzuyxzh3ehefP_W6CjaBSTSKhYOuk-qWcEfpynVHcsP3RlQJcFmrrakSiG0NJmkznSTwvNP-qNFprZ7uGO_IYxMkXNMfZMaXZaL55OJd1Do6kk5mI1AFT7NgonRXwz7lnFD5l0O5n0T6ZenCiXzaGIRAA6kUyhyzDl_QAs5J6S-TK1wAPY2plF03O0qaQQtwIPUENwF1Y65toMP_gwgifGyCxP1iPBZ7QmNyt-mso6D7hlOAhOiTSUwVteLw02otTGaamjzHTK2fAK"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-6 bg-background space-y-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container text-label-caps border border-error/30">CRITICAL SAFETY</span>
+<span class="text-on-surface-variant font-data-mono text-data-mono">LOGGED: 2024-10-27 14:22 UTC</span>
+</div>
+<h3 class="font-display-lg text-display-lg text-on-surface">Primary Propulsion System Cooling Leak</h3>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline-variant/30 rounded text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="download">download</span> Export Data
+                        </span>
+</button>
+<button class="px-4 py-2 bg-primary text-on-primary-fixed rounded font-title-sm hover:brightness-110 active:brightness-125 transition-all">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span> New Incident
+                        </span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- Left Column: Description & History -->
+<div class="col-span-8 space-y-6">
+<!-- Description Panel -->
+<section class="glass-panel p-6 rounded-xl space-y-4">
+<h4 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="description">description</span> Incident Description
+                        </h4>
+<div class="space-y-4 text-on-surface-variant leading-relaxed">
+<p>Sensors in Sector 4B (Engine Room Lower Level) detected a sudden pressure drop in the primary propulsion cooling circuit at 14:21:05. Initial visual inspection via remote cam 12 indicates a fracture in the titanium heat exchanger feed line. Fluid loss estimated at 12L/min.</p>
+<p>Immediate containment protocols initiated. Auxiliary cooling loop engaged at 40% capacity. Propulsion system de-rated to 'Economy Mode' to prevent thermal runaway. Engineering crew dispatched for manual isolation.</p>
+</div>
+<div class="grid grid-cols-3 gap-4 pt-4 border-t border-outline-variant/10">
+<div>
+<span class="block text-label-caps text-on-surface-variant/60">AFFECTED SYSTEM</span>
+<span class="font-data-mono text-on-surface">PROP-COOL-004</span>
+</div>
+<div>
+<span class="block text-label-caps text-on-surface-variant/60">SEVERITY</span>
+<span class="font-data-mono text-error">LEVEL 1 - RED</span>
+</div>
+<div>
+<span class="block text-label-caps text-on-surface-variant/60">REPORTER</span>
+<span class="font-data-mono text-on-surface">AUTO-SYS-MON</span>
+</div>
+</div>
+</section>
+<!-- History / Timeline -->
+<section class="glass-panel p-6 rounded-xl space-y-6">
+<h4 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span> Operational Timeline
+                        </h4>
+<div class="relative space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-outline-variant/30">
+<!-- Timeline Item 1 -->
+<div class="relative pl-8 flex gap-4">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] rounded-full bg-surface-container flex items-center justify-center border border-primary/40">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-on-surface">Auxiliary Cooling Engaged</span>
+<span class="font-data-mono text-body-sm text-on-surface-variant/60">14:25 UTC</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">System automatically activated secondary loop. Pressure stabilizing at 2.4 bar. Thermal gradient remains within threshold.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative pl-8 flex gap-4">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] rounded-full bg-surface-container flex items-center justify-center border border-error/40">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-error">Pressure Threshold Breach</span>
+<span class="font-data-mono text-body-sm text-on-surface-variant/60">14:21 UTC</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Alarm level CRITICAL. Drop from 8.2 bar to 3.1 bar in &lt; 10 seconds. Automated containment active.</p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative pl-8 flex gap-4">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] rounded-full bg-surface-container flex items-center justify-center border border-outline-variant/40">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-on-surface">System Diagnostic Started</span>
+<span class="font-data-mono text-body-sm text-on-surface-variant/60">14:20 UTC</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Routine 24h scan initiated by MAR-CORE-AI. No anomalies detected in precursor data.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Panel Detail -->
+<aside class="col-span-4 space-y-6">
+<!-- SLA Countdown -->
+<section class="glass-panel p-6 rounded-xl border-l-4 border-error">
+<div class="flex justify-between items-center mb-4">
+<span class="text-label-caps text-on-surface-variant">SLA: CONTAINMENT PHASE</span>
+<span class="material-symbols-outlined text-error" data-icon="alarm">alarm</span>
+</div>
+<div class="text-center mb-6">
+<div class="font-data-mono text-[48px] leading-none text-error font-bold tracking-tighter">00:14:22</div>
+<span class="text-body-sm text-on-surface-variant">TIME REMAINING TO BREACH</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-3/4 h-full shimmer-sla opacity-80" style="animation: shimmer 2s infinite linear;"></div>
+</div>
+</section>
+<!-- Controlled Actions -->
+<section class="glass-panel p-6 rounded-xl space-y-4">
+<h4 class="font-label-caps text-on-surface-variant mb-2">CONTROLLED ACTIONS</h4>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container hover:bg-surface-container-high border border-outline-variant/10 rounded-lg group transition-all">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="lock">lock</span>
+<span class="font-body-md text-on-surface">Isolate Sector 4B</span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container hover:bg-surface-container-high border border-outline-variant/10 rounded-lg group transition-all">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="air">air</span>
+<span class="font-body-md text-on-surface">Vent Pressure V-09</span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-error-container/10 hover:bg-error-container/20 border border-error/20 rounded-lg group transition-all">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="emergency_home">emergency_home</span>
+<span class="font-body-md text-error">Emergency Shutdown</span>
+</span>
+<span class="material-symbols-outlined text-error group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+</section>
+<!-- Audit Trail -->
+<section class="glass-panel p-6 rounded-xl space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-title-sm text-title-sm text-on-surface">Audit Trail</h4>
+<span class="text-label-caps text-primary cursor-pointer hover:underline">View All</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-1 h-8 bg-primary rounded-full"></div>
+<div>
+<div class="text-body-sm text-on-surface">Capt. Sorenson reviewed status</div>
+<div class="text-[11px] font-data-mono text-on-surface-variant/60">14:30:12 UTC</div>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1 h-8 bg-outline-variant rounded-full"></div>
+<div>
+<div class="text-body-sm text-on-surface">Auto-log: Comms burst sent</div>
+<div class="text-[11px] font-data-mono text-on-surface-variant/60">14:26:45 UTC</div>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1 h-8 bg-secondary rounded-full"></div>
+<div>
+<div class="text-body-sm text-on-surface">Eng-Team 2 acknowledged</div>
+<div class="text-[11px] font-data-mono text-on-surface-variant/60">14:22:30 UTC</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Gauge Mini-Module -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl text-center">
+<span class="text-label-caps text-on-surface-variant/60 block mb-2">THERMAL</span>
+<div class="relative w-16 h-16 mx-auto mb-2">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="44" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-data-mono text-on-surface">75%</span>
+</div>
+<span class="text-body-sm text-on-surface">82°C</span>
+</div>
+<div class="glass-panel p-4 rounded-xl text-center">
+<span class="text-label-caps text-on-surface-variant/60 block mb-2">FLOW</span>
+<div class="relative w-16 h-16 mx-auto mb-2">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-error" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="132" stroke-width="4"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center font-data-mono text-on-surface">25%</span>
+</div>
+<span class="text-body-sm text-error">CRIT</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

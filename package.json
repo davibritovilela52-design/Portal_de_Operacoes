@@ -1,0 +1,31 @@
+{
+  "name": "operations-portal",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@11.6.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev:api": "npm run start:dev --workspace @ops-portal/api",
+    "predev:api": "node ./scripts/clean-dev-artifacts.mjs api",
+    "predev:web": "node ./scripts/clean-dev-artifacts.mjs web",
+    "dev:web": "npm run dev --workspace @ops-portal/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "readiness:phase1": "node ./scripts/phase1-go-live-readiness.mjs",
+    "smoke:phase1": "node ./scripts/phase1-go-live-smoke.mjs",
+    "test": "npm run test --workspaces --if-present",
+    "uat:phase1:check": "node ./scripts/phase1-uat-local.mjs --verify-only",
+    "uat:phase1:local": "node ./scripts/phase1-uat-local.mjs",
+    "verify:phase0": "npm run test --workspace @ops-portal/api && npm run build --workspace @ops-portal/api && npm run build --workspace @ops-portal/web"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

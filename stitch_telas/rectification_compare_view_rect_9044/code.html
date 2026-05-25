@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-tertiary-container": "#3c4459",
+                    "surface-container": "#152031",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#a9b1ca",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline": "#87929a",
+                    "secondary-container": "#39485a",
+                    "primary-container": "#38bdf8",
+                    "on-secondary": "#233143",
+                    "inverse-surface": "#d8e3fb",
+                    "on-primary-container": "#004965",
+                    "surface-dim": "#081425",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-variant": "#2a3548",
+                    "tertiary": "#c5cce6",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-primary": "#00354a",
+                    "inverse-primary": "#00668a",
+                    "surface-container-highest": "#2a3548",
+                    "on-background": "#d8e3fb",
+                    "outline-variant": "#3e484f",
+                    "background": "#081425",
+                    "on-surface-variant": "#bdc8d1",
+                    "surface-bright": "#2f3a4c",
+                    "surface": "#081425",
+                    "surface-container-high": "#1f2a3c",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-primary-fixed": "#001e2c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "inverse-on-surface": "#263143",
+                    "surface-container-low": "#111c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "error-container": "#93000a",
+                    "secondary": "#b9c8de",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "primary-fixed": "#c4e7ff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-primary-fixed-variant": "#004c69",
+                    "on-tertiary": "#283044",
+                    "surface-container-lowest": "#040e1f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-tight": "4px",
+                    "panel-gap": "12px",
+                    "max-width": "1600px",
+                    "stack-md": "16px",
+                    "container-padding": "24px",
+                    "unit": "4px",
+                    "grid-columns": "12"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .watermark {
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.05;
+            transform: rotate(-45deg);
+        }
+        .glow-blue {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+        .glow-red {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.1);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(142, 213, 255, 0.05), transparent);
+            background-size: 200% 100%;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/10 bg-surface-container-lowest flex flex-col py-stack-md z-50">
+<div class="px-container-padding mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Operations Portal</h1>
+<p class="text-on-surface-variant font-body-sm opacity-70">Vessel ID: MAR-7700</p>
+</div>
+<nav class="flex-1 space-y-1 px-4">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="report_problem">report_problem</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold bg-primary-container/10 border-r-2 border-primary transition-all rounded-r-none" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-body-md text-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Access &amp; Admin</span>
+</a>
+</nav>
+<div class="px-4 pt-4 border-t border-outline-variant/10 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors duration-200 rounded" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 border-b border-outline-variant/10 bg-surface-container/80 backdrop-blur-md flex items-center justify-between px-container-padding z-40">
+<div class="flex items-center gap-4">
+<span class="font-title-sm text-title-sm text-on-surface">Rectification Compare View</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest border border-outline-variant text-data-mono text-on-surface-variant">v2.1.0-FIX</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="bg-surface-container-lowest border border-outline-variant/30 rounded px-4 py-1.5 text-body-sm w-64 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Search logs..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined hover:text-primary transition-colors cursor-pointer" data-icon="dark_mode">dark_mode</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User profile" data-alt="A professional headshot of a maritime safety officer with sharp lighting and a neutral expression. The background is a blurred corporate maritime operations room with soft blue and grey tones, maintaining a serious and high-stakes aesthetic consistent with technical yacht management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_A5nx1S7YRKCiqLEBXdKrf8LETLBm5L_IKWU5R1VAiIqMwFkms0KnbfixE68fQjyvUiIemJvipykvi1O6nR3fHdVs7Y19CqJgJHoEgOTnqmX9JrM47gxWJNLE6WME2qOdeLb3EyeqShVhEFDI7KU6t3t_fRNa0AKCHtHRABvLzcGBDA9t3lRcqlmUNZ8GVdZfHqCBPXYt0Df8YGCXL4QWBwKETelmE7JSZHzKiLs9-o4PbuDQomRnygewa5qJ4ort4EbqpXJA1pTt"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-container-padding max-w-max-width mx-auto">
+<!-- Header Metadata -->
+<section class="glass-panel rounded-xl p-6 mb-panel-gap flex flex-wrap gap-8 items-start">
+<div class="flex-1 min-w-[240px]">
+<label class="font-label-caps text-label-caps text-primary opacity-80 uppercase mb-1 block">Rectification-ID</label>
+<div class="font-data-mono text-display-lg text-on-surface">RECT-2023-089-ALPHA</div>
+</div>
+<div class="w-px h-16 bg-outline-variant/30 hidden md:block"></div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1 block">Original Memo ID</label>
+<div class="font-body-md text-on-surface font-semibold">MEMO-7700-LOG-042</div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1 block">Effective Date</label>
+<div class="font-body-md text-on-surface font-semibold">14 OCT 2023, 08:45 UTC</div>
+</div>
+<div class="max-w-md">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1 block">Reason for Rectification</label>
+<div class="font-body-md text-on-surface-variant">Data entry error during engine telemetry sync. Pressure values recorded in BAR instead of PSI for Port Main Engine fuel injectors.</div>
+</div>
+</section>
+<!-- Split-Pane Comparison -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap mb-panel-gap">
+<!-- Left: Original State -->
+<div class="relative glass-panel rounded-xl overflow-hidden opacity-60 grayscale-[0.2]">
+<div class="absolute inset-0 watermark flex items-center justify-center font-bold text-[80px] text-error tracking-widest z-0">
+                    INVALIDATED
+                </div>
+<div class="p-6 relative z-10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="history">history</span>
+                            Original State
+                        </h3>
+<span class="px-2 py-1 bg-error-container/20 border border-error/30 text-error font-label-caps rounded">DEPRECATED</span>
+</div>
+<div class="space-y-6">
+<div class="p-4 bg-surface-container-low rounded border border-outline-variant/20">
+<label class="font-label-caps text-on-surface-variant block mb-2">TELEMETRY DATA (LOG-042)</label>
+<div class="grid grid-cols-2 gap-4 font-data-mono">
+<div class="text-on-surface-variant">Fuel Pressure (P):</div>
+<div class="text-on-surface text-right line-through decoration-error decoration-2 decoration-dotted">182.5 BAR</div>
+<div class="text-on-surface-variant">Fuel Temp (P):</div>
+<div class="text-on-surface text-right">42.2 °C</div>
+<div class="text-on-surface-variant">Injector Delta:</div>
+<div class="text-on-surface text-right line-through decoration-error decoration-2 decoration-dotted">0.05 BAR</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded border border-outline-variant/20">
+<label class="font-label-caps text-on-surface-variant block mb-2">OBSERVATIONS</label>
+<p class="text-body-md text-on-surface-variant leading-relaxed line-through decoration-error/50">
+                                Standard engine check completed. Telemetry within normal operating range for regional cruise. No anomalies detected in fuel delivery system. Sign-off recorded by Junior Engineer.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Rectified State -->
+<div class="relative glass-panel rounded-xl border-primary-container/40 border-2 glow-blue overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] pointer-events-none"></div>
+<div class="p-6 relative z-10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+                            Rectified State
+                        </h3>
+<span class="px-2 py-1 bg-primary-container/20 border border-primary/30 text-primary font-label-caps rounded">ACTIVE CORRECTION</span>
+</div>
+<div class="space-y-6">
+<div class="p-4 bg-surface-container-low rounded border border-primary-container/30">
+<label class="font-label-caps text-primary block mb-2">TELEMETRY DATA (LOG-042-FIX)</label>
+<div class="grid grid-cols-2 gap-4 font-data-mono">
+<div class="text-on-surface-variant">Fuel Pressure (P):</div>
+<div class="text-on-surface text-right bg-primary/10 px-1 border-b-2 border-primary">2,646.9 PSI</div>
+<div class="text-on-surface-variant">Fuel Temp (P):</div>
+<div class="text-on-surface text-right">42.2 °C</div>
+<div class="text-on-surface-variant">Injector Delta:</div>
+<div class="text-on-surface text-right bg-primary/10 px-1 border-b-2 border-primary">0.72 PSI</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded border border-primary-container/20">
+<label class="font-label-caps text-primary block mb-2">OBSERVATIONS</label>
+<p class="text-body-md text-on-surface leading-relaxed">
+                                Standard engine check completed. Telemetry within normal operating range for regional cruise. No anomalies detected in fuel delivery system. <span class="bg-primary/10 border-b border-primary italic">Correction applied: telemetry unit conversion error resolved. Previous entry incorrectly logged as BAR.</span> Sign-off recorded by Chief Engineer.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Validation Chain -->
+<section class="glass-panel rounded-xl p-6">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-title-sm text-title-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="history_edu">history_edu</span>
+                    Validation Chain &amp; Traceability
+                </h3>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary glow-blue"></span>
+                    Immutable Hash: <span class="font-data-mono text-[11px] opacity-60">0x8821...A9F2</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+<!-- Connective Line -->
+<div class="hidden md:block absolute top-12 left-1/2 -translate-x-1/2 w-32 border-t border-dashed border-outline-variant/30"></div>
+<!-- Signer 1 -->
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-high/50 border border-outline-variant/20">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center border border-primary/20 text-primary">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div>
+<div class="font-body-md font-bold text-on-surface">Cpt. Alistair Thorne</div>
+<div class="text-body-sm text-on-surface-variant">Master of Vessel</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="check_circle">check_circle</span>
+<span class="text-data-mono text-[11px] text-primary">SIGNED: 14 OCT 23, 09:12 UTC</span>
+</div>
+</div>
+</div>
+<!-- Signer 2 -->
+<div class="flex items-center gap-4 p-4 rounded-lg bg-surface-container-high/50 border border-outline-variant/20">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center border border-primary/20 text-primary">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<div class="font-body-md font-bold text-on-surface">Elena Rodriguez</div>
+<div class="text-body-sm text-on-surface-variant">Chief Technical Officer</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="check_circle">check_circle</span>
+<span class="text-data-mono text-[11px] text-primary">SIGNED: 14 OCT 23, 09:45 UTC</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/10 flex justify-end gap-4">
+<button class="px-6 py-2 rounded border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-all font-body-md">
+                    Export Audit Trail
+                </button>
+<button class="px-6 py-2 rounded bg-primary text-on-primary font-bold hover:opacity-90 active:scale-[0.99] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="print">print</span>
+                    Print Official Record
+                </button>
+</div>
+</section>
+</main>
+<!-- Visual Accents (Technical Gauges placeholder context) -->
+<div class="fixed bottom-8 right-8 flex gap-4 pointer-events-none opacity-20">
+<div class="w-16 h-1 w-32 bg-primary-container/20 rounded-full overflow-hidden">
+<div class="w-2/3 h-full bg-primary shimmer"></div>
+</div>
+<div class="w-16 h-1 w-32 bg-primary-container/20 rounded-full overflow-hidden">
+<div class="w-full h-full bg-primary/40"></div>
+</div>
+</div>
+</body></html>

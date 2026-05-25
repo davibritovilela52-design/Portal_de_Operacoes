@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#3c4459",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-background": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "tertiary": "#c5cce6",
+                    "inverse-on-surface": "#263143",
+                    "secondary-container": "#39485a",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline-variant": "#3e484f",
+                    "inverse-primary": "#00668a",
+                    "primary-fixed": "#c4e7ff",
+                    "on-primary": "#00354a",
+                    "surface-container-highest": "#2a3548",
+                    "surface-container-high": "#1f2a3c",
+                    "surface-container": "#152031",
+                    "inverse-surface": "#d8e3fb",
+                    "outline": "#87929a",
+                    "surface-container-lowest": "#040e1f",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2c",
+                    "background": "#081425",
+                    "error": "#ffb4ab",
+                    "surface": "#081425",
+                    "on-primary-container": "#004965",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-dim": "#081425",
+                    "surface-container-low": "#111c2d",
+                    "surface-variant": "#2a3548",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "tertiary-container": "#a9b1ca",
+                    "surface-bright": "#2f3a4c",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "primary-container": "#38bdf8",
+                    "on-surface-variant": "#bdc8d1",
+                    "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "panel-gap": "12px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #081425;
+            color: #d8e3fb;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-glow-success {
+            box-shadow: 0 0 12px rgba(142, 213, 255, 0.2);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest h-screen w-64 flex-shrink-0 border-r border-outline-variant/10 flex flex-col h-full py-container-padding">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal</h1>
+<p class="font-body-sm text-on-surface-variant opacity-70">ID do Ativo: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Painel</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-body-md text-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 rounded transition-colors duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Access &amp; Admin</span>
+</a>
+<!-- Active State Cutover -->
+<a class="flex items-center px-3 py-2 space-x-3 rounded bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">CookingPot</span>
+<span class="font-body-md text-body-md">Cutover</span>
+</a>
+</nav>
+<div class="px-3 mt-auto space-y-1">
+<button class="w-full bg-primary text-on-primary font-bold py-3 rounded-lg flex items-center justify-center space-x-2 active:opacity-80 active:scale-[0.99] transition-all mb-4">
+<span class="material-symbols-outlined">bolt</span>
+<span class="font-label-caps text-label-caps">Comando Rápido</span>
+</button>
+<a class="flex items-center px-3 py-2 space-x-3 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Configurações</span>
+</a>
+<a class="flex items-center px-3 py-2 space-x-3 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Suporte</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- TopNavBar (Authority: JSON) -->
+<header class="flex justify-between items-center px-container-padding w-full sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10 h-16">
+<div class="flex items-center space-x-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Portal de Operações</span>
+<div class="hidden md:flex space-x-6">
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Frota</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Logística</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="bg-surface-variant/20 border border-outline-variant/30 px-4 py-1.5 rounded-full font-title-sm text-title-sm text-on-surface hover:bg-surface-variant/40 transition-all">Exportar Dados</button>
+<button class="bg-primary px-4 py-1.5 rounded-full font-title-sm text-title-sm text-on-primary font-bold hover:brightness-125 transition-all">Novo Incidente</button>
+<div class="flex items-center space-x-3 ml-4 border-l border-outline-variant/20 pl-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">history</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
+<img alt="User profile" data-alt="A professional close-up portrait of a high-ranking maritime operations officer in a clean, dark blue uniform. The lighting is crisp and cold, reflecting a high-tech command center environment with blurred digital displays in the background. The aesthetic is modern, serious, and authoritative, consistent with a luxury vessel management portal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiSJdDC5Q5AHnLl8JYXApYeh5kkTLsF02zsazV5pDd9_l-eMrGorN0Fxh76W722X-Bpt-2OYevA0vrF1Jn99bykH3eMr0ohXTPUEChIzvD9kCM_XYnLWiX4gMq1H8oJ1LIZ2uMp1duJN9fcXFPaCVJe0dM3wHGeahx5Mre4d2YhB8qp2_DChYHApdxeTcK35IG-rOGPMOdV_sAfazRhI9NtBRpI5KBzxgtI1k-RAkCIFu074pcsURun4Rb4iDXv-q_noevPxrv2F9A"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto p-container-padding space-y-panel-gap">
+<!-- Hero Governance Status -->
+<section class="grid grid-cols-12 gap-panel-gap">
+<div class="col-span-12 glass-panel p-6 rounded-xl flex items-center justify-between border-primary/20 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-full bg-primary/5 -skew-x-12 translate-x-32"></div>
+<div class="flex items-center space-x-6">
+<div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center border border-primary/40 status-glow-success">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-primary leading-tight">GovernanÃ§a de Cutover</h2>
+<p class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-widest">Estado: <span class="text-primary">PRONTO</span> â€¢ 100% Migrado</p>
+</div>
+</div>
+<button class="relative overflow-hidden group bg-primary-container px-8 py-4 rounded-xl text-on-primary-container font-display-lg text-headline-md font-extrabold shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+                        EXECUTAR ENTRADA EM PRODUÇÃO
+                        <div class="absolute inset-0 shimmer animate-[shimmer_2s_infinite]"></div>
+</button>
+</div>
+</section>
+<!-- Grid Content -->
+<section class="grid grid-cols-12 gap-panel-gap h-fit">
+<!-- Gate Checklist (Bento Style) -->
+<div class="col-span-12 lg:col-span-7 glass-panel rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">fact_check</span>
+                            Status dos Gates Operacionais
+                        </h3>
+<span class="font-data-mono text-data-mono bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/30">VALIDADO</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-surface-container-high/50 border border-white/5 rounded-lg">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span class="font-body-md text-body-md">MigraÃ§Ã£o de Dados Estruturais</span>
+</div>
+<div class="w-32 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high/50 border border-white/5 rounded-lg">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span class="font-body-md text-body-md">SincronizaÃ§Ã£o de APIs Maritime-Connect</span>
+</div>
+<div class="w-32 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high/50 border border-white/5 rounded-lg">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span class="font-body-md text-body-md">Sanidade de Infraestrutura de Nuvem (Local)</span>
+</div>
+<div class="w-32 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high/50 border border-white/5 rounded-lg">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<span class="font-body-md text-body-md">Protocolos de SeguranÃ§a MarÃ­tima SSL/V3</span>
+</div>
+<div class="w-32 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full h-full bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Digital Signatures (Panel) -->
+<div class="col-span-12 lg:col-span-5 glass-panel rounded-xl p-6">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+                        Assinaturas Digitais (Blockchain Auth)
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center p-3 border border-outline-variant/10 rounded-lg bg-surface-container-lowest">
+<div class="w-10 h-10 rounded bg-on-tertiary-container/20 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-on-tertiary-container">hub</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">OPERACAO CENTRAL</p>
+<p class="font-body-md text-body-md font-bold text-primary">Adm. Ricardo Santos</p>
+</div>
+<span class="font-data-mono text-[10px] text-primary/70">ID: 0xFF8...2A1</span>
+</div>
+<div class="flex items-center p-3 border border-outline-variant/10 rounded-lg bg-surface-container-lowest">
+<div class="w-10 h-10 rounded bg-on-tertiary-container/20 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-on-tertiary-container">groups</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">COORDENACAO</p>
+<p class="font-body-md text-body-md font-bold text-primary">CapitÃ£ Elen Costa</p>
+</div>
+<span class="font-data-mono text-[10px] text-primary/70">ID: 0xBC4...99E</span>
+</div>
+<div class="flex items-center p-3 border border-outline-variant/10 rounded-lg bg-surface-container-lowest">
+<div class="w-10 h-10 rounded bg-on-tertiary-container/20 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-on-tertiary-container">security</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">ADMINISTRACAO</p>
+<p class="font-body-md text-body-md font-bold text-primary">Gov. Central MAR-2024</p>
+</div>
+<span class="font-data-mono text-[10px] text-primary/70">ID: 0x112...EFD</span>
+</div>
+</div>
+</div>
+<!-- Checkpoints Schedule (Timeline) -->
+<div class="col-span-12 glass-panel rounded-xl p-6">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-8">Cronograma de Checkpoints PÃ³s-Cutover</h3>
+<div class="relative flex items-center justify-between px-10">
+<div class="absolute h-0.5 bg-outline-variant/20 left-20 right-20 top-1/2 -translate-y-1/2 z-0"></div>
+<!-- Checkpoint T+1h -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-surface-container border-2 border-primary flex items-center justify-center mb-4 status-glow-success">
+<span class="font-data-mono text-primary font-bold">T+1</span>
+</div>
+<p class="font-body-md text-body-md font-bold">ValidaÃ§Ã£o Fluxo</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Status Inicial</p>
+</div>
+<!-- Checkpoint T+4h -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-surface-container border-2 border-outline flex items-center justify-center mb-4 opacity-50">
+<span class="font-data-mono text-on-surface font-bold">T+4</span>
+</div>
+<p class="font-body-md text-body-md font-bold opacity-50">Performance</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-50">LatÃªncia MÃ©dias</p>
+</div>
+<!-- Checkpoint T+12h -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-surface-container border-2 border-outline flex items-center justify-center mb-4 opacity-50">
+<span class="font-data-mono text-on-surface font-bold">T+12</span>
+</div>
+<p class="font-body-md text-body-md font-bold opacity-50">ConsistÃªncia</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-50">Sincronia DB</p>
+</div>
+<!-- Checkpoint T+24h -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-surface-container border-2 border-outline flex items-center justify-center mb-4 opacity-50">
+<span class="font-data-mono text-on-surface font-bold">T+24</span>
+</div>
+<p class="font-body-md text-body-md font-bold opacity-50">Fechamento</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-50">Handover Final</p>
+</div>
+</div>
+</div>
+<!-- Technical Analytics Gauge -->
+<div class="col-span-12 lg:col-span-4 glass-panel rounded-xl p-6">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Integridade de Rede</h4>
+<div class="flex items-center justify-center py-4">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="18.2" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg leading-none">100%</span>
+<span class="font-data-mono text-[10px] text-primary">PRONTO PARA OPERAÇÃO</span>
+</div>
+</div>
+</div>
+<div class="mt-4 border-t border-outline-variant/10 pt-4 flex justify-between">
+<div class="text-center">
+<p class="font-data-mono text-data-mono text-primary">12ms</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant uppercase">LatÃªncia</p>
+</div>
+<div class="text-center border-x border-outline-variant/10 px-4">
+<p class="font-data-mono text-data-mono text-primary">0.0%</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant uppercase">Packet Loss</p>
+</div>
+<div class="text-center">
+<p class="font-data-mono text-data-mono text-primary">99.9</p>
+<p class="font-body-sm text-[10px] text-on-surface-variant uppercase">SLA Grade</p>
+</div>
+</div>
+</div>
+<!-- System Logs (Technical Feed) -->
+<div class="col-span-12 lg:col-span-8 glass-panel rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Live Governance Logs</h4>
+<span class="flex items-center gap-1.5 font-data-mono text-[10px] text-primary animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            TRANSMISSÃO AO VIVO
+                        </span>
+</div>
+<div class="font-data-mono text-data-mono space-y-2 max-h-[180px] overflow-y-auto">
+<p class="text-on-surface/60"><span class="text-primary/40">[08:42:01]</span> <span class="text-on-surface">SYS_AUTH:</span> Assinatura digital 'CoordenaÃ§Ã£o' coletada via HW-Token.</p>
+<p class="text-on-surface/60"><span class="text-primary/40">[08:44:15]</span> <span class="text-on-surface">MIGR_SRV:</span> VerificaÃ§Ã£o de checksum concluÃ­da. 1,284,551 objetos OK.</p>
+<p class="text-on-surface/60"><span class="text-primary/40">[08:45:30]</span> <span class="text-primary">GOV_GATE:</span> Todos os critÃ©rios de seguranÃ§a marÃ­tima atendidos.</p>
+<p class="text-on-surface/60"><span class="text-primary/40">[08:46:12]</span> <span class="text-primary">SISTEMA:</span> BotÃ£o de 'entrada em produção' habilitado para o nÃ­vel de autoridade 'Portal de Operações'.</p>
+<p class="text-on-surface/40"><span class="text-primary/20">[08:46:45]</span> <span class="text-on-surface/30">AGUARDANDO:</span> Aguardando comando de execuÃ§Ã£o final...</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>
+
+
+

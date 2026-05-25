@@ -1,0 +1,536 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#3c4459",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-background": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "tertiary": "#c5cce6",
+                    "inverse-on-surface": "#263143",
+                    "secondary-container": "#39485a",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline-variant": "#3e484f",
+                    "inverse-primary": "#00668a",
+                    "primary-fixed": "#c4e7ff",
+                    "on-primary": "#00354a",
+                    "surface-container-highest": "#2a3548",
+                    "surface-container-high": "#1f2a3c",
+                    "surface-container": "#152031",
+                    "inverse-surface": "#d8e3fb",
+                    "outline": "#87929a",
+                    "surface-container-lowest": "#040e1f",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2c",
+                    "background": "#081425",
+                    "error": "#ffb4ab",
+                    "surface": "#081425",
+                    "on-primary-container": "#004965",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-dim": "#081425",
+                    "surface-container-low": "#111c2d",
+                    "surface-variant": "#2a3548",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "tertiary-container": "#a9b1ca",
+                    "surface-bright": "#2f3a4c",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "primary-container": "#38bdf8",
+                    "on-surface-variant": "#bdc8d1",
+                    "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "panel-gap": "12px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #081425;
+            color: #d8e3fb;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-primary {
+            box-shadow: 0 0 15px rgba(142, 213, 255, 0.15);
+        }
+        .glow-error {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.2);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            background-size: 200% 100%;
+        }
+        .active-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="overflow-hidden flex h-screen">
+<!-- Sidebar Component (Shared Component Logic) -->
+<aside class="h-screen w-64 flex-shrink-0 border-r border-outline-variant/10 bg-surface-container-lowest flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal de Operações</h1>
+<p class="font-body-md text-on-surface-variant text-xs mt-1">ID do Ativo: MAR-2024</p>
+</div>
+<nav class="flex-grow space-y-1 px-3">
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Painel</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">build</span>
+<span>Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span>Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Audit &amp; Governance</span>
+</a>
+<!-- ATIVO TAB: Access & Admin -->
+<a class="flex items-center gap-3 px-4 py-3 font-body-md bg-secondary-container text-on-secondary-container border-r-2 border-primary" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span>Access &amp; Admin</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">CookingPot</span>
+<span>Cutover</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Configurações</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Suporte</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col overflow-hidden bg-background">
+<!-- TopNavBar Component -->
+<header class="flex justify-between items-center px-6 w-full sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10 h-16">
+<div class="flex items-center gap-8">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">GestÃ£o de Acessos</h2>
+<nav class="hidden md:flex gap-6">
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Frota</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Logística</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-error-container text-on-error-container px-4 py-2 flex items-center gap-2 hover:brightness-125 transition-all glow-error font-title-sm text-title-sm rounded">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                    RevogaÃ§Ã£o CrÃ­tica (15min)
+                </button>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary p-2 transition-all"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary p-2 transition-all"><span class="material-symbols-outlined">history</span></button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline ml-2">
+<img alt="User Profile" data-alt="A close-up portrait of a professional maritime administrator with a confident expression. The lighting is focused and clean, emphasizing a high-tech corporate atmosphere with subtle blue backlighting. The aesthetic is sharp and modern, reflecting the steel and glass philosophy of luxury yacht operations. Deep shadows and luminous skin tones create a sense of command and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP502RKRUhny2LvX8k8vZkYVPVG2h-rwKjNrztLOO-LKedzoDnH9eROghIbZHUTuLz-oGH6-suMBB94v0g5MGEvCiw4MlgqtS5Fckifo1Kq22KrKN_PlHy64Dyfb73DY7mK6vGIrYLAzArRpo8DSnYsTu6ldEOGb_m9fRykRPXHjnhmFp1ZzJocEdFIEENj28_OzwpaP7CN4fuj8TPLmr9J-uA3-AtaLCNxUjMUjRlbbSVvr3F7qAKGlZae_gSvKZPXsL8xx_UeLNa"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas Content -->
+<div class="flex-grow overflow-y-auto p-6 space-y-6">
+<!-- Painel Stats -->
+<div class="grid grid-cols-12 gap-4">
+<div class="col-span-12 lg:col-span-8 grid grid-cols-3 gap-4">
+<div class="glass-panel p-4 flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">UsuÃ¡rios Ativos</span>
+<div class="flex items-end justify-between mt-2">
+<span class="font-display-lg text-display-lg text-primary">142</span>
+<span class="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded">+4 esta semana</span>
+</div>
+</div>
+<div class="glass-panel p-4 flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">PapÃ©is CrÃ­ticos</span>
+<div class="flex items-end justify-between mt-2">
+<span class="font-display-lg text-display-lg text-on-surface">12</span>
+<span class="text-xs text-on-surface-variant">SLA 100%</span>
+</div>
+</div>
+<div class="glass-panel p-4 flex flex-col justify-between border-l-2 border-primary">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Logs de Auditoria</span>
+<div class="flex items-end justify-between mt-2">
+<span class="font-display-lg text-display-lg text-on-surface">2.4k</span>
+<span class="text-xs text-on-surface-variant">Ãšltimas 24h</span>
+</div>
+</div>
+</div>
+<!-- Critical Revocation Status Panel -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-4 bg-error-container/5 border-error/20">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-title-sm text-title-sm text-error">Status de ContingÃªncia</h3>
+<span class="active-dot bg-error animate-pulse"></span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">Janela de Bloqueio</span>
+<span class="font-data-mono text-error">15:00 min</span>
+</div>
+<div class="w-full bg-surface-container h-1 overflow-hidden">
+<div class="bg-error h-full" style="width: 100%"></div>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">
+                            O modo de RevogaÃ§Ã£o CrÃ­tica suspende imediatamente todos os acessos operacionais nÃ£o essenciais. Utilizar apenas em caso de brecha confirmada ou sequestro de credenciais.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Main Layout: Bento Grid for Permissions & Users -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Column: Role Mapping & Structure -->
+<div class="col-span-12 xl:col-span-5 space-y-6">
+<!-- Cadastro Estrutural Section (LOCKED) -->
+<section class="glass-panel p-6 border-l-4 border-on-tertiary">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Cadastro Estrutural</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Bloqueado para Admin Central / Dev</p>
+</div>
+<span class="material-symbols-outlined text-outline">lock</span>
+</div>
+<div class="space-y-3 opacity-60 pointer-events-none">
+<div class="flex items-center justify-between p-3 bg-surface-container-high rounded border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<span class="font-body-md text-body-md">DefiniÃ§Ã£o de API Endpoints</span>
+</div>
+<span class="font-data-mono text-xs">2.4.0</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-high rounded border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">database</span>
+<span class="font-body-md text-body-md">Esquema de Schema de Dados</span>
+</div>
+<span class="font-data-mono text-xs">IMMUTABLE</span>
+</div>
+</div>
+</section>
+<!-- Mapeamento de PapÃ©is (Operational Roles) -->
+<section class="glass-panel p-6">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-6">Mapeamento de PapÃ©is</h3>
+<div class="grid grid-cols-2 gap-3">
+<!-- Role Card -->
+<div class="p-4 bg-surface-container border border-outline-variant/20 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">shield_person</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded uppercase">Alta</span>
+</div>
+<span class="font-body-md text-body-md font-semibold block">Admin Portal</span>
+<span class="text-[11px] text-on-surface-variant mt-1 block">GestÃ£o total de identidades</span>
+</div>
+<!-- Role Card -->
+<div class="p-4 bg-surface-container border border-outline-variant/20 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">engineering</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded uppercase">MÃ©dia</span>
+</div>
+<span class="font-body-md text-body-md font-semibold block">CoordenaÃ§Ã£o TÃ©cnica</span>
+<span class="text-[11px] text-on-surface-variant mt-1 block">AprovaÃ§Ãµes de manutenÃ§Ã£o</span>
+</div>
+<!-- Role Card -->
+<div class="p-4 bg-surface-container border border-outline-variant/20 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">hub</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded uppercase">MÃ©dia</span>
+</div>
+<span class="font-body-md text-body-md font-semibold block">OperaÃ§Ã£o Central</span>
+<span class="text-[11px] text-on-surface-variant mt-1 block">Monitoramento em tempo real</span>
+</div>
+<!-- Role Card -->
+<div class="p-4 bg-surface-container border border-outline-variant/20 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">badge</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded uppercase">Baixa</span>
+</div>
+<span class="font-body-md text-body-md font-semibold block">Equipe de Campo</span>
+<span class="text-[11px] text-on-surface-variant mt-1 block">ExecuÃ§Ã£o de ordens local</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: User List with Asset Scope -->
+<div class="col-span-12 xl:col-span-7 space-y-6">
+<section class="glass-panel overflow-hidden flex flex-col h-full">
+<div class="p-6 border-b border-outline-variant/10 flex items-center justify-between">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Cadastro Operacional</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lista de usuÃ¡rios por escopo de ativo</p>
+</div>
+<div class="flex gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant/20 rounded pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary/50 w-64" placeholder="Filtrar usuÃ¡rio..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 text-sm font-semibold rounded hover:brightness-110 transition-all">Novo UsuÃ¡rio</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">UsuÃ¡rio</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Papel</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Escopo Ativo</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase text-right">AÃ§Ãµes</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Table Row -->
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">RS</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Ricardo Silva</div>
+<div class="text-[11px] text-on-surface-variant">ricardo.s@yacht-ops.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">OperaÃ§Ã£o Central</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-data-mono text-xs bg-surface-container-highest px-2 py-1 rounded">MAR-2024-ENG</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="active-dot bg-[#4ADE80]"></span>
+<span class="font-body-sm text-body-sm">Ativo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<!-- Table Row -->
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded bg-secondary/20 flex items-center justify-center font-bold text-secondary text-xs">ML</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Marina Lopes</div>
+<div class="text-[11px] text-on-surface-variant">marina.l@yacht-ops.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">Equipe de Campo</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-data-mono text-xs bg-surface-container-highest px-2 py-1 rounded">DECK-AFT-12</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="active-dot bg-[#4ADE80]"></span>
+<span class="font-body-sm text-body-sm">Ativo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<!-- Table Row -->
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded bg-error-container/20 flex items-center justify-center font-bold text-error text-xs">AJ</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Arnaldo Junior</div>
+<div class="text-[11px] text-on-surface-variant">arnaldo.j@yacht-ops.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">CoordenaÃ§Ã£o TÃ©cnica</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-data-mono text-xs bg-surface-container-highest px-2 py-1 rounded">ALL-VESSELS</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="active-dot bg-error"></span>
+<span class="font-body-sm text-body-sm">Bloqueado</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<!-- Table Row -->
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">PB</div>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Paula Braz</div>
+<div class="text-[11px] text-on-surface-variant">paula.b@yacht-ops.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">OperaÃ§Ã£o Central</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-data-mono text-xs bg-surface-container-highest px-2 py-1 rounded">BRIDGE-SYS</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="active-dot bg-[#4ADE80]"></span>
+<span class="font-body-sm text-body-sm">Ativo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-auto p-4 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container-low">
+<span class="text-xs text-on-surface-variant">Mostrando 4 de 142 usuÃ¡rios</span>
+<div class="flex gap-1">
+<button class="p-1 hover:bg-surface-container-highest rounded"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="px-2 py-1 bg-primary/10 text-primary text-xs rounded">1</button>
+<button class="px-2 py-1 hover:bg-surface-container-highest text-xs rounded">2</button>
+<button class="px-2 py-1 hover:bg-surface-container-highest text-xs rounded">3</button>
+<button class="p-1 hover:bg-surface-container-highest rounded"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Technical Gauges / Health Indicators -->
+<div class="grid grid-cols-4 gap-4">
+<div class="glass-panel p-4 flex items-center gap-4">
+<div class="relative w-12 h-12">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2a3548" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#8ed5ff" stroke-dasharray="98, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-data-mono text-[10px]">98%</div>
+</div>
+<div>
+<div class="text-[11px] font-label-caps text-on-surface-variant uppercase">Health Acesso</div>
+<div class="text-sm font-semibold">Integridade Alta</div>
+</div>
+</div>
+<div class="glass-panel p-4 flex items-center gap-4">
+<div class="relative w-12 h-12">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2a3548" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#8ed5ff" stroke-dasharray="15, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-data-mono text-[10px]">15ms</div>
+</div>
+<div>
+<div class="text-[11px] font-label-caps text-on-surface-variant uppercase">LatÃªncia IAM</div>
+<div class="text-sm font-semibold">Resposta Nominal</div>
+</div>
+</div>
+<div class="glass-panel p-4 flex items-center gap-4">
+<div class="relative w-12 h-12">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2a3548" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4ade80" stroke-dasharray="100, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-data-mono text-[10px]">100%</div>
+</div>
+<div>
+<div class="text-[11px] font-label-caps text-on-surface-variant uppercase">Compliance</div>
+<div class="text-sm font-semibold">Auditoria Verificada</div>
+</div>
+</div>
+<div class="glass-panel p-4 flex items-center gap-4">
+<div class="relative w-12 h-12">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2a3548" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#8ed5ff" stroke-dasharray="45, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-data-mono text-[10px]">45%</div>
+</div>
+<div>
+<div class="text-[11px] font-label-caps text-on-surface-variant uppercase">MFA Adoption</div>
+<div class="text-sm font-semibold">CrÃ­tico / Requerido</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
+
+

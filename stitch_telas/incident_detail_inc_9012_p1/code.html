@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#111c2d",
+            "surface-variant": "#2a3548",
+            "surface-container": "#152031",
+            "on-secondary-fixed": "#0d1c2d",
+            "secondary-container": "#39485a",
+            "primary": "#8ed5ff",
+            "primary-fixed": "#c4e7ff",
+            "on-secondary-fixed-variant": "#39485a",
+            "surface-container-lowest": "#040e1f",
+            "on-tertiary-container": "#3c4459",
+            "on-secondary": "#233143",
+            "primary-fixed-dim": "#7bd0ff",
+            "on-error-container": "#ffdad6",
+            "on-tertiary": "#283044",
+            "error": "#ffb4ab",
+            "tertiary": "#c5cce6",
+            "on-surface-variant": "#bdc8d1",
+            "on-background": "#d8e3fb",
+            "on-tertiary-fixed": "#131b2e",
+            "surface-tint": "#7bd0ff",
+            "on-tertiary-fixed-variant": "#3f465c",
+            "on-primary": "#00354a",
+            "on-primary-container": "#004965",
+            "inverse-primary": "#00668a",
+            "on-primary-fixed-variant": "#004c69",
+            "surface-container-highest": "#2a3548",
+            "outline-variant": "#3e484f",
+            "background": "#081425",
+            "tertiary-container": "#a9b1ca",
+            "outline": "#87929a",
+            "tertiary-fixed": "#dae2fd",
+            "primary-container": "#38bdf8",
+            "inverse-on-surface": "#263143",
+            "surface-bright": "#2f3a4c",
+            "secondary": "#b9c8de",
+            "on-primary-fixed": "#001e2c",
+            "error-container": "#93000a",
+            "surface-container-high": "#1f2a3c",
+            "secondary-fixed": "#d4e4fa",
+            "inverse-surface": "#d8e3fb",
+            "on-error": "#690005",
+            "tertiary-fixed-dim": "#bec6e0",
+            "surface-dim": "#081425",
+            "secondary-fixed-dim": "#b9c8de",
+            "surface": "#081425",
+            "on-secondary-container": "#a7b6cc",
+            "on-surface": "#d8e3fb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "stack-md": "16px",
+            "grid-columns": "12",
+            "unit": "4px",
+            "stack-tight": "4px",
+            "panel-gap": "12px",
+            "max-width": "1600px",
+            "container-padding": "24px"
+          },
+          "fontFamily": {
+            "data-mono": ["JetBrains Mono"],
+            "title-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-caps": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-panel {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(21, 32, 49, 0.8);
+      backdrop-filter: blur(12px);
+    }
+    .p1-glow {
+      box-shadow: 0 0 15px rgba(255, 180, 171, 0.3);
+    }
+    .sla-shimmer {
+      background: linear-gradient(90deg, #93000a 25%, #ffb4ab 50%, #93000a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite linear;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen overflow-x-hidden">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-white/10 bg-surface-container-lowest flex flex-col py-6 px-4 z-[60]">
+<div class="mb-8 px-2">
+<div class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">AURA FLEET</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-1">MARITIME COMMAND</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</div>
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</div>
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="build">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</div>
+<div class="flex items-center px-3 py-3 text-primary bg-primary/10 border-l-4 border-primary font-bold transition-all scale-[0.98] cursor-pointer">
+<span class="material-symbols-outlined mr-3" data-icon="report_problem">report_problem</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</div>
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 hover:text-on-surface transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mr-3" data-icon="verified_user">verified_user</span>
+<span class="font-body-md text-body-md">Audit</span>
+</div>
+</nav>
+<div class="mt-auto space-y-1 pt-4 border-t border-white/5">
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</div>
+<div class="flex items-center px-3 py-3 text-on-surface-variant font-medium hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<span class="material-symbols-outlined mr-3" data-icon="help_outline">help_outline</span>
+<span class="font-body-md text-body-md">Support</span>
+</div>
+<div class="mt-4 px-3 py-3 glass-panel rounded-xl flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-primary/30" data-alt="A professional headshot of a chief engineer in a maritime uniform with a focused expression against a backdrop of a modern technological ship console. The lighting is cold and professional with blue and slate tones consistent with high-stakes maritime command centers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCotG9SRrxSpfAQuddrHYQV2OlDdiKnmCI8JeGXZ8ttaRInjJqAUdKVo-c3OygEXK7Qi9d3ZnucAW4ZuyV8_7aeqBvgy9cghYhbUpNE4KzvTbn3WNFukiKMqLSx1HYRRXgo3NXYL4NP91DbSs3zIjopJANzm8Whc51euTABSRgW8ueHr53FDw0PkRdw-ir_Xqxezkte7-xDAnn1Tf05i2IPfYNwQOnJdMtmaMVhhkvGYbA25w1KyW508j6Q1F2vpQA92LhXWCXcLMf4"/>
+<div class="overflow-hidden">
+<div class="font-label-caps text-[10px] text-primary truncate">CHIEF ENGINEER</div>
+<div class="font-body-sm text-body-sm text-on-surface truncate">Marcus Vane</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 border-b border-white/10 bg-surface-container/80 backdrop-blur-md flex justify-between items-center px-stack-md z-50">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-low px-4 py-1.5 rounded-lg border border-white/5 flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] mr-2" data-icon="search">search</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Search command records...</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="settings_input_component">settings_input_component</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="help">help</span>
+</div>
+<div class="h-8 w-px bg-white/10 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<div class="font-label-caps text-label-caps text-on-surface">VESSEL STATUS: RED</div>
+<div class="font-data-mono text-[10px] text-error flex items-center justify-end">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1 animate-pulse"></span> ACTIVE BREACH
+          </div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 p-container-padding max-w-max-width mx-auto">
+<!-- Incident Header Section -->
+<section class="mb-panel-gap flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-1">
+<div class="flex items-center gap-3 mb-2">
+<span class="font-data-mono text-data-mono bg-surface-container-high px-2 py-0.5 rounded border border-white/10">ID: INC-992-ALPHA</span>
+<span class="bg-error-container text-error border border-error/30 px-3 py-0.5 font-label-caps text-label-caps rounded-full flex items-center gap-1.5 p1-glow">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warning</span>
+            P1 CRITICAL
+          </span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight">Fire in Galley - MAR-2024</h1>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="person">person</span>
+            Commander: <span class="text-on-surface font-semibold">Central Ops</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span>
+            Vessel: <span class="text-on-surface font-semibold">MY Solaris</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+            Elapsed: <span class="text-error font-semibold font-data-mono">04h 12m 33s</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high border border-white/10 px-4 py-2 text-on-surface font-semibold font-body-md rounded hover:bg-surface-variant transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="share">share</span>
+          Export Report
+        </button>
+<div class="relative group">
+<button class="bg-on-surface/5 border border-white/5 px-4 py-2 text-on-surface-variant font-semibold font-body-md rounded cursor-not-allowed opacity-50 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+            Resolve Incident
+          </button>
+<div class="absolute bottom-full right-0 mb-2 w-64 p-3 glass-panel rounded-lg shadow-xl text-error text-[12px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+<div class="font-bold mb-1">UNABLE TO RESOLVE</div>
+            Cannot resolve: Root Cause Analysis and Central Ops Validation pending.
+          </div>
+</div>
+</div>
+</section>
+<!-- Content Grid -->
+<div class="grid grid-cols-12 gap-panel-gap">
+<!-- Left Column: Overview & Tasks -->
+<div class="col-span-12 lg:col-span-7 space-y-panel-gap">
+<!-- Incident Overview -->
+<div class="glass-panel p-stack-md rounded-xl">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest">INCIDENT OVERVIEW</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="info">info</span>
+</div>
+<div class="space-y-6">
+<div>
+<label class="font-label-caps text-[10px] text-on-surface-variant block mb-1">IMPACT SUMMARY</label>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                Localized electrical fire in Main Galley Deck 2. Suppression systems activated at 02:44 UTC. Primary damage restricted to induction range and overhead ventilation. No injuries reported. Vessel power temporarily switched to STBD Emergency Grid.
+              </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-3 border border-white/5 rounded">
+<label class="font-label-caps text-[10px] text-on-surface-variant block mb-1">ROOT CAUSE</label>
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-semibold text-body-md">Technical / Electrical</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 border border-white/5 rounded">
+<label class="font-label-caps text-[10px] text-on-surface-variant block mb-1">INITIAL RESPONSE</label>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[16px]" data-icon="fire_extinguisher">fire_extinguisher</span>
+<span class="font-semibold text-body-md">Auto-Suppression Stage 2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Linked Maintenance Tickets -->
+<div class="glass-panel p-stack-md rounded-xl">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest">LINKED MAINTENANCE</h3>
+<button class="text-primary text-[12px] font-semibold hover:underline">Link Ticket +</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest border border-white/5 rounded-lg group hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-surface-variant/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="settings">settings</span>
+</div>
+<div>
+<div class="font-data-mono text-[12px] text-on-surface">#TK-4402</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">STBD Engine Overhaul - Post-Power Surge</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary border border-secondary/30 rounded text-[10px] font-bold">IN PROGRESS</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest border border-white/5 rounded-lg group hover:border-primary/30 transition-all cursor-pointer opacity-80">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-surface-variant/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<div class="font-data-mono text-[12px] text-on-surface">#TK-4405</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Galley Ventilation Replacement</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-surface-variant/50 text-on-surface-variant border border-white/10 rounded text-[10px] font-bold">PENDING PARTS</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Follow-up Actions -->
+<div class="glass-panel p-stack-md rounded-xl">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest mb-4">MANDATORY FOLLOW-UP ACTIONS</h3>
+<div class="space-y-2">
+<div class="flex items-start gap-3 p-3 bg-surface-container-low rounded border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary" data-icon="check_box" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_box</span>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Immediate Crew Headcount</div>
+<div class="text-[12px] text-on-surface-variant">Verified by Captain at 02:50 UTC.</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-surface-container-low rounded border-l-4 border-error">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="check_box_outline_blank">check_box_outline_blank</span>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Damage Assessment Photos Upload</div>
+<div class="text-[12px] text-error font-medium">Overdue by 45 minutes.</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-surface-container-low rounded border-l-4 border-outline">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="check_box_outline_blank">check_box_outline_blank</span>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">Central Ops Root Cause Analysis (RCA)</div>
+<div class="text-[12px] text-on-surface-variant">Pending technical upload from Fleet Hub.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Validation & Timeline -->
+<div class="col-span-12 lg:col-span-5 space-y-panel-gap">
+<!-- Validation Block -->
+<div class="glass-panel p-stack-md rounded-xl border-error/20 bg-error-container/5 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 sla-shimmer"></div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-error" data-icon="verified">verified</span>
+<h3 class="font-label-caps text-label-caps text-error tracking-widest">CENTRAL VALIDATION REQUIRED</h3>
+</div>
+<div class="bg-background/50 rounded-lg border border-white/5 p-4 mb-6">
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-full bg-error/10">
+<span class="material-symbols-outlined text-error text-[20px]" data-icon="pending_actions">pending_actions</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-bold text-on-surface">Awaiting Final Verification</div>
+<div class="text-[13px] text-on-surface-variant mt-1 leading-snug">Incident cannot be closed without digital sign-off from two authorized Central Ops officers.</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="text-[11px] font-label-caps text-on-surface-variant mb-2">AUDIT LOG: VALIDATION PIPELINE</div>
+<div class="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-white/10">
+<div class="relative">
+<span class="absolute -left-[19px] top-1 w-[14px] h-[14px] rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-primary" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</span>
+<div class="font-body-sm text-body-sm font-semibold">Incident Acknowledged</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">02:46 UTC • Fleet Captain J. Rivers</div>
+</div>
+<div class="relative">
+<span class="absolute -left-[19px] top-1 w-[14px] h-[14px] rounded-full bg-surface-container-high border border-white/20 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+</span>
+<div class="font-body-sm text-body-sm font-semibold text-error">Root Cause Verification</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">PENDING • Lead Technical Analyst</div>
+</div>
+<div class="relative opacity-40">
+<span class="absolute -left-[19px] top-1 w-[14px] h-[14px] rounded-full bg-surface-container-high border border-white/20"></span>
+<div class="font-body-sm text-body-sm font-semibold">Regulatory Compliance Check</div>
+<div class="font-data-mono text-[10px] text-on-surface-variant">LOCKED • Legal Dept</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2.5 bg-error/10 border border-error/30 text-error font-bold font-body-md rounded hover:bg-error/20 transition-all">
+            Request Expedited Validation
+          </button>
+</div>
+<!-- Incident Timeline -->
+<div class="glass-panel p-stack-md rounded-xl flex-1 flex flex-col h-[500px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest">COMMAND TIMELINE</h3>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="filter_list">filter_list</span>
+</div>
+<div class="flex-1 overflow-y-auto pr-2 space-y-6 custom-scrollbar">
+<!-- Timeline Item 1 -->
+<div class="flex gap-4">
+<div class="text-right min-w-[64px]">
+<div class="font-data-mono text-[11px] text-on-surface">06:54:12</div>
+<div class="text-[9px] text-on-surface-variant">NOW</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-4 ring-primary/10"></div>
+<div class="w-px flex-1 bg-white/10"></div>
+</div>
+<div class="pb-6">
+<div class="font-body-sm text-body-sm font-bold text-on-surface">Status Update: Monitoring Stage</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Air filtration systems running at 110% to clear residual particulates. Sensors reading normal.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="flex gap-4">
+<div class="text-right min-w-[64px]">
+<div class="font-data-mono text-[11px] text-on-surface">06:45:00</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant ring-4 ring-surface-variant/20"></div>
+<div class="w-px flex-1 bg-white/10"></div>
+</div>
+<div class="pb-6">
+<div class="font-body-sm text-body-sm font-bold text-on-surface">Communication Log: Bridge to Fleet</div>
+<div class="bg-surface-container-low p-3 rounded mt-2 border border-white/5 italic text-[13px] text-on-secondary-container">
+                  "Damage assessment team 1 returning to station. Galley secured. Requesting switch back to primary grid pending engineering sign-off."
+                </div>
+</div>
+</div>
+<!-- Timeline Item 3 (Alert) -->
+<div class="flex gap-4">
+<div class="text-right min-w-[64px]">
+<div class="font-data-mono text-[11px] text-error">03:12:04</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-error ring-4 ring-error/20"></div>
+<div class="w-px flex-1 bg-white/10"></div>
+</div>
+<div class="pb-6">
+<div class="font-body-sm text-body-sm font-bold text-error">CRITICAL ALERT: Power Surge Detected</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Bus B breaker tripped. Voltage fluctuation 440V -&gt; 512V. Systems protected by fail-safe.</p>
+</div>
+</div>
+<!-- Timeline Item 4 -->
+<div class="flex gap-4">
+<div class="text-right min-w-[64px]">
+<div class="font-data-mono text-[11px] text-on-surface">02:44:30</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-variant"></div>
+<div class="w-px flex-1 bg-white/10"></div>
+</div>
+<div class="pb-6">
+<div class="font-body-sm text-body-sm font-bold text-on-surface">Incident Origin: Alarm 402-B</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Thermal sensor triggered in Galley Zone 4. Auto-suppression armed.</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10">
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-white/5 p-2 rounded-lg">
+<input class="bg-transparent border-none focus:ring-0 text-body-sm flex-1 placeholder:text-on-surface-variant" placeholder="Add entry to log..." type="text"/>
+<button class="bg-primary/20 text-primary p-1.5 rounded hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<style>
+    /* Custom Scrollbar for the Timeline */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(142, 213, 255, 0.2);
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(142, 213, 255, 0.4);
+    }
+  </style>
+</body></html>

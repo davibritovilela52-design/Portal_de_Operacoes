@@ -1,0 +1,461 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#3c4459",
+                    "on-secondary": "#233143",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-background": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#d4e4fa",
+                    "on-secondary-fixed": "#0d1c2d",
+                    "secondary-fixed-dim": "#b9c8de",
+                    "tertiary": "#c5cce6",
+                    "inverse-on-surface": "#263143",
+                    "secondary-container": "#39485a",
+                    "on-error": "#690005",
+                    "surface-tint": "#7bd0ff",
+                    "outline-variant": "#3e484f",
+                    "inverse-primary": "#00668a",
+                    "primary-fixed": "#c4e7ff",
+                    "on-primary": "#00354a",
+                    "surface-container-highest": "#2a3548",
+                    "surface-container-high": "#1f2a3c",
+                    "surface-container": "#152031",
+                    "inverse-surface": "#d8e3fb",
+                    "outline": "#87929a",
+                    "surface-container-lowest": "#040e1f",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001e2c",
+                    "background": "#081425",
+                    "error": "#ffb4ab",
+                    "surface": "#081425",
+                    "on-primary-container": "#004965",
+                    "primary": "#8ed5ff",
+                    "on-surface": "#d8e3fb",
+                    "on-secondary-container": "#a7b6cc",
+                    "surface-dim": "#081425",
+                    "surface-container-low": "#111c2d",
+                    "surface-variant": "#2a3548",
+                    "primary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#39485a",
+                    "on-primary-fixed-variant": "#004c69",
+                    "tertiary-container": "#a9b1ca",
+                    "surface-bright": "#2f3a4c",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "primary-container": "#38bdf8",
+                    "on-surface-variant": "#bdc8d1",
+                    "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "max-width": "1600px",
+                    "panel-gap": "12px",
+                    "stack-tight": "4px",
+                    "grid-columns": "12",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .shimmer-urgent {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-urgent::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 180, 171, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3e484f; border-radius: 2px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30 min-h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 flex-shrink-0 bg-surface-container-lowest border-r border-outline-variant/10 flex flex-col py-container-padding">
+<div class="px-6 mb-10">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal de Operações</h1>
+<p class="text-on-surface-variant font-body-sm mt-1 opacity-60">ID do Ativo: MAR-2024</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Painel</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-body-md">Agenda</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-body-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-body-md">Incidents</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-3 rounded bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md">Access &amp; Admin</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">CookingPot</span>
+<span class="font-body-md">Cutover</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-outline-variant/10 pt-4 space-y-1">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-3 rounded font-title-sm hover:brightness-110 active:scale-[0.98] transition-all mb-4">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+<span>Comando Rápido</span>
+</button>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Configurações</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md">Suporte</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
+<!-- TopNavBar -->
+<header class="w-full h-16 flex justify-between items-center px-container-padding sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-8 flex-1">
+<div class="relative max-w-md w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded pl-10 pr-4 py-2 text-body-sm focus:ring-1 focus:ring-primary/50 text-on-surface" placeholder="Pesquisar auditoria, ator ou log..." type="text"/>
+</div>
+<nav class="hidden md:flex gap-6">
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Frota</a>
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Logística</a>
+<a class="font-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-surface-container-highest text-on-surface px-4 py-2 rounded font-title-sm hover:bg-surface-bright transition-all">Exportar Dados</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded font-title-sm hover:brightness-110 transition-all">Novo Incidente</button>
+<div class="flex items-center gap-2 border-l border-outline-variant/20 ml-2 pl-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">history</span></button>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="User Profile" data-alt="Close-up portrait of a professional maritime operations officer in a clean, modern dark navy uniform. The background is a blurred high-tech command center with soft blue and slate tones. The lighting is crisp and professional, highlighting a focused and authoritative expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA5aERmslKjtQUjy5hvYkQJyTY6lgVQfWCM3cCzETWCOl4TpsrT3nc8rVckOgWkPxMvK7DJWbKbjZaSvdb-rT1MmJRMIUPD8kwmmMoKoVsAmU_bZbLGz9sjDhO7Hzx-V8jBTw0zc2TlD11JPn1rt25TegHXTlKhOpoiRipR6Th8Fu4kByrQWuspTCIzdli3FyL-vBlDZA4rMNouxBmwwlYDBjtprc5nVBySvZzccuPFL1oDTfLHwuTYma07TJxuEbUBEGWHxlOaNtF"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Timeline Center -->
+<div class="flex-1 flex flex-col p-container-padding space-y-6 overflow-y-auto custom-scrollbar">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Timeline de Auditoria e GovernanÃ§a</h2>
+<p class="text-on-surface-variant text-body-md">AnÃ¡lise forense de eventos operacionais e decisÃµes de override.</p>
+</div>
+<div class="flex gap-2">
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-outline uppercase">Ativo</span>
+<select class="bg-surface-container-high border-none rounded text-body-sm py-1.5 px-3 min-w-[120px] text-on-surface outline-none">
+<option>Todos os Ativos</option>
+<option>Motor Principal</option>
+<option>Sist. CombustÃ­vel</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-outline uppercase">Ator</span>
+<select class="bg-surface-container-high border-none rounded text-body-sm py-1.5 px-3 min-w-[120px] text-on-surface outline-none">
+<option>Todos</option>
+<option>CapitÃ£o</option>
+<option>Eng. Chefe</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-outline uppercase">Tipo</span>
+<select class="bg-surface-container-high border-none rounded text-body-sm py-1.5 px-3 min-w-[120px] text-on-surface outline-none">
+<option>Todos os Tipos</option>
+<option>Overrides</option>
+<option>RetificaÃ§Ãµes</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Timeline Feed -->
+<div class="space-y-4 relative">
+<div class="absolute left-[27px] top-4 bottom-4 w-px bg-outline-variant/30"></div>
+<!-- Event 1: Critical Decision (Active) -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-14 h-14 rounded bg-primary/20 flex items-center justify-center border border-primary/40 ring-4 ring-background">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+</div>
+<div class="flex-1 glass-panel p-4 rounded-lg border-l-4 border-l-primary hover:border-l-primary-container transition-all cursor-pointer bg-surface-container-high/40">
+<div class="flex justify-between items-start mb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-label-caps font-label-caps text-primary uppercase bg-primary/10 px-2 py-0.5 rounded">DecisÃ£o CrÃ­tica</span>
+<span class="text-data-mono font-data-mono text-outline">EVT-9042-ALPHA</span>
+</div>
+<h3 class="font-title-sm text-title-sm">Override de PressÃ£o do Turboalimentador (M1)</h3>
+</div>
+<span class="text-data-mono font-data-mono text-on-surface-variant">Hoje, 08:42:12</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-3 max-w-2xl">
+                                Comando manual emitido para forÃ§ar bypass do limitador de seguranÃ§a eletrÃ´nico durante manobra de emergÃªncia em canal restrito.
+                            </p>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-outline-variant/40 overflow-hidden">
+<img alt="Actor" data-alt="Detailed professional headshot of a senior maritime engineer with graying hair and a serious expression. Wearing a structured dark grey technical uniform. Neutral, high-contrast industrial background with soft lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-H7aChg3n8_3Gvc_FIgi-04wfT9ERagj9iDWkF6RZQYWyucWAZPmjsckVmnjF65o-Ci4TJ0pjPwUkE5K2AE1PcwcUYBGlfhXBINR60BZTW8fQq6SrZIfLS5_TATYuKPOsYBHQ1JA1Q_dXfe5BBndMiOCs6-RXeLFcwDEi3Ktt2659U6kygalKnpTBcX8WlIV-8ZHgj9a8bClJMGv8mcTKRiDIIuapX9cdZPVHAe1aPZm7SpZujXQaL2YVSdR_dFz8F9y94Ex3aXAw"/>
+</div>
+<span class="text-body-sm text-on-surface">Cap. Julian Vance</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">anchor</span>
+<span class="text-body-sm">Ponte de Comando</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 2: Rectification -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-14 h-14 rounded bg-surface-container-highest flex items-center justify-center border border-outline-variant/40 ring-4 ring-background">
+<span class="material-symbols-outlined text-tertiary">edit_note</span>
+</div>
+<div class="flex-1 glass-panel p-4 rounded-lg hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-label-caps font-label-caps text-tertiary uppercase bg-tertiary/10 px-2 py-0.5 rounded">RetificaÃ§Ã£o de Log</span>
+<span class="text-data-mono font-data-mono text-outline">EVT-8921-GAMMA</span>
+</div>
+<h3 class="font-title-sm text-title-sm">CorreÃ§Ã£o de NÃ­vel de ReservatÃ³rio Auxiliar</h3>
+</div>
+<span class="text-data-mono font-data-mono text-on-surface-variant">Ontem, 22:15:00</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-3">
+                                Valor anterior de 85% retificado para 72% apÃ³s conferÃªncia manual no sensor secundÃ¡rio. DivergÃªncia reportada via mÃ³dulo de manutenÃ§Ã£o.
+                            </p>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-outline-variant/40 overflow-hidden">
+<img alt="Actor" data-alt="Portrait of a female technical systems officer with sharp features and pulled-back hair. She wears a dark blue maritime uniform. The lighting is cool-toned, echoing a technical control room atmosphere. Professional and determined look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApAQC_ecuLyIbzEEDt19FPz35XhhlbBSr73V4mrC40mcs8XMBpUgXYiuDYEeDLiY1sh3GEuzUS6Q6r2gGalijKF3BYNDt3WFJQhH-gXzqPH0Urfsm1fqpsxjVPVV4FDP1upsAIY8-Fc9YlkXWG0-cbZ5JIyckZxdM1_qoQZhdOeGzHdf0cuNqepcmeilWwioNH-xvrtVOM-2yYnqyJWJUxGMG6wDZcADJay2LWn5ZF2BTG5b9RDBj-8QEgw8i6TSkqQjEVef9yj6EN"/>
+</div>
+<span class="text-body-sm text-on-surface">Eng. Sarah Chen</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 3: SLA Warning (Breach) -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-14 h-14 rounded bg-error-container/20 flex items-center justify-center border border-error/40 ring-4 ring-background">
+<span class="material-symbols-outlined text-error">gavel</span>
+</div>
+<div class="flex-1 glass-panel p-4 rounded-lg border-l-4 border-l-error bg-error-container/5">
+<div class="flex justify-between items-start mb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-label-caps font-label-caps text-error uppercase bg-error/10 px-2 py-0.5 rounded">ViolaÃ§Ã£o de GovernanÃ§a</span>
+<span class="text-data-mono font-data-mono text-outline">EVT-8850-BETA</span>
+</div>
+<h3 class="font-title-sm text-title-sm">Acesso NÃ£o Autorizado a Protocolos de Cutover</h3>
+</div>
+<span class="text-data-mono font-data-mono text-on-surface-variant">Ontem, 19:30:45</span>
+</div>
+<div class="w-full bg-outline-variant/10 h-1 rounded-full mb-3 shimmer-urgent">
+<div class="bg-error h-full rounded-full" style="width: 100%;"></div>
+</div>
+<p class="text-body-md text-on-surface-variant">
+                                Tentativa de modificaÃ§Ã£o de parÃ¢metros de rede sem assinatura digital do Oficial de SeguranÃ§a. Sistema bloqueado preventivamente.
+                            </p>
+</div>
+</div>
+<!-- Event 4: System Audit -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-14 h-14 rounded bg-surface-container-highest flex items-center justify-center border border-outline-variant/40 ring-4 ring-background">
+<span class="material-symbols-outlined text-outline">verified_user</span>
+</div>
+<div class="flex-1 glass-panel p-4 rounded-lg hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-label-caps font-label-caps text-outline-variant uppercase bg-outline-variant/10 px-2 py-0.5 rounded">Auditoria de Rotina</span>
+<span class="text-data-mono font-data-mono text-outline">EVT-8744-DELTA</span>
+</div>
+<h3 class="font-title-sm text-title-sm">VerificaÃ§Ã£o Completa de Integridade de Dados</h3>
+</div>
+<span class="text-data-mono font-data-mono text-on-surface-variant">Ontem, 12:00:00</span>
+</div>
+<p class="text-body-md text-on-surface-variant">
+                                SincronizaÃ§Ã£o automÃ¡tica de logs entre o servidor principal e backup off-shore concluÃ­da com 100% de paridade.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail Panel (Right Sidebar) -->
+<aside class="w-[400px] bg-surface-container border-l border-outline-variant/10 flex flex-col p-container-padding overflow-y-auto custom-scrollbar">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md">Detalhe da DecisÃ£o</h3>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/20 rounded p-4 mb-6">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded bg-primary/10 border border-primary/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">warning</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-primary uppercase mb-1">Status: CrÃ­tico / Ativo</p>
+<h4 class="font-title-sm text-title-sm">Override M1 - Turbo</h4>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<span class="text-label-caps font-label-caps text-outline uppercase block mb-1">Justificativa Forense</span>
+<p class="text-body-md text-on-surface bg-surface-container-highest p-3 rounded border-l-2 border-primary">
+                                "Necessidade imediata de torque para evitar colisÃ£o lateral com bÃ³ia de sinalizaÃ§Ã£o deslocada no Canal de Suez. O limitador automÃ¡tico nÃ£o permitia a rotaÃ§Ã£o necessÃ¡ria para a correÃ§Ã£o de curso sob vento lateral de 40 nÃ³s."
+                            </p>
+</div>
+<div>
+<span class="text-label-caps font-label-caps text-outline uppercase block mb-1">Alternativas Consideradas</span>
+<ul class="text-body-md text-on-surface-variant space-y-2 list-disc pl-5">
+<li>Uso de propulsores de proa (Descartado: insuficiente para a massa do navio na velocidade atual).</li>
+<li>Ancoragem de emergÃªncia (Descartado: risco de ruptura de cabos submarinos na zona).</li>
+</ul>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/10">
+<div>
+<span class="text-label-caps font-label-caps text-outline uppercase block mb-1">Impacto Estimado</span>
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="text-data-mono font-data-mono">Desgaste +15%</span>
+</div>
+</div>
+<div>
+<span class="text-label-caps font-label-caps text-outline uppercase block mb-1">Risco Residual</span>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+<span class="text-data-mono font-data-mono">Controlado</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<h5 class="font-title-sm text-title-sm border-b border-outline-variant/10 pb-2">Assinaturas Digitais</h5>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between glass-panel p-2 rounded">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<div class="flex flex-col">
+<span class="text-body-sm font-semibold">Julian Vance</span>
+<span class="text-data-mono font-data-mono text-[10px] text-outline">CAP-SEC-00192-X</span>
+</div>
+</div>
+<span class="text-data-mono font-data-mono text-[10px] text-on-surface-variant">08:42:15</span>
+</div>
+<div class="flex items-center justify-between glass-panel p-2 rounded opacity-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">pending</span>
+<div class="flex flex-col">
+<span class="text-body-sm font-semibold">Sarah Chen</span>
+<span class="text-data-mono font-data-mono text-[10px] text-outline">ENG-SEC-00441-A</span>
+</div>
+</div>
+<span class="text-body-sm text-primary italic">Pendente</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6">
+<button class="w-full bg-surface-bright border border-primary/20 text-primary py-3 rounded font-title-sm hover:bg-primary/10 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">description</span>
+                        Gerar RelatÃ³rio Forense PDF
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Hidden on desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-lowest flex justify-around items-center border-t border-outline-variant/10 z-50 px-4">
+<a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px]">Logs</span>
+</a>
+<a class="flex flex-col items-center text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="text-[10px]">Audit</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Ajustes</span>
+</a>
+</nav>
+</body></html>
+
+

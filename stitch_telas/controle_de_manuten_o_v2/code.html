@@ -1,0 +1,505 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lista de ManutenÃ§Ã£o - Portal de Operações</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-container": "#3c4459",
+                "on-secondary": "#233143",
+                "tertiary-fixed": "#dae2fd",
+                "on-tertiary-fixed-variant": "#3f465c",
+                "tertiary-fixed-dim": "#bec6e0",
+                "on-background": "#d8e3fb",
+                "error-container": "#93000a",
+                "secondary-fixed": "#d4e4fa",
+                "on-secondary-fixed": "#0d1c2d",
+                "secondary-fixed-dim": "#b9c8de",
+                "tertiary": "#c5cce6",
+                "inverse-on-surface": "#263143",
+                "secondary-container": "#39485a",
+                "on-error": "#690005",
+                "surface-tint": "#7bd0ff",
+                "outline-variant": "#3e484f",
+                "inverse-primary": "#00668a",
+                "primary-fixed": "#c4e7ff",
+                "on-primary": "#00354a",
+                "surface-container-highest": "#2a3548",
+                "surface-container-high": "#1f2a3c",
+                "surface-container": "#152031",
+                "inverse-surface": "#d8e3fb",
+                "outline": "#87929a",
+                "surface-container-lowest": "#040e1f",
+                "on-error-container": "#ffdad6",
+                "on-primary-fixed": "#001e2c",
+                "background": "#081425",
+                "error": "#ffb4ab",
+                "surface": "#081425",
+                "on-primary-container": "#004965",
+                "primary": "#8ed5ff",
+                "on-surface": "#d8e3fb",
+                "on-secondary-container": "#a7b6cc",
+                "surface-dim": "#081425",
+                "surface-container-low": "#111c2d",
+                "surface-variant": "#2a3548",
+                "primary-fixed-dim": "#7bd0ff",
+                "on-secondary-fixed-variant": "#39485a",
+                "on-primary-fixed-variant": "#004c69",
+                "tertiary-container": "#a9b1ca",
+                "surface-bright": "#2f3a4c",
+                "on-tertiary-fixed": "#131b2e",
+                "on-tertiary": "#283044",
+                "primary-container": "#38bdf8",
+                "on-surface-variant": "#bdc8d1",
+                "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "unit": "4px",
+                "stack-md": "16px",
+                "max-width": "1600px",
+                "panel-gap": "12px",
+                "stack-tight": "4px",
+                "grid-columns": "12",
+                "container-padding": "24px"
+            },
+            "fontFamily": {
+                "display-lg": ["Inter"],
+                "data-mono": ["JetBrains Mono"],
+                "body-sm": ["Inter"],
+                "headline-md": ["Inter"],
+                "body-md": ["Inter"],
+                "title-sm": ["Inter"],
+                "label-caps": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-border { border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow-primary { box-shadow: 0 0 8px 0 rgba(142, 213, 255, 0.3); }
+        .glow-error { box-shadow: 0 0 8px 0 rgba(255, 180, 171, 0.3); }
+        .shimmer-sla {
+            background: linear-gradient(90deg, transparent, rgba(255, 180, 171, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 flex-shrink-0 bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant/10 flex flex-col py-container-padding">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal de Operações</h1>
+<p class="text-on-surface-variant font-body-sm text-body-sm">ID do Ativo: MAR-2024</p>
+</div>
+<nav class="flex-grow space-y-1 px-2">
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span>Painel</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">calendar_today</span>
+<span>Agenda</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">build</span>
+<span>Maintenance</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">warning</span>
+<span>Incidents</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">gavel</span>
+<span>Audit &amp; Governance</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">admin_panel_settings</span>
+<span>Access &amp; Admin</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">CookingPot</span>
+<span>Cutover</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-4 space-y-2">
+<button class="w-full py-2 px-4 bg-primary-container text-on-primary-container rounded font-bold transition-all active:opacity-80 active:scale-[0.99] glow-primary">
+                    Comando Rápido
+                </button>
+<div class="pt-4 space-y-1">
+<a class="flex items-center px-4 py-2 text-on-surface-variant hover:text-on-surface text-body-sm" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span>Configurações</span>
+</a>
+<a class="flex items-center px-4 py-2 text-on-surface-variant hover:text-on-surface text-body-sm" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span>Suporte</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col min-w-0 bg-background overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-container-padding w-full h-16 sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center space-x-6">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Portal de Operações</span>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-body-md">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-1.5 text-body-sm focus:ring-1 focus:ring-primary w-64 glass-border" placeholder="Procurar ativos..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<nav class="flex space-x-6 mr-6">
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Frota</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Logística</a>
+<a class="text-on-surface-variant hover:text-primary transition-all font-title-sm text-title-sm" href="#">Segurança</a>
+</nav>
+<button class="bg-surface-container-highest px-4 py-2 rounded text-on-surface font-title-sm text-title-sm transition-all hover:brightness-125">Exportar Dados</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded font-title-sm text-title-sm transition-all hover:brightness-110 glow-primary">Novo Incidente</button>
+<div class="flex items-center space-x-3 ml-4 border-l border-outline-variant/20 pl-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface">history</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="User Profile" data-alt="Professional headshot of a maritime operations manager, mid-40s, looking confident with a background of a high-tech naval bridge. The lighting is cool-toned and cinematic, emphasizing the glass and steel aesthetic of the command center. The image is crisp, high-resolution, and perfectly centered." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX23o4AW_aHqdAcLBhQ5PhMNCFQce_Pfn4TzHua9WxeSjN6jYuVSolrDFMXFnYzw1_bX2Ok6dYACH_8uD0XcatfS0rcL7HLJoLtBszTOE8AxG5X7D2rjgLxUt73ivVQFwVmsL5l7yUJ8F4E2Cijx_x_d3bRjjYpr8u2wUfuGGQjCKy0xTNb_0X4RPH3rn6srXRICpfGS3JXuXLtgM3PQzaFWY_wZqtLzEQg__yayn42uUGBRaXPhss7RjGSryRc4nFs1wbaqDWmrJ-"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Painel Content -->
+<div class="p-container-padding flex-grow overflow-y-auto">
+<div class="max-w-max-width mx-auto">
+<!-- Filters & Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Lista de ManutenÃ§Ã£o</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">GestÃ£o tÃ©cnica e operacional do sistema de propulsÃ£o e utilidades.</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<select class="bg-surface-container-low border border-outline-variant/20 rounded px-4 py-2 text-body-sm text-on-surface focus:ring-primary">
+<option>Todos os Ativos</option>
+<option>PropulsÃ£o Principal</option>
+<option>Sistemas ElÃ©tricos</option>
+<option>Purificadores</option>
+</select>
+<select class="bg-surface-container-low border border-outline-variant/20 rounded px-4 py-2 text-body-sm text-on-surface focus:ring-primary">
+<option>Prioridade (Todas)</option>
+<option>Alta</option>
+<option>MÃ©dia</option>
+<option>Baixa</option>
+</select>
+<select class="bg-surface-container-low border border-outline-variant/20 rounded px-4 py-2 text-body-sm text-on-surface focus:ring-primary">
+<option>Status (Todos)</option>
+<option>Pendente</option>
+<option>Em andamento</option>
+<option>Congelado</option>
+<option>Pagamento</option>
+<option>ConcluÃ­do</option>
+<option>Cancelado</option>
+<option>Reaberto</option>
+</select>
+</div>
+</div>
+<!-- Maintenance Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-panel-gap">
+<!-- Row 1: High Priority / Critical Items -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container rounded-xl p-4 glass-border">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title-sm text-title-sm flex items-center">
+<span class="material-symbols-outlined text-error mr-2">emergency</span>
+                                    IntervenÃ§Ãµes CrÃ­ticas (SLA Alerta)
+                                </h3>
+<span class="font-data-mono text-data-mono text-error uppercase px-2 py-1 bg-error-container/20 rounded">Escalonamento 72h Ativo</span>
+</div>
+<div class="space-y-4">
+<!-- Item 1: Critical -->
+<div class="bg-surface-container-high rounded p-4 border-l-4 border-error relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-50 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined cursor-pointer">more_vert</span>
+</div>
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">#MTN-8829 â€” InspeÃ§Ã£o</span>
+<h4 class="font-title-sm text-title-sm text-on-surface mt-1">Troca de Filtros de Ã“leo - Motor de Bombordo</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-caps text-label-caps">PENDENTE</span>
+<span class="text-error font-data-mono text-[10px] mt-1">Escalonado em +12h</span>
+</div>
+</div>
+<div class="flex items-center gap-6 mt-4">
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SLA DE VALIDAÃ‡ÃƒO (24H)</span>
+<span class="font-data-mono text-data-mono text-error">98% â€” 23h 30m</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-error w-[98%] shimmer-sla glow-error"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="bg-surface-container-highest p-2 rounded hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary">play_arrow</span>
+</button>
+<button class="bg-surface-container-highest p-2 rounded hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">attach_file</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2: Reaberto Critical -->
+<div class="bg-surface-container-high rounded p-4 border-l-4 border-tertiary relative overflow-hidden">
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">#MTN-8815 â€” Corretiva</span>
+<h4 class="font-title-sm text-title-sm text-on-surface mt-1">Falha de Sensor de PressÃ£o - Deck B</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-caps text-label-caps">REABERTO</span>
+</div>
+</div>
+<div class="flex items-center gap-6 mt-4">
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SLA DE VALIDAÃ‡ÃƒO (24H)</span>
+<span class="font-data-mono text-data-mono text-on-surface">15% â€” 3h 45m</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[15%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="bg-surface-container-highest p-2 rounded hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Stats / Action Panel -->
+<div class="col-span-12 lg:col-span-4 space-y-panel-gap">
+<div class="bg-surface-container rounded-xl p-6 glass-border">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4">STATUS DA FROTA</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface">ManutenÃ§Ãµes Ativas</span>
+<span class="font-data-mono text-data-mono text-primary text-title-sm">14</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface">Aguardando Pagamento</span>
+<span class="font-data-mono text-data-mono text-secondary text-title-sm">03</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface">ConcluÃ­das (24h)</span>
+<span class="font-data-mono text-data-mono text-on-tertiary-fixed-variant text-title-sm">08</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/10">
+<div class="flex items-center text-error mb-2">
+<span class="material-symbols-outlined text-[16px] mr-2">report</span>
+<span class="font-label-caps text-label-caps">ALERTA DE SEGURANÃ‡A</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Sistemas crÃ­ticos de incÃªndio requerem inspeÃ§Ã£o imediata em 4 ativos.</p>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-4 glass-border overflow-hidden relative">
+<div class="absolute inset-0 opacity-10 bg-gradient-to-br from-primary to-transparent"></div>
+<h3 class="font-title-sm text-title-sm relative z-10 mb-2">Technical Gauge</h3>
+<div class="flex items-center justify-between relative z-10">
+<div class="flex flex-col">
+<span class="font-data-mono text-[24px] text-primary">82%</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">MTN Efficiency</span>
+</div>
+<div class="w-16 h-16 rounded-full border-4 border-surface-container-lowest flex items-center justify-center relative">
+<div class="absolute inset-0 rounded-full border-4 border-primary border-r-transparent animate-spin-slow" style="border-right-color: transparent; border-top-color: transparent;"></div>
+<span class="material-symbols-outlined text-primary">speed</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="col-span-12 bg-surface-container rounded-xl overflow-hidden glass-border">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm">Cronograma Geral de ManutenÃ§Ã£o</h3>
+<div class="flex items-center space-x-2">
+<span class="text-body-sm text-on-surface-variant">VisualizaÃ§Ã£o:</span>
+<div class="bg-surface-container-lowest rounded p-1 flex">
+<button class="px-3 py-1 text-label-caps bg-surface-container-high text-primary rounded">LISTA</button>
+<button class="px-3 py-1 text-label-caps text-on-surface-variant">QUADRO</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest/50">
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10">ID/ATIVO</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10">DESCRIÃ‡ÃƒO</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10">CATEGORIA</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10">STATUS</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10">SLA</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant/10 text-right">AÃ‡Ã•ES</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-data-mono text-data-mono text-primary">#MTN-8712</span>
+<span class="text-body-sm text-on-surface">Gerador 02</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-body-md text-on-surface">CalibraÃ§Ã£o de Injetores</div>
+<div class="text-[12px] text-on-surface-variant">AtribuÃ­do: Eng. Marino S.</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-secondary font-label-caps text-[10px]">MELHORIA</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="w-2 h-2 rounded-full bg-primary mr-2"></div>
+<span class="text-body-sm">Em andamento</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="w-32 h-1 bg-surface-container-lowest rounded-full">
+<div class="h-full bg-primary w-[45%]"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">visibility</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-data-mono text-data-mono text-primary">#MTN-8705</span>
+<span class="text-body-sm text-on-surface">Purificador Comb.</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-body-md text-on-surface">Troca de Selos HidrÃ¡ulicos</div>
+<div class="text-[12px] text-on-surface-variant">Fornecedor: Alfa Laval</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-tertiary font-label-caps text-[10px]">CORRETIVA</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="w-2 h-2 rounded-full bg-on-tertiary-container mr-2"></div>
+<span class="text-body-sm">Pagamento</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="w-32 h-1 bg-surface-container-lowest rounded-full">
+<div class="h-full bg-secondary w-[100%]"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">payments</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-data-mono text-data-mono text-primary">#MTN-8699</span>
+<span class="text-body-sm text-on-surface">AC Deck 03</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-body-md text-on-surface">Limpeza de Dutos Externos</div>
+<div class="text-[12px] text-on-surface-variant">ConcluÃ­do em: 12/10/24</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-caps text-[10px]">INSPEÃ‡ÃƒO</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant/30 mr-2"></div>
+<span class="text-body-sm text-on-surface-variant">Congelado</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="w-32 h-1 bg-surface-container-lowest rounded-full">
+<div class="h-full bg-outline-variant w-[80%]"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">lock</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-data-mono text-data-mono text-primary">#MTN-8650</span>
+<span class="text-body-sm text-on-surface">Bomba de PorÃ£o</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="text-body-md text-on-surface">ManutenÃ§Ã£o Preventiva Trimestral</div>
+<div class="text-[12px] text-on-surface-variant">RelatÃ³rio TÃ©cnico Gerado</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-caps text-[10px]">INSPEÃ‡ÃƒO</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<div class="w-2 h-2 rounded-full bg-green-400 mr-2"></div>
+<span class="text-body-sm">ConcluÃ­do</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="w-32 h-1 bg-surface-container-lowest rounded-full">
+<div class="h-full bg-green-400 w-full opacity-30"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">check_circle</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest/30">
+<span class="text-body-sm text-on-surface-variant">Mostrando 4 de 14 resultados</span>
+<div class="flex space-x-1">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded bg-primary text-on-primary text-body-sm font-bold">1</button>
+<button class="px-3 py-1 rounded hover:bg-surface-container-highest text-on-surface-variant text-body-sm">2</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
+
+

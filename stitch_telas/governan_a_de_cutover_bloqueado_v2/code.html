@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-container": "#3c4459",
+                "on-secondary": "#233143",
+                "tertiary-fixed": "#dae2fd",
+                "on-tertiary-fixed-variant": "#3f465c",
+                "tertiary-fixed-dim": "#bec6e0",
+                "on-background": "#d8e3fb",
+                "error-container": "#93000a",
+                "secondary-fixed": "#d4e4fa",
+                "on-secondary-fixed": "#0d1c2d",
+                "secondary-fixed-dim": "#b9c8de",
+                "tertiary": "#c5cce6",
+                "inverse-on-surface": "#263143",
+                "secondary-container": "#39485a",
+                "on-error": "#690005",
+                "surface-tint": "#7bd0ff",
+                "outline-variant": "#3e484f",
+                "inverse-primary": "#00668a",
+                "primary-fixed": "#c4e7ff",
+                "on-primary": "#00354a",
+                "surface-container-highest": "#2a3548",
+                "surface-container-high": "#1f2a3c",
+                "surface-container": "#152031",
+                "inverse-surface": "#d8e3fb",
+                "outline": "#87929a",
+                "surface-container-lowest": "#040e1f",
+                "on-error-container": "#ffdad6",
+                "on-primary-fixed": "#001e2c",
+                "background": "#081425",
+                "error": "#ffb4ab",
+                "surface": "#081425",
+                "on-primary-container": "#004965",
+                "primary": "#8ed5ff",
+                "on-surface": "#d8e3fb",
+                "on-secondary-container": "#a7b6cc",
+                "surface-dim": "#081425",
+                "surface-container-low": "#111c2d",
+                "surface-variant": "#2a3548",
+                "primary-fixed-dim": "#7bd0ff",
+                "on-secondary-fixed-variant": "#39485a",
+                "on-primary-fixed-variant": "#004c69",
+                "tertiary-container": "#a9b1ca",
+                "surface-bright": "#2f3a4c",
+                "on-tertiary-fixed": "#131b2e",
+                "on-tertiary": "#283044",
+                "primary-container": "#38bdf8",
+                "on-surface-variant": "#bdc8d1",
+                "secondary": "#b9c8de"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "unit": "4px",
+                "stack-md": "16px",
+                "max-width": "1600px",
+                "panel-gap": "12px",
+                "stack-tight": "4px",
+                "grid-columns": "12",
+                "container-padding": "24px"
+            },
+            "fontFamily": {
+                "display-lg": ["Inter"],
+                "data-mono": ["JetBrains Mono"],
+                "body-sm": ["Inter"],
+                "headline-md": ["Inter"],
+                "body-md": ["Inter"],
+                "title-sm": ["Inter"],
+                "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "data-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #081425;
+            color: #d8e3fb;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-error {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.2);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 flex-shrink-0 flex flex-col py-container-padding bg-surface-container-lowest border-r border-outline-variant/10">
+<div class="px-6 mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tighter">Portal</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">ID do Ativo: MAR-2024</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Painel</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Agenda</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="build">build</span>
+<span class="font-body-md text-body-md">Maintenance</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="warning">warning</span>
+<span class="font-body-md text-body-md">Incidents</span>
+</a>
+<a class="flex items-center px-6 py-3 bg-secondary-container text-on-secondary-container border-r-2 border-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="gavel">gavel</span>
+<span class="font-body-md text-body-md">Audit &amp; Governance</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Access &amp; Admin</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="pumping_unit">CookingPot</span>
+<span class="font-body-md text-body-md">Cutover</span>
+</a>
+</nav>
+<div class="px-6 mt-auto pt-6 border-t border-outline-variant/10 space-y-1">
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Configurações</span>
+</a>
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Suporte</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar Shell -->
+<header class="flex justify-between items-center px-container-padding w-full h-16 sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Portal de Operações</span>
+<div class="hidden md:flex gap-6">
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Frota</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Logística</a>
+<a class="font-title-sm text-title-sm text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 bg-primary text-on-primary font-title-sm text-title-sm rounded-lg hover:brightness-125 transition-all">Novo Incidente</button>
+<div class="flex gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="history">history</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background p-container-padding">
+<div class="max-w-max-width mx-auto">
+<!-- Status Header Banner -->
+<div class="mb-panel-gap p-6 glass-panel rounded-xl border-error/30 bg-error-container/10 flex flex-col md:flex-row items-center justify-between gap-6 glow-error">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-error text-on-error rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl" data-icon="block" style="font-variation-settings: 'FILL' 1;">block</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-error">Estado: BLOQUEADO</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Go-live impedido por pendÃªncias de governanÃ§a</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant mb-1">AÃ§Ã£o de SeguranÃ§a</span>
+<button class="px-8 py-3 bg-outline text-on-surface/50 font-title-sm text-title-sm rounded-lg cursor-not-allowed flex items-center gap-2" disabled="">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+                            Executar Go-live
+                        </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-panel-gap">
+<!-- Progress Narrative -->
+<div class="col-span-12 lg:col-span-8 glass-panel p-6 rounded-xl flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm">Narrativa de MigraÃ§Ã£o Total</h3>
+<span class="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full font-label-caps text-label-caps">100% CONCLUÃDA</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full shadow-[0_0_8px_#8ed5ff]"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-4 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-2">DB CORE</span>
+<span class="font-data-mono text-data-mono text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> SINCRONIZADO
+                                </span>
+</div>
+<div class="p-4 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-2">ASSETS FLOW</span>
+<span class="font-data-mono text-data-mono text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> VERIFICADO
+                                </span>
+</div>
+<div class="p-4 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-2">SISTEMAS DE AUTENTICAÇÃO</span>
+<span class="font-data-mono text-data-mono text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> ATIVO
+                                </span>
+</div>
+</div>
+<div class="flex-1 relative min-h-[200px] rounded-lg overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover opacity-40 grayscale" data-alt="A sophisticated data visualization dashboard showing complex migration flow charts and technical metrics in a dark control room setting. The aesthetic is clean and corporate, dominated by deep blues and slate grays, with bright cyan highlights indicating successful data transfer pathways. The atmosphere is professional, suggesting a high-stakes maritime technology command center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxOzusVZ5tWxslHMtRUs1B1uvo9bsmXoaWe3kOUa_CyHICVg9C7mC3VUKdw3yzTFjgUZYDg7zMAw4yQWkAL3PvnClihCc5d6GyhYcJfNOPC5HyPn7e_CsNWXWoiNUVUBKErAh2PiMV9NWCIGmEi4F0LV1tsGxew_eWyPH_kIo6Mo-I09_nEWZ6LqG-W829Z79GUwf4HguCDIkoCtNxnBVJF1P0iwzW_W29dBHJKE22oUeCKGXNOWOOprZHAAgnInKChH7xb87CBjEx"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-body-sm text-body-sm text-on-surface italic">"Todos os vetores de dados estruturados foram consolidados conforme protocolo de Cutover MAR-2024."</p>
+</div>
+</div>
+</div>
+<!-- Readiness Checklist -->
+<div class="col-span-12 lg:col-span-4 space-y-panel-gap">
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-6">
+<h3 class="font-title-sm text-title-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="assignment_late">assignment_late</span>
+                                Checklist de ProntidÃ£o
+                            </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded bg-surface-container-high border-l-4 border-error">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-error">Anexos CrÃ­ticos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">DocumentaÃ§Ã£o tÃ©cnica ausente</span>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="cancel">cancel</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-surface-container-high border-l-4 border-error">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-error">MigraÃ§Ã£o de Agenda</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Conflito de sincronismo</span>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-surface-container-low border-l-4 border-primary opacity-60">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">SeguranÃ§a de Rede</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Firewall validado</span>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-surface-container-low border-l-4 border-primary opacity-60">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">RedundÃ¢ncia UPS</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hardware verificado</span>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Technical Details -->
+<div class="glass-panel p-6 rounded-xl border-outline-variant/10">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase tracking-widest">Metadados de GovernanÃ§a</h3>
+<div class="space-y-3 font-data-mono text-data-mono">
+<div class="flex justify-between border-b border-outline-variant/5 pb-2">
+<span class="text-on-surface-variant">ID SessÃ£o:</span>
+<span class="text-secondary">CUT-OFF-992-X</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/5 pb-2">
+<span class="text-on-surface-variant">Auditore:</span>
+<span class="text-secondary">AUTO-SYS-ADMIN</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/5 pb-2">
+<span class="text-on-surface-variant">Timestamp:</span>
+<span class="text-secondary">2024-10-24 14:22:11</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SLA and Technical Gauges -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-4 gap-panel-gap">
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">CPU LOAD</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-primary leading-none">12%</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant pb-1">Nominal</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[12%] shadow-[0_0_5px_rgba(142,213,255,0.5)]"></div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">LATENCY</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-primary leading-none">24<small class="text-title-sm">ms</small></span>
+<span class="font-data-mono text-data-mono text-on-surface-variant pb-1">Stable</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[24%] shadow-[0_0_5px_rgba(142,213,255,0.5)]"></div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl border-error/20 flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-error">SLA RISK</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-error leading-none">HIGH</span>
+<span class="font-data-mono text-data-mono text-error pb-1">Delayed</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-[85%] shadow-[0_0_8px_rgba(255,180,171,0.5)] animate-pulse"></div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">QUEUE SIZE</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-primary leading-none">0</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant pb-1">Empty</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[0%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
+
+
