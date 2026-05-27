@@ -8,6 +8,7 @@ import { AgendaModule } from '../src/modules/agenda/agenda.module.js';
 import { AssetRegistryModule } from '../src/modules/asset-registry/asset-registry.module.js';
 import { AuditModule } from '../src/modules/audit/audit.module.js';
 import { AuthModule } from '../src/modules/auth/auth.module.js';
+import { AviationModule } from '../src/modules/aviation/aviation.module.js';
 import { CutoverModule } from '../src/modules/cutover/cutover.module.js';
 import { GovernanceModule } from '../src/modules/governance/governance.module.js';
 import { MaintenanceModule } from '../src/modules/maintenance/maintenance.module.js';
@@ -27,6 +28,7 @@ describe('AppModule', () => {
       GovernanceModule,
       AgendaModule,
       MaintenanceModule,
+      AviationModule,
       NotificationModule,
       CutoverModule
     ]);
