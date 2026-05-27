@@ -62,6 +62,7 @@ export type AviationReport = {
   kanbanSubstatus?: AviationKanbanSubstatus;
   groundCount: number;
   groundReason?: AviationGroundReason;
+  returnToServiceEta?: Date;
 };
 
 export type CreateAviationReportInput = Omit<
@@ -78,6 +79,7 @@ export type TransitionAviationReportInput = {
   kanbanSubstatus?: AviationKanbanSubstatus;
   justification?: string;
   groundReason?: AviationGroundReason;
+  returnToServiceEta?: Date;
 };
 
 export type TransitionAviationReportResult =
@@ -181,8 +183,9 @@ export class AviationWorkflowService {
     const statusChanged = input.toStatus !== report.status;
     const kanbanSubstatusChanged =
       !!input.kanbanSubstatus && input.kanbanSubstatus !== report.kanbanSubstatus;
+    const etaChanged = input.returnToServiceEta !== undefined;
 
-    if (!statusChanged && !kanbanSubstatusChanged) {
+    if (!statusChanged && !kanbanSubstatusChanged && !etaChanged) {
       return { allowed: false, reason: 'INVALID_STATUS_TRANSITION' };
     }
 
@@ -218,15 +221,27 @@ export class AviationWorkflowService {
         ...report,
         status: 'grounded',
         groundCount: nextGroundCount,
-        groundReason: input.groundReason
+        groundReason: input.groundReason,
+        returnToServiceEta: input.returnToServiceEta
       });
 
       return { allowed: true, reason: 'ALLOWED', report: groundedReport };
     }
 
     const nextReport = statusChanged
-      ? { ...report, status: input.toStatus, groundReason: undefined }
-      : { ...report };
+      ? {
+          ...report,
+          status: input.toStatus,
+          groundReason: undefined,
+          returnToServiceEta:
+            input.toStatus === 'returned' || input.toStatus === 'cancelled'
+              ? undefined
+              : (input.returnToServiceEta ?? report.returnToServiceEta)
+        }
+      : {
+          ...report,
+          returnToServiceEta: input.returnToServiceEta ?? report.returnToServiceEta
+        };
 
     const withDefaultSubstatus = statusChanged
       ? this.synchronizeKanbanSubstatus(nextReport)

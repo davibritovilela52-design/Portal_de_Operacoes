@@ -524,6 +524,7 @@ model AviationReport {
   kanbanSubstatus String?
   groundCount     Int              @default(0)
   groundReason    AviationGroundReason?
+  returnToServiceEta DateTime?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 

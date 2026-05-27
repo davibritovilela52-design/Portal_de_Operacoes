@@ -31,6 +31,7 @@ export type AviationReportQueueView = {
   kanbanSubstatus?: AviationReport['kanbanSubstatus'];
   groundCount: number;
   groundReason?: AviationReport['groundReason'];
+  returnToServiceEta?: Date;
   updatedAt: Date;
   evidenceCount: number;
   evidenceTypes: AviationEvidenceType[];
@@ -80,6 +81,7 @@ export type TransitionAviationReportCommand = {
     kanbanSubstatus?: AviationReport['kanbanSubstatus'];
     justification?: string;
     groundReason?: AviationReport['groundReason'];
+    returnToServiceEta?: Date | string;
   };
 };
 
@@ -248,9 +250,15 @@ export class AviationApplicationService {
 
     const evidences = await this.evidenceRepository.listByReport(command.tenantId, command.reportId);
 
+    const eta = command.input.returnToServiceEta
+      ? command.input.returnToServiceEta instanceof Date
+        ? command.input.returnToServiceEta
+        : new Date(command.input.returnToServiceEta)
+      : undefined;
+
     const result = this.aviationWorkflowService.transition(
       this.toDomainReport(current),
-      command.input,
+      { ...command.input, returnToServiceEta: eta },
       evidences.map((e) => e.type)
     );
 
@@ -397,7 +405,11 @@ export class AviationApplicationService {
       status: persisted.status,
       kanbanSubstatus: persisted.kanbanSubstatus ?? undefined,
       groundCount: persisted.groundCount,
-      groundReason: persisted.groundReason ?? undefined
+      groundReason: persisted.groundReason ?? undefined,
+      returnToServiceEta:
+        (persisted as Record<string, unknown>).returnToServiceEta instanceof Date
+          ? ((persisted as Record<string, unknown>).returnToServiceEta as Date)
+          : undefined
     };
   }
 
@@ -424,6 +436,7 @@ export class AviationApplicationService {
       kanbanSubstatus: report.kanbanSubstatus ?? undefined,
       groundCount: report.groundCount,
       groundReason: report.groundReason ?? undefined,
+      returnToServiceEta: report.returnToServiceEta ?? undefined,
       updatedAt: report.updatedAt,
       evidenceCount: evidences.length,
       evidenceTypes: [...new Set(evidences.map((e) => e.type))]

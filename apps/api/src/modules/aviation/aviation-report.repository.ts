@@ -244,7 +244,8 @@ export class PrismaAviationReportRepository implements AviationReportWriter {
       status: report.status,
       kanbanSubstatus: report.kanbanSubstatus,
       groundCount: report.groundCount,
-      groundReason: report.groundReason
+      groundReason: report.groundReason,
+      returnToServiceEta: report.returnToServiceEta ?? null
     };
   }
 }
