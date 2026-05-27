@@ -100,11 +100,15 @@ export const navigationItems: NavigationItem[] = [
   { href: '/dashboard', label: 'Painel', icon: 'dashboard' },
   { href: '/agenda', label: 'Agenda', icon: 'agenda' },
   { href: '/maintenance', label: 'Manutenção', icon: 'maintenance' },
+  { href: '/aviation', label: 'Aviation', icon: 'maintenance' },
   { href: '/improvements', label: 'Melhorias', icon: 'maintenance' },
   { href: '/access', label: 'Acessos', icon: 'access' }
 ];
 
-export const topbarTabs: TopbarTab[] = [{ href: '/dashboard', label: 'Yachts' }];
+export const topbarTabs: TopbarTab[] = [
+  { href: '/dashboard', label: 'Yachts' },
+  { href: '/aviation', label: 'Aviation' }
+];
 
 export const fleetAssets: AssetRecord[] = [
   {
