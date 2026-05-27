@@ -91,6 +91,8 @@ export function PortalShell({ children, session }: PortalShellProps) {
           pathname.startsWith('/maintenance') ||
           pathname.startsWith('/improvements')
         );
+      case '/aviation':
+        return pathname === '/aviation' || pathname.startsWith('/aviation/');
       case '/audit-governance':
         return pathname === '/audit-governance' || pathname.startsWith('/access');
       case '/cutover':
