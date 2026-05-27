@@ -33,6 +33,10 @@ export type AccessAction =
   | 'maintenance.provisional_block.apply'
   | 'maintenance.provisional_block.validate'
   | 'maintenance.asset.release'
+  | 'aviation.report.search'
+  | 'aviation.report.read'
+  | 'aviation.report.create'
+  | 'aviation.report.transition'
   | 'cutover.run.read'
   | 'cutover.run.manage'
   | 'cutover.run.evaluate'
@@ -73,6 +77,8 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.ticket.search',
     'maintenance.ticket.read',
     'maintenance.ticket.comment',
+    'aviation.report.search',
+    'aviation.report.read',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -96,6 +102,10 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.evidence.attach',
     'maintenance.evidence.read',
     'maintenance.provisional_block.validate',
+    'aviation.report.search',
+    'aviation.report.read',
+    'aviation.report.create',
+    'aviation.report.transition',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -121,6 +131,8 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.evidence.attach',
     'maintenance.evidence.read',
     'maintenance.provisional_block.validate',
+    'aviation.report.search',
+    'aviation.report.read',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -142,6 +154,8 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.evidence.read',
     'maintenance.provisional_block.apply',
     'maintenance.asset.release',
+    'aviation.report.search',
+    'aviation.report.read',
     'cutover.run.read',
     'cutover.checkpoint.record',
     'audit.ledger.search',
@@ -160,7 +174,11 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.ticket.comment',
     'maintenance.ticket.transition',
     'maintenance.evidence.attach',
-    'maintenance.evidence.read'
+    'maintenance.evidence.read',
+    'aviation.report.search',
+    'aviation.report.read',
+    'aviation.report.create',
+    'aviation.report.transition'
   ])
 };
 
@@ -178,7 +196,10 @@ const assetScopedActions = new Set([
   'maintenance.evidence.read',
   'maintenance.provisional_block.apply',
   'maintenance.provisional_block.validate',
-  'maintenance.asset.release'
+  'maintenance.asset.release',
+  'aviation.report.read',
+  'aviation.report.create',
+  'aviation.report.transition'
 ]);
 
 @Injectable()
