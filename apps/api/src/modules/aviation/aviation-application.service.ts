@@ -10,7 +10,12 @@ import type { AviationEvidenceType, AviationReport, CreateAviationReportInput } 
 import { AviationWorkflowService } from './aviation-workflow.service.js';
 import type { AviationEvidenceWriter, PersistedAviationEvidence } from './aviation-evidence.repository.js';
 import { PrismaAviationEvidenceRepository } from './aviation-evidence.repository.js';
-import type { AviationReportWriter, AviationStatsResult, PersistedAviationReport } from './aviation-report.repository.js';
+import type {
+  AviationReportWriter,
+  AviationStatsResult,
+  AviationStatusTransitionRecord,
+  PersistedAviationReport
+} from './aviation-report.repository.js';
 import { PrismaAviationReportRepository } from './aviation-report.repository.js';
 
 export type AviationReportQueueView = {
@@ -123,6 +128,17 @@ export type AviationReportDetailView = AviationReportQueueView & {
 
 export type GetAviationReportDetailCommandResult =
   | { found: true; report: AviationReportDetailView }
+  | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { found: false; reason: 'NOT_FOUND' };
+
+export type GetAviationTransitionHistoryCommand = {
+  actor: AccessActor;
+  tenantId: string;
+  reportId: string;
+};
+
+export type GetAviationTransitionHistoryCommandResult =
+  | { found: true; transitions: AviationStatusTransitionRecord[] }
   | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
   | { found: false; reason: 'NOT_FOUND' };
 
@@ -343,6 +359,27 @@ export class AviationApplicationService {
         evidences
       }
     };
+  }
+
+  async getTransitionHistory(
+    command: GetAviationTransitionHistoryCommand
+  ): Promise<GetAviationTransitionHistoryCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
+
+    if (!current) return { found: false, reason: 'NOT_FOUND' };
+
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.report.read',
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
+    });
+
+    if (!decision.allowed) {
+      return { found: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const transitions = await this.reportRepository.listTransitions(command.tenantId, command.reportId);
+    return { found: true, transitions };
   }
 
   private toDomainReport(persisted: PersistedAviationReport): AviationReport {
