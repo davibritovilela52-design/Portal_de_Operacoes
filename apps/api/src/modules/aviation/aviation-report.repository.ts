@@ -34,6 +34,15 @@ export type AviationReportWriter = {
     report: AviationReport,
     transition: AviationStatusTransitionWrite
   ): Promise<PersistedAviationReport>;
+  getStats(tenantId: string): Promise<AviationStatsResult>;
+};
+
+export type AviationStatsResult = {
+  byStatus: Record<string, number>;
+  byPriority: Record<string, number>;
+  totalAogEvents: number;
+  activeAogCount: number;
+  totalReports: number;
 };
 
 type PrismaAviationReportDelegate = {
@@ -41,6 +50,8 @@ type PrismaAviationReportDelegate = {
   findFirst(args: { where: Record<string, unknown> }): Promise<Record<string, unknown> | null>;
   findMany(args: { where: Record<string, unknown>; orderBy: Record<string, unknown> }): Promise<Record<string, unknown>[]>;
   update(args: { where: Record<string, unknown>; data: Record<string, unknown> }): Promise<Record<string, unknown>>;
+  groupBy(args: { by: string[]; where: Record<string, unknown>; _count: Record<string, unknown> }): Promise<Array<Record<string, unknown>>>;
+  aggregate(args: { where: Record<string, unknown>; _sum?: Record<string, unknown>; _count?: Record<string, unknown> }): Promise<Record<string, unknown>>;
 };
 
 type PrismaAviationStatusTransitionDelegate = {
@@ -138,6 +149,63 @@ export class PrismaAviationReportRepository implements AviationReportWriter {
       });
       return updated as PersistedAviationReport;
     })) as PersistedAviationReport;
+  }
+
+  async getStats(tenantId: string): Promise<AviationStatsResult> {
+    const [statusGroups, priorityGroups, aogAggregate, activeAog] = await Promise.all([
+      this.prisma.aviationReport.groupBy({
+        by: ['status'],
+        where: { tenantId },
+        _count: { id: true }
+      }),
+      this.prisma.aviationReport.groupBy({
+        by: ['priority'],
+        where: { tenantId },
+        _count: { id: true }
+      }),
+      this.prisma.aviationReport.aggregate({
+        where: { tenantId },
+        _sum: { groundCount: true },
+        _count: { id: true }
+      }),
+      this.prisma.aviationReport.findMany({
+        where: { tenantId, status: 'grounded' },
+        orderBy: { openedAt: 'desc' }
+      })
+    ]);
+
+    const typedStatusGroups = statusGroups as Array<{ status: unknown; _count: { id: number } }>;
+    const typedPriorityGroups = priorityGroups as Array<{ priority: unknown; _count: { id: number } }>;
+    const typedAogAggregate = aogAggregate as {
+      _sum: { groundCount: number | null };
+      _count: { id: number };
+    };
+
+    const byStatus: Record<string, number> = {
+      pending: 0,
+      in_progress: 0,
+      grounded: 0,
+      return_check: 0,
+      returned: 0,
+      cancelled: 0,
+      reopened: 0
+    };
+    for (const group of typedStatusGroups) {
+      byStatus[String(group.status)] = group._count.id;
+    }
+
+    const byPriority: Record<string, number> = { P1: 0, P2: 0, P3: 0, P4: 0 };
+    for (const group of typedPriorityGroups) {
+      byPriority[String(group.priority)] = group._count.id;
+    }
+
+    return {
+      byStatus,
+      byPriority,
+      totalAogEvents: typedAogAggregate._sum.groundCount ?? 0,
+      activeAogCount: activeAog.length,
+      totalReports: typedAogAggregate._count.id
+    };
   }
 
   private buildReportData(report: AviationReport): Record<string, unknown> {
