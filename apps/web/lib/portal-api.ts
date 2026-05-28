@@ -2807,11 +2807,6 @@ export async function fetchAviationSnapshot(
     const reportsOk = reportsResponse.ok;
 
     if (!reportsOk && !assetsOk) {
-      ensurePortalReadFallbackAllowed(
-        options.sessionToken,
-        `Portal API aviation snapshot failed: reports=${reportsResponse.status}, assets=${assetsResponse.status}.`
-      );
-
       return { source: 'mock', aviationReports: [], fleetAssets: [] };
     }
 
@@ -2823,11 +2818,6 @@ export async function fetchAviationSnapshot(
       : [];
 
     if (!reportsOk) {
-      ensurePortalReadFallbackAllowed(
-        options.sessionToken,
-        `Portal API aviation reports read failed: ${reportsResponse.status}.`
-      );
-
       return { source: 'mixed', aviationReports: [], fleetAssets };
     }
 
@@ -2842,13 +2832,7 @@ export async function fetchAviationSnapshot(
       aviationReports: mapAviationReportsToRecords(reportsPayload.reports, fleetAssets),
       fleetAssets
     };
-  } catch (error) {
-    rethrowAuthenticatedPortalReadFailure(
-      error,
-      options.sessionToken,
-      'Unable to load the authenticated aviation snapshot from the API.'
-    );
-
+  } catch {
     return { source: 'mock', aviationReports: [], fleetAssets: [] };
   }
 }

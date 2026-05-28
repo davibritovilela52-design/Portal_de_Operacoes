@@ -41,7 +41,7 @@ export default async function AviationReportsPage({ searchParams }: AviationRepo
       actor: session.actor,
       sessionToken: session.token
     }),
-    searchParams ?? Promise.resolve({})
+    (searchParams ?? Promise.resolve({} as Record<string, string | string[] | undefined>))
   ]);
 
   const notice = readSearchMessage(resolvedSearchParams, 'notice');

@@ -21,6 +21,7 @@ type PortalShellProps = {
 
 const SIDEBAR_COLLAPSE_STORAGE_KEY = 'ops-portal-sidebar-collapsed';
 const THEME_STORAGE_KEY = 'ops-portal-theme';
+const ACTIVE_MODULE_STORAGE_KEY = 'ops-portal-active-module';
 
 export function PortalShell({ children, session }: PortalShellProps) {
   const pathname = usePathname();
@@ -77,7 +78,26 @@ export function PortalShell({ children, session }: PortalShellProps) {
   };
 
   const canViewAccess = canViewAccessModule(session.role);
-  const activeModule = pathname.startsWith('/aviation') ? 'aviation' : 'yachts';
+  const isNeutralPath =
+    pathname === '/access' ||
+    pathname.startsWith('/access/') ||
+    pathname === '/security' ||
+    pathname.startsWith('/security/');
+  const pathModule: 'aviation' | 'yachts' = pathname.startsWith('/aviation') ? 'aviation' : 'yachts';
+  const [activeModule, setActiveModule] = useState<'aviation' | 'yachts'>(pathModule);
+
+  useEffect(() => {
+    if (isNeutralPath) {
+      const stored = window.localStorage.getItem(ACTIVE_MODULE_STORAGE_KEY);
+      if (stored === 'aviation' || stored === 'yachts') {
+        setActiveModule(stored);
+      }
+    } else {
+      setActiveModule(pathModule);
+      window.localStorage.setItem(ACTIVE_MODULE_STORAGE_KEY, pathModule);
+    }
+  }, [pathname]);
+
   const visibleNavigationItems = navigationItems.filter((item) => {
     if (!canViewAccess && item.href === '/access') return false;
     if (item.module && item.module !== activeModule) return false;
