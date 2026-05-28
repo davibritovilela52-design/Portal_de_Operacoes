@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 export type AviationStatus =
   | 'pending'
   | 'in_progress'
-  | 'return_check'
   | 'grounded'
+  | 'return_check'
   | 'returned'
   | 'cancelled'
   | 'reopened';
@@ -36,11 +36,15 @@ export type AviationEvidenceType =
   | 'airworthiness_release';
 
 export type AviationKanbanSubstatus =
-  | 'report_opening'
-  | 'diagnostic'
-  | 'return_check'
-  | 'grounded'
-  | 'returned'
+  | 'report_open'
+  | 'report_qualification'
+  | 'technical_assessment'
+  | 'action_plan'
+  | 'service_execution'
+  | 'post_service_check'
+  | 'aog_hold'
+  | 'return_authorization'
+  | 'returned_to_service'
   | 'cancelled';
 
 export type AviationReport = {
@@ -67,16 +71,8 @@ export type CreateAviationReportInput = Omit<
 >;
 
 export type CreateAviationReportResult =
-  | {
-      created: true;
-      reason: 'CREATED';
-      report: AviationReport;
-    }
-  | {
-      created: false;
-      reason: 'REQUIRED_FIELDS_MISSING';
-      missingFields: string[];
-    };
+  | { created: true; reason: 'CREATED'; report: AviationReport }
+  | { created: false; reason: 'REQUIRED_FIELDS_MISSING'; missingFields: string[] };
 
 export type TransitionAviationReportInput = {
   toStatus: AviationStatus;
@@ -87,30 +83,23 @@ export type TransitionAviationReportInput = {
 };
 
 export type TransitionAviationReportResult =
-  | {
-      allowed: true;
-      reason: 'ALLOWED';
-      escalationRequired: boolean;
-      report: AviationReport;
-    }
+  | { allowed: true; reason: 'ALLOWED'; report: AviationReport }
   | {
       allowed: false;
       reason:
         | 'INVALID_STATUS_TRANSITION'
-        | 'KANBAN_SUBSTATUS_INVALID'
-        | 'GROUND_REASON_REQUIRED';
+        | 'JUSTIFICATION_REQUIRED'
+        | 'GROUND_REASON_REQUIRED'
+        | 'GROUND_REASON_INVALID'
+        | 'KANBAN_SUBSTATUS_INVALID';
     }
-  | {
-      allowed: false;
-      reason: 'REQUIRED_EVIDENCE_MISSING';
-      missingEvidenceTypes: AviationEvidenceType[];
-    };
+  | { allowed: false; reason: 'REQUIRED_EVIDENCE_MISSING'; missingEvidenceTypes: AviationEvidenceType[] };
 
 const aviationStatuses: AviationStatus[] = [
   'pending',
   'in_progress',
-  'return_check',
   'grounded',
+  'return_check',
   'returned',
   'cancelled',
   'reopened'
@@ -119,50 +108,56 @@ const aviationStatuses: AviationStatus[] = [
 const aviationPriorities: AviationPriority[] = ['P1', 'P2', 'P3', 'P4'];
 
 const defaultKanbanSubstatusByStatus: Record<AviationStatus, AviationKanbanSubstatus> = {
-  pending: 'report_opening',
-  in_progress: 'diagnostic',
-  return_check: 'return_check',
-  grounded: 'grounded',
-  returned: 'returned',
+  pending: 'report_open',
+  in_progress: 'report_qualification',
+  grounded: 'aog_hold',
+  return_check: 'return_authorization',
+  returned: 'returned_to_service',
   cancelled: 'cancelled',
-  reopened: 'diagnostic'
+  reopened: 'report_qualification'
 };
 
 const statusByKanbanSubstatus: Record<AviationKanbanSubstatus, AviationStatus> = {
-  report_opening: 'pending',
-  diagnostic: 'in_progress',
-  return_check: 'return_check',
-  grounded: 'grounded',
-  returned: 'returned',
+  report_open: 'pending',
+  report_qualification: 'in_progress',
+  technical_assessment: 'in_progress',
+  action_plan: 'in_progress',
+  service_execution: 'in_progress',
+  post_service_check: 'in_progress',
+  aog_hold: 'grounded',
+  return_authorization: 'return_check',
+  returned_to_service: 'returned',
   cancelled: 'cancelled'
 };
 
-const requiredEvidenceByStatus: Partial<Record<AviationStatus, AviationEvidenceType[]>> = {
-  return_check: ['diagnostic', 'technical_report'],
-  returned: ['diagnostic', 'technical_report', 'execution_evidence', 'airworthiness_release']
+const allowedTransitions: Record<AviationStatus, AviationStatus[]> = {
+  pending: ['in_progress', 'cancelled'],
+  in_progress: ['grounded', 'return_check', 'cancelled'],
+  grounded: ['in_progress', 'cancelled'],
+  return_check: ['returned', 'cancelled'],
+  returned: ['reopened'],
+  cancelled: ['reopened'],
+  reopened: ['in_progress', 'cancelled']
 };
+
+const validGroundReasons = new Set<AviationGroundReason>([
+  'awaiting_part',
+  'awaiting_authorization',
+  'awaiting_maintenance_crew',
+  'awaiting_operational_window'
+]);
 
 @Injectable()
 export class AviationWorkflowService {
-  getCatalog(): {
-    statuses: AviationStatus[];
-    priorities: AviationPriority[];
-  } {
-    return {
-      statuses: [...aviationStatuses],
-      priorities: [...aviationPriorities]
-    };
+  getCatalog(): { statuses: AviationStatus[]; priorities: AviationPriority[] } {
+    return { statuses: [...aviationStatuses], priorities: [...aviationPriorities] };
   }
 
   createReport(input: CreateAviationReportInput): CreateAviationReportResult {
     const missingFields = this.getMissingRequiredFields(input);
 
     if (missingFields.length > 0) {
-      return {
-        created: false,
-        reason: 'REQUIRED_FIELDS_MISSING',
-        missingFields
-      };
+      return { created: false, reason: 'REQUIRED_FIELDS_MISSING', missingFields };
     }
 
     return {
@@ -177,10 +172,7 @@ export class AviationWorkflowService {
   }
 
   synchronizeKanbanSubstatus(report: AviationReport): AviationReport {
-    return {
-      ...report,
-      kanbanSubstatus: this.resolveKanbanSubstatus(report)
-    };
+    return { ...report, kanbanSubstatus: this.resolveKanbanSubstatus(report) };
   }
 
   transition(
@@ -188,65 +180,52 @@ export class AviationWorkflowService {
     input: TransitionAviationReportInput,
     availableEvidenceTypes: AviationEvidenceType[] = []
   ): TransitionAviationReportResult {
-    const currentKanbanSubstatus = this.resolvePersistedKanbanSubstatus(report);
     const statusChanged = input.toStatus !== report.status;
     const kanbanSubstatusChanged =
-      !!input.kanbanSubstatus && input.kanbanSubstatus !== currentKanbanSubstatus;
+      !!input.kanbanSubstatus && input.kanbanSubstatus !== report.kanbanSubstatus;
     const etaChanged = input.returnToServiceEta !== undefined;
 
     if (!statusChanged && !kanbanSubstatusChanged && !etaChanged) {
-      return {
-        allowed: false,
-        reason: 'INVALID_STATUS_TRANSITION'
-      };
+      return { allowed: false, reason: 'INVALID_STATUS_TRANSITION' };
+    }
+
+    if (statusChanged && !allowedTransitions[report.status].includes(input.toStatus)) {
+      return { allowed: false, reason: 'INVALID_STATUS_TRANSITION' };
+    }
+
+    if (statusChanged && (input.toStatus === 'cancelled' || input.toStatus === 'reopened')) {
+      if (!input.justification?.trim()) {
+        return { allowed: false, reason: 'JUSTIFICATION_REQUIRED' };
+      }
+    }
+
+    const missingEvidenceTypes = statusChanged
+      ? this.getMissingRequiredEvidenceTypes(input.toStatus, availableEvidenceTypes)
+      : [];
+
+    if (missingEvidenceTypes.length > 0) {
+      return { allowed: false, reason: 'REQUIRED_EVIDENCE_MISSING', missingEvidenceTypes };
     }
 
     if (statusChanged && input.toStatus === 'grounded') {
       if (!input.groundReason) {
-        return {
-          allowed: false,
-          reason: 'GROUND_REASON_REQUIRED'
-        };
+        return { allowed: false, reason: 'GROUND_REASON_REQUIRED' };
+      }
+
+      if (!validGroundReasons.has(input.groundReason)) {
+        return { allowed: false, reason: 'GROUND_REASON_INVALID' };
       }
 
       const nextGroundCount = report.groundCount + 1;
-      const groundedReport = this.applyRequestedKanbanSubstatus(
-        this.synchronizeKanbanSubstatus({
-          ...report,
-          status: 'grounded',
-          groundCount: nextGroundCount,
-          groundReason: input.groundReason,
-          returnToServiceEta: input.returnToServiceEta
-        }),
-        input.kanbanSubstatus
-      );
+      const groundedReport = this.synchronizeKanbanSubstatus({
+        ...report,
+        status: 'grounded',
+        groundCount: nextGroundCount,
+        groundReason: input.groundReason,
+        returnToServiceEta: input.returnToServiceEta
+      });
 
-      if (!groundedReport) {
-        return {
-          allowed: false,
-          reason: 'KANBAN_SUBSTATUS_INVALID'
-        };
-      }
-
-      return {
-        allowed: true,
-        reason: 'ALLOWED',
-        escalationRequired: nextGroundCount >= 3,
-        report: groundedReport
-      };
-    }
-
-    const missingEvidenceTypes = this.getMissingEvidenceTypes(
-      input.toStatus,
-      availableEvidenceTypes
-    );
-
-    if (missingEvidenceTypes.length > 0) {
-      return {
-        allowed: false,
-        reason: 'REQUIRED_EVIDENCE_MISSING',
-        missingEvidenceTypes
-      };
+      return { allowed: true, reason: 'ALLOWED', report: groundedReport };
     }
 
     const nextReport = statusChanged
@@ -263,112 +242,65 @@ export class AviationWorkflowService {
           ...report,
           returnToServiceEta: input.returnToServiceEta ?? report.returnToServiceEta
         };
-    const reportWithDefaultKanbanSubstatus = statusChanged
+
+    const withDefaultSubstatus = statusChanged
       ? this.synchronizeKanbanSubstatus(nextReport)
       : nextReport;
-    const reportWithRequestedKanbanSubstatus = this.applyRequestedKanbanSubstatus(
-      reportWithDefaultKanbanSubstatus,
+
+    const withRequestedSubstatus = this.applyRequestedKanbanSubstatus(
+      withDefaultSubstatus,
       input.kanbanSubstatus
     );
 
-    if (!reportWithRequestedKanbanSubstatus) {
-      return {
-        allowed: false,
-        reason: 'KANBAN_SUBSTATUS_INVALID'
-      };
+    if (!withRequestedSubstatus) {
+      return { allowed: false, reason: 'KANBAN_SUBSTATUS_INVALID' };
     }
 
-    return {
-      allowed: true,
-      reason: 'ALLOWED',
-      escalationRequired: false,
-      report: reportWithRequestedKanbanSubstatus
-    };
+    return { allowed: true, reason: 'ALLOWED', report: withRequestedSubstatus };
   }
 
   private getMissingRequiredFields(input: CreateAviationReportInput): string[] {
-    const missingFields: string[] = [];
-
-    if (!input.assetId?.trim()) {
-      missingFields.push('assetId');
-    }
-
-    if (!input.category) {
-      missingFields.push('category');
-    }
-
-    if (!input.priority) {
-      missingFields.push('priority');
-    }
-
-    if (!input.description?.trim()) {
-      missingFields.push('description');
-    }
-
-    if (!input.origin) {
-      missingFields.push('origin');
-    }
-
-    if (!input.openedBy?.trim()) {
-      missingFields.push('openedBy');
-    }
-
+    const missing: string[] = [];
+    if (!input.assetId?.trim()) missing.push('assetId');
+    if (!input.category) missing.push('category');
+    if (!input.priority) missing.push('priority');
+    if (!input.description?.trim()) missing.push('description');
+    if (!input.origin) missing.push('origin');
+    if (!input.openedBy?.trim()) missing.push('openedBy');
     if (!(input.openedAt instanceof Date) || Number.isNaN(input.openedAt.getTime())) {
-      missingFields.push('openedAt');
+      missing.push('openedAt');
     }
-
-    return missingFields;
+    return missing;
   }
 
-  private getMissingEvidenceTypes(
+  private getMissingRequiredEvidenceTypes(
     toStatus: AviationStatus,
-    availableEvidenceTypes: AviationEvidenceType[]
+    availableTypes: AviationEvidenceType[]
   ): AviationEvidenceType[] {
-    const requiredEvidenceTypes = requiredEvidenceByStatus[toStatus] ?? [];
+    const available = new Set(availableTypes);
+    return this.getRequiredEvidenceTypesForStatus(toStatus).filter((t) => !available.has(t));
+  }
 
-    return requiredEvidenceTypes.filter(
-      (requiredType) => !availableEvidenceTypes.includes(requiredType)
-    );
+  private getRequiredEvidenceTypesForStatus(toStatus: AviationStatus): AviationEvidenceType[] {
+    if (toStatus === 'in_progress') return ['diagnostic'];
+    if (toStatus === 'return_check') return ['technical_report'];
+    if (toStatus === 'returned') return ['execution_evidence', 'airworthiness_release'];
+    return [];
   }
 
   private resolveKanbanSubstatus(report: AviationReport): AviationKanbanSubstatus {
     return defaultKanbanSubstatusByStatus[report.status];
   }
 
-  private resolvePersistedKanbanSubstatus(report: AviationReport): AviationKanbanSubstatus {
-    if (
-      report.kanbanSubstatus &&
-      this.isKanbanSubstatusCompatible(report.kanbanSubstatus, report.status)
-    ) {
-      return report.kanbanSubstatus;
-    }
-
-    return this.resolveKanbanSubstatus(report);
-  }
-
   private applyRequestedKanbanSubstatus(
     report: AviationReport,
-    requestedKanbanSubstatus?: AviationKanbanSubstatus
+    requested?: AviationKanbanSubstatus
   ): AviationReport | null {
-    if (!requestedKanbanSubstatus) {
-      return report;
-    }
+    if (!requested) return report;
 
-    if (!this.isKanbanSubstatusCompatible(requestedKanbanSubstatus, report.status)) {
-      return null;
-    }
+    const compatibleStatus = report.status === 'reopened' ? 'in_progress' : report.status;
+    if (statusByKanbanSubstatus[requested] !== compatibleStatus) return null;
 
-    return {
-      ...report,
-      kanbanSubstatus: requestedKanbanSubstatus
-    };
-  }
-
-  private isKanbanSubstatusCompatible(
-    kanbanSubstatus: AviationKanbanSubstatus,
-    status: AviationStatus
-  ) {
-    const compatibleStatus = status === 'reopened' ? 'in_progress' : status;
-    return statusByKanbanSubstatus[kanbanSubstatus] === compatibleStatus;
+    return { ...report, kanbanSubstatus: requested };
   }
 }

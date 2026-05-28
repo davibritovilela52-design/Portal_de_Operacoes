@@ -66,6 +66,8 @@ export type PortalRole =
   | 'central_operations'
   | 'yachts_operations'
   | 'yachts_technical_coordination'
+  | 'aviation_operations'
+  | 'aviation_technical_coordination'
   | 'asset_field_team';
 
 export type MaintenanceStatusTransitionRecord = {
@@ -320,6 +322,8 @@ export const portalRoleLabels: Record<PortalRole, string> = {
   central_operations: 'Operações Centrais',
   yachts_operations: 'Operações - Yachts',
   yachts_technical_coordination: 'Coordenação técnica - Embarcações',
+  aviation_operations: 'Operações - Aviation',
+  aviation_technical_coordination: 'Coordenação técnica - Aviation',
   asset_field_team: 'Equipe de campo - Embarcações'
 };
 
@@ -1049,4 +1053,154 @@ function addBlockedDays(
   }
 
   blockedDaysByAsset.set(assetId, dayKeys);
+}
+
+// ─── Aviation ────────────────────────────────────────────────────────────────
+
+export type AviationStatus =
+  | 'pending'
+  | 'in_progress'
+  | 'grounded'
+  | 'return_check'
+  | 'returned'
+  | 'cancelled'
+  | 'reopened';
+
+export type AviationCategory =
+  | 'preventive'
+  | 'corrective'
+  | 'emergency'
+  | 'inspection'
+  | 'airworthiness';
+
+export type AviationPriority = 'P1' | 'P2' | 'P3' | 'P4';
+
+export type AviationKanbanSubstatus =
+  | 'report_open'
+  | 'report_qualification'
+  | 'technical_assessment'
+  | 'action_plan'
+  | 'service_execution'
+  | 'post_service_check'
+  | 'aog_hold'
+  | 'return_authorization'
+  | 'returned_to_service'
+  | 'cancelled';
+
+export type AviationReportRecord = {
+  id: string;
+  reportNumber: string;
+  assetId: string;
+  assetName: string;
+  title: string;
+  category: AviationCategory;
+  priority: AviationPriority;
+  aircraftSystem?: string;
+  status: AviationStatus;
+  openedBy?: string;
+  openedAt: string;
+  updatedAt?: string;
+  groundCount: number;
+  groundReason?: string;
+  kanbanSubstatus?: AviationKanbanSubstatus;
+};
+
+export type AviationKanbanColumn = {
+  key: AviationKanbanSubstatus;
+  label: string;
+  phaseLabel: string;
+  status: AviationStatus;
+  tickets: AviationReportRecord[];
+  count: number;
+};
+
+type AviationKanbanSubstatusDefinition = {
+  key: AviationKanbanSubstatus;
+  label: string;
+  status: AviationStatus;
+  phaseLabel: string;
+};
+
+export const aviationStatusLabels: Record<AviationStatus, string> = {
+  pending: 'Reporte aberto',
+  in_progress: 'Em andamento',
+  grounded: 'Bloqueada (AOG)',
+  return_check: 'Verificação de retorno',
+  returned: 'Retornada',
+  cancelled: 'Cancelado',
+  reopened: 'Reaberto'
+};
+
+export const aviationCategoryLabels: Record<AviationCategory, string> = {
+  preventive: 'Preventiva',
+  corrective: 'Corretiva',
+  emergency: 'Emergência / AOG',
+  inspection: 'Inspeção',
+  airworthiness: 'Aeronavegabilidade'
+};
+
+export const aviationKanbanSubstatusDefinitions: AviationKanbanSubstatusDefinition[] = [
+  { key: 'report_open', label: 'Reporte aberto', status: 'pending', phaseLabel: 'Reporte' },
+  { key: 'report_qualification', label: 'Qualificação do reporte', status: 'in_progress', phaseLabel: 'Em andamento' },
+  { key: 'technical_assessment', label: 'Avaliação técnica', status: 'in_progress', phaseLabel: 'Em andamento' },
+  { key: 'action_plan', label: 'Plano de ação', status: 'in_progress', phaseLabel: 'Em andamento' },
+  { key: 'service_execution', label: 'Execução do serviço', status: 'in_progress', phaseLabel: 'Em andamento' },
+  { key: 'post_service_check', label: 'Inspeção pós-serviço', status: 'in_progress', phaseLabel: 'Em andamento' },
+  { key: 'aog_hold', label: 'AOG / Bloqueio operacional', status: 'grounded', phaseLabel: 'Bloqueada' },
+  { key: 'return_authorization', label: 'Autorização de retorno', status: 'return_check', phaseLabel: 'Verificação' },
+  { key: 'returned_to_service', label: 'Retornada ao serviço', status: 'returned', phaseLabel: 'Retornada' },
+  { key: 'cancelled', label: 'Cancelado', status: 'cancelled', phaseLabel: 'Cancelado' }
+];
+
+export function buildAviationKanbanColumns(
+  reports: AviationReportRecord[],
+  overrides: Partial<Record<string, AviationKanbanSubstatus>> = {}
+): AviationKanbanColumn[] {
+  const columns: AviationKanbanColumn[] = aviationKanbanSubstatusDefinitions.map((def) => ({
+    key: def.key,
+    label: def.label,
+    phaseLabel: def.phaseLabel,
+    status: def.status,
+    tickets: [],
+    count: 0
+  }));
+
+  for (const report of reports) {
+    const effectiveSubstatus =
+      overrides[report.id] ?? report.kanbanSubstatus ?? resolveAviationDefaultKanbanSubstatus(report.status);
+    const column = columns.find((c) => c.key === effectiveSubstatus);
+    if (column) {
+      column.tickets.push(report);
+      column.count++;
+    }
+  }
+
+  return columns;
+}
+
+function resolveAviationDefaultKanbanSubstatus(status: AviationStatus): AviationKanbanSubstatus {
+  const map: Record<AviationStatus, AviationKanbanSubstatus> = {
+    pending: 'report_open',
+    in_progress: 'report_qualification',
+    grounded: 'aog_hold',
+    return_check: 'return_authorization',
+    returned: 'returned_to_service',
+    cancelled: 'cancelled',
+    reopened: 'report_qualification'
+  };
+  return map[status];
+}
+
+export function isAviationKanbanSubstatusCompatible(
+  substatus: AviationKanbanSubstatus,
+  status: AviationStatus
+): boolean {
+  const def = aviationKanbanSubstatusDefinitions.find((d) => d.key === substatus);
+  if (!def) return false;
+  const compatibleStatus = status === 'reopened' ? 'in_progress' : status;
+  return def.status === compatibleStatus;
+}
+
+export function canViewAviationModule(role: PortalRole): boolean {
+  return ['portal_admin', 'central_operations', 'aviation_operations', 'aviation_technical_coordination'].includes(role);
 }

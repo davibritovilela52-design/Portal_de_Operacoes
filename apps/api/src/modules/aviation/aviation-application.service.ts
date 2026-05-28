@@ -1,26 +1,65 @@
+import { randomUUID } from 'node:crypto';
+
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  AccessActor,
-  AccessDecisionReason,
-  AccessPolicyService
-} from '../access/access-policy.service.js';
-import {
-  AviationReport,
-  AviationWorkflowService,
-  CreateAviationReportInput,
-  CreateAviationReportResult
-} from './aviation-workflow.service.js';
-import {
+import type { AccessActor, AccessDecisionReason } from '../access/access-policy.service.js';
+import { AccessPolicyService } from '../access/access-policy.service.js';
+import { EvidenceSecurityService } from '../governance/evidence-security.service.js';
+import { appendMaintenanceTicketComment } from '../maintenance/maintenance-ticket-comments.js';
+import type { AviationEvidenceType, AviationReport, CreateAviationReportInput } from './aviation-workflow.service.js';
+import { AviationWorkflowService } from './aviation-workflow.service.js';
+import type { AviationEvidenceWriter, PersistedAviationEvidence } from './aviation-evidence.repository.js';
+import { PrismaAviationEvidenceRepository } from './aviation-evidence.repository.js';
+import type {
   AviationReportWriter,
-  PersistedAviationReport,
-  PrismaAviationReportRepository
+  AviationStatsResult,
+  AviationStatusTransitionRecord,
+  PersistedAviationReport
 } from './aviation-report.repository.js';
-import {
-  AviationEvidenceReader,
-  PersistedAviationEvidence,
-  PrismaAviationEvidenceRepository
-} from './aviation-evidence.repository.js';
+import { PrismaAviationReportRepository } from './aviation-report.repository.js';
+
+export type AviationReportQueueView = {
+  id: string;
+  assetId: string;
+  title: string;
+  category: AviationReport['category'];
+  priority: AviationReport['priority'];
+  origin: AviationReport['origin'];
+  openedBy: string;
+  openedAt: Date;
+  status: AviationReport['status'];
+  kanbanSubstatus?: AviationReport['kanbanSubstatus'];
+  groundCount: number;
+  groundReason?: AviationReport['groundReason'];
+  returnToServiceEta?: Date;
+  updatedAt: Date;
+  evidenceCount: number;
+  evidenceTypes: AviationEvidenceType[];
+};
+
+export type SearchAviationReportsCommand = {
+  actor: AccessActor;
+  tenantId: string;
+  filters?: {
+    assetIds?: string[];
+    statuses?: AviationReport['status'][];
+    priorities?: AviationReport['priority'][];
+    categories?: AviationReport['category'][];
+  };
+};
+
+export type SearchAviationReportsCommandResult =
+  | { reports: AviationReportQueueView[] }
+  | { reports: []; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason };
+
+export type GetAviationStatsCommand = {
+  actor: AccessActor;
+  tenantId: string;
+};
+
+export type GetAviationStatsCommandResult =
+  | { found: true; stats: AviationStatsResult }
+  | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason };
 
 export type CreateAviationReportCommand = {
   actor: AccessActor;
@@ -29,12 +68,9 @@ export type CreateAviationReportCommand = {
 };
 
 export type CreateAviationReportCommandResult =
-  | CreateAviationReportResult
-  | {
-      created: false;
-      reason: 'FORBIDDEN';
-      accessReason: AccessDecisionReason;
-    };
+  | { created: true; reason: 'CREATED'; report: AviationReport }
+  | { created: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { created: false; reason: 'REQUIRED_FIELDS_MISSING'; missingFields: string[] };
 
 export type TransitionAviationReportCommand = {
   actor: AccessActor;
@@ -50,57 +86,35 @@ export type TransitionAviationReportCommand = {
 };
 
 export type TransitionAviationReportCommandResult =
-  | ReturnType<AviationWorkflowService['transition']>
-  | {
-      allowed: false;
-      reason: 'FORBIDDEN';
-      accessReason: AccessDecisionReason;
-    }
-  | {
-      allowed: false;
-      reason: 'NOT_FOUND';
-    };
+  | { allowed: true; reason: 'ALLOWED'; report: AviationReport }
+  | { allowed: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { allowed: false; reason: 'NOT_FOUND' }
+  | { allowed: false; reason: string };
 
-export type SearchAviationReportsCommand = {
+export type RegisterAviationCommentCommand = {
   actor: AccessActor;
   tenantId: string;
-  filters?: {
-    assetIds?: string[];
-    statuses?: AviationReport['status'][];
-    priorities?: AviationReport['priority'][];
-    categories?: AviationReport['category'][];
-  };
+  reportId: string;
+  input: { message: string; commentedBy: string; commentedAt: Date };
 };
 
-export type AviationReportQueueView = {
-  id: string;
-  assetId: string;
-  title?: string;
-  category: AviationReport['category'];
-  priority: AviationReport['priority'];
-  description: string;
-  notes?: string;
-  aircraftSystem?: string;
-  origin: AviationReport['origin'];
-  openedBy: string;
-  openedAt: Date;
-  status: AviationReport['status'];
-  kanbanSubstatus?: AviationReport['kanbanSubstatus'];
-  groundCount: number;
-  groundReason?: AviationReport['groundReason'];
-  returnToServiceEta?: Date;
-  updatedAt: Date;
+export type RegisterAviationCommentCommandResult =
+  | { registered: true; reason: 'REGISTERED'; notes?: string }
+  | { registered: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { registered: false; reason: 'NOT_FOUND' | 'COMMENT_REQUIRED' };
+
+export type AttachAviationEvidenceCommand = {
+  actor: AccessActor;
+  tenantId: string;
+  reportId: string;
+  input: Omit<PersistedAviationEvidence, 'id' | 'tenantId' | 'reportId' | 'createdAt' | 'storageKey' | 'antivirusStatus'>;
 };
 
-export type SearchAviationReportsCommandResult =
-  | {
-      reports: AviationReportQueueView[];
-    }
-  | {
-      reports: [];
-      reason: 'FORBIDDEN';
-      accessReason: AccessDecisionReason;
-    };
+export type AttachAviationEvidenceCommandResult =
+  | { attached: true; reason: 'ATTACHED' }
+  | { attached: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { attached: false; reason: 'NOT_FOUND' }
+  | { attached: false; reason: 'UPLOAD_POLICY_BLOCKED'; uploadReason: string };
 
 export type GetAviationReportDetailCommand = {
   actor: AccessActor;
@@ -109,23 +123,26 @@ export type GetAviationReportDetailCommand = {
 };
 
 export type AviationReportDetailView = AviationReportQueueView & {
+  notes?: string;
+  aircraftSystem?: string;
   evidences: PersistedAviationEvidence[];
 };
 
 export type GetAviationReportDetailCommandResult =
-  | {
-      found: true;
-      report: AviationReportDetailView;
-    }
-  | {
-      found: false;
-      reason: 'FORBIDDEN';
-      accessReason: AccessDecisionReason;
-    }
-  | {
-      found: false;
-      reason: 'NOT_FOUND';
-    };
+  | { found: true; report: AviationReportDetailView }
+  | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { found: false; reason: 'NOT_FOUND' };
+
+export type GetAviationTransitionHistoryCommand = {
+  actor: AccessActor;
+  tenantId: string;
+  reportId: string;
+};
+
+export type GetAviationTransitionHistoryCommandResult =
+  | { found: true; transitions: AviationStatusTransitionRecord[] }
+  | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason }
+  | { found: false; reason: 'NOT_FOUND' };
 
 @Injectable()
 export class AviationApplicationService {
@@ -133,104 +150,105 @@ export class AviationApplicationService {
     private readonly accessPolicyService: AccessPolicyService,
     private readonly aviationWorkflowService: AviationWorkflowService,
     @Inject(PrismaAviationReportRepository)
-    private readonly aviationReportRepository: AviationReportWriter,
+    private readonly reportRepository: AviationReportWriter,
     @Inject(PrismaAviationEvidenceRepository)
-    private readonly aviationEvidenceRepository: AviationEvidenceReader
+    private readonly evidenceRepository: AviationEvidenceWriter,
+    private readonly evidenceSecurityService: EvidenceSecurityService
   ) {}
 
-  getCatalog(): ReturnType<AviationWorkflowService['getCatalog']> {
+  getCatalog() {
     return this.aviationWorkflowService.getCatalog();
   }
 
-  async searchReports(
-    command: SearchAviationReportsCommand
-  ): Promise<SearchAviationReportsCommandResult> {
-    const accessDecision = this.accessPolicyService.authorize({
+  async searchReports(command: SearchAviationReportsCommand): Promise<SearchAviationReportsCommandResult> {
+    const decision = this.accessPolicyService.authorize({
       actor: command.actor,
       action: 'aviation.report.search',
-      subject: {
-        tenantId: command.tenantId
-      }
+      subject: { tenantId: command.tenantId }
     });
 
-    if (!accessDecision.allowed) {
-      return {
-        reports: [],
-        reason: 'FORBIDDEN',
-        accessReason: accessDecision.reason
-      };
+    if (!decision.allowed) {
+      return { reports: [], reason: 'FORBIDDEN', accessReason: decision.reason };
     }
 
-    const reports = await this.aviationReportRepository.search(command.tenantId, {
+    const reports = await this.reportRepository.search(command.tenantId, {
       ...command.filters,
       assetIds: this.resolveVisibleAssetIds(command.actor, command.filters?.assetIds)
     });
 
+    const evidences = await this.evidenceRepository.listByReportIds(
+      command.tenantId,
+      reports.map((r) => r.id)
+    );
+
+    const evidencesByReportId = new Map<string, PersistedAviationEvidence[]>();
+    for (const ev of evidences) {
+      const bucket = evidencesByReportId.get(ev.reportId) ?? [];
+      bucket.push(ev);
+      evidencesByReportId.set(ev.reportId, bucket);
+    }
+
     return {
-      reports: reports.map((report) => this.toQueueView(report))
+      reports: reports.map((r) => this.toQueueView(r, evidencesByReportId.get(r.id) ?? []))
     };
   }
 
-  async createReport(
-    command: CreateAviationReportCommand
-  ): Promise<CreateAviationReportCommandResult> {
-    const accessDecision = this.accessPolicyService.authorize({
+  async getStats(command: GetAviationStatsCommand): Promise<GetAviationStatsCommandResult> {
+    if (command.actor.role === 'asset_field_team') {
+      return { found: false, reason: 'FORBIDDEN', accessReason: 'ROLE_NOT_ALLOWED' };
+    }
+
+    const decision = this.accessPolicyService.authorize({
       actor: command.actor,
-      action: 'aviation.report.create',
-      subject: {
-        tenantId: command.tenantId,
-        assetId: command.input.assetId
-      }
+      action: 'aviation.report.search',
+      subject: { tenantId: command.tenantId }
     });
 
-    if (!accessDecision.allowed) {
-      return {
-        created: false,
-        reason: 'FORBIDDEN',
-        accessReason: accessDecision.reason
-      };
+    if (!decision.allowed) {
+      return { found: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const stats = await this.reportRepository.getStats(command.tenantId);
+    return { found: true, stats };
+  }
+
+  async createReport(command: CreateAviationReportCommand): Promise<CreateAviationReportCommandResult> {
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.report.create',
+      subject: { tenantId: command.tenantId, assetId: command.input.assetId }
+    });
+
+    if (!decision.allowed) {
+      return { created: false, reason: 'FORBIDDEN', accessReason: decision.reason };
     }
 
     const result = this.aviationWorkflowService.createReport(command.input);
 
-    if (result.created) {
-      await this.aviationReportRepository.create(command.tenantId, result.report);
+    if (!result.created) {
+      return result;
     }
 
+    await this.reportRepository.create(command.tenantId, result.report);
     return result;
   }
 
-  async transitionReport(
-    command: TransitionAviationReportCommand
-  ): Promise<TransitionAviationReportCommandResult> {
-    const current = await this.aviationReportRepository.findById(
-      command.tenantId,
-      command.reportId
-    );
+  async transitionReport(command: TransitionAviationReportCommand): Promise<TransitionAviationReportCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
 
-    if (!current) {
-      return {
-        allowed: false,
-        reason: 'NOT_FOUND'
-      };
-    }
+    if (!current) return { allowed: false, reason: 'NOT_FOUND' };
 
-    const accessDecision = this.accessPolicyService.authorize({
+    const decision = this.accessPolicyService.authorize({
       actor: command.actor,
       action: 'aviation.report.transition',
-      subject: {
-        tenantId: command.tenantId,
-        assetId: current.assetId
-      }
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
     });
 
-    if (!accessDecision.allowed) {
-      return {
-        allowed: false,
-        reason: 'FORBIDDEN',
-        accessReason: accessDecision.reason
-      };
+    if (!decision.allowed) {
+      return { allowed: false, reason: 'FORBIDDEN', accessReason: decision.reason };
     }
+
+    const evidences = await this.evidenceRepository.listByReport(command.tenantId, command.reportId);
 
     const eta = command.input.returnToServiceEta
       ? command.input.returnToServiceEta instanceof Date
@@ -238,147 +256,179 @@ export class AviationApplicationService {
         : new Date(command.input.returnToServiceEta)
       : undefined;
 
-    const evidences = await this.aviationEvidenceRepository.listByReport(
-      command.tenantId,
-      command.reportId
-    );
     const result = this.aviationWorkflowService.transition(
       this.toDomainReport(current),
       { ...command.input, returnToServiceEta: eta },
-      evidences.map((evidence) => evidence.type)
+      evidences.map((e) => e.type)
     );
 
-    if (!result.allowed) {
-      return result;
-    }
+    if (!result.allowed) return result;
 
     if (result.report.status === current.status) {
-      await this.aviationReportRepository.update(command.tenantId, command.reportId, result.report);
+      await this.reportRepository.update(command.tenantId, command.reportId, result.report);
     } else {
-      await this.aviationReportRepository.updateStatusWithTransitionHistory(
+      await this.reportRepository.updateStatusWithTransitionHistory(
         command.tenantId,
         command.reportId,
         result.report,
-        {
-          fromStatus: current.status,
-          transitionedBy: command.actor.userId,
-          at: new Date()
-        }
+        { fromStatus: current.status, transitionedBy: command.actor.userId, at: new Date() }
       );
     }
 
     return result;
   }
 
-  async getReportDetail(
-    command: GetAviationReportDetailCommand
-  ): Promise<GetAviationReportDetailCommandResult> {
-    const current = await this.aviationReportRepository.findById(
-      command.tenantId,
-      command.reportId
-    );
+  async registerComment(command: RegisterAviationCommentCommand): Promise<RegisterAviationCommentCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
 
-    if (!current) {
-      return {
-        found: false,
-        reason: 'NOT_FOUND'
-      };
-    }
+    if (!current) return { registered: false, reason: 'NOT_FOUND' };
 
-    const accessDecision = this.accessPolicyService.authorize({
+    const decision = this.accessPolicyService.authorize({
       actor: command.actor,
-      action: 'aviation.report.read',
-      subject: {
-        tenantId: command.tenantId,
-        assetId: current.assetId
-      }
+      action: 'aviation.report.comment',
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
     });
 
-    if (!accessDecision.allowed) {
-      return {
-        found: false,
-        reason: 'FORBIDDEN',
-        accessReason: accessDecision.reason
-      };
+    if (!decision.allowed) {
+      return { registered: false, reason: 'FORBIDDEN', accessReason: decision.reason };
     }
 
-    const evidences = await this.aviationEvidenceRepository.listByReport(
-      command.tenantId,
-      command.reportId
-    );
+    if (!command.input.message.trim()) {
+      return { registered: false, reason: 'COMMENT_REQUIRED' };
+    }
+
+    const nextReport = this.toDomainReport(current);
+    nextReport.notes = appendMaintenanceTicketComment(nextReport.notes, {
+      id: `comment-${randomUUID().slice(0, 8)}`,
+      author: command.input.commentedBy.trim(),
+      message: command.input.message.trim(),
+      at: command.input.commentedAt.toISOString()
+    });
+
+    const updated = await this.reportRepository.update(command.tenantId, command.reportId, nextReport);
+
+    return {
+      registered: true,
+      reason: 'REGISTERED',
+      notes: typeof updated.notes === 'string' ? updated.notes : undefined
+    };
+  }
+
+  async attachEvidence(command: AttachAviationEvidenceCommand): Promise<AttachAviationEvidenceCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
+
+    if (!current) return { attached: false, reason: 'NOT_FOUND' };
+
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.evidence.attach',
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
+    });
+
+    if (!decision.allowed) {
+      return { attached: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const uploadDecision = this.evidenceSecurityService.validateUpload(command.input as never);
+
+    if (!uploadDecision.allowed) {
+      return { attached: false, reason: 'UPLOAD_POLICY_BLOCKED', uploadReason: uploadDecision.reason };
+    }
+
+    const prepared = this.evidenceSecurityService.prepareEvidenceUpload(command.reportId, command.input as never);
+    await this.evidenceRepository.create(command.tenantId, command.reportId, { ...command.input, ...prepared } as never);
+
+    return { attached: true, reason: 'ATTACHED' };
+  }
+
+  async getReportDetail(command: GetAviationReportDetailCommand): Promise<GetAviationReportDetailCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
+
+    if (!current) return { found: false, reason: 'NOT_FOUND' };
+
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.report.read',
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
+    });
+
+    if (!decision.allowed) {
+      return { found: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const evidences = await this.evidenceRepository.listByReport(command.tenantId, command.reportId);
 
     return {
       found: true,
       report: {
-        ...this.toQueueView(current),
+        ...this.toQueueView(current, evidences),
+        notes: typeof current.notes === 'string' ? current.notes : undefined,
+        aircraftSystem: typeof current.aircraftSystem === 'string' ? current.aircraftSystem : undefined,
         evidences
       }
     };
   }
 
-  private toDomainReport(report: {
-    assetId: string;
-    title?: string | null;
-    category: AviationReport['category'];
-    priority: AviationReport['priority'];
-    description: string;
-    notes?: string | null;
-    aircraftSystem?: string | null;
-    origin: AviationReport['origin'];
-    openedBy: string;
-    openedAt: Date;
-    status: AviationReport['status'];
-    kanbanSubstatus?: AviationReport['kanbanSubstatus'] | null;
-    groundCount: number;
-    groundReason?: AviationReport['groundReason'] | null;
-  }): AviationReport {
+  async getTransitionHistory(
+    command: GetAviationTransitionHistoryCommand
+  ): Promise<GetAviationTransitionHistoryCommandResult> {
+    const current = await this.reportRepository.findById(command.tenantId, command.reportId);
+
+    if (!current) return { found: false, reason: 'NOT_FOUND' };
+
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.report.read',
+      subject: { tenantId: command.tenantId, assetId: current.assetId }
+    });
+
+    if (!decision.allowed) {
+      return { found: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const transitions = await this.reportRepository.listTransitions(command.tenantId, command.reportId);
+    return { found: true, transitions };
+  }
+
+  private toDomainReport(persisted: PersistedAviationReport): AviationReport {
     return {
-      assetId: report.assetId,
-      title: report.title ?? undefined,
-      category: report.category,
-      priority: report.priority,
-      description: report.description,
-      notes: report.notes ?? undefined,
-      aircraftSystem: report.aircraftSystem ?? undefined,
-      origin: report.origin,
-      openedBy: report.openedBy,
-      openedAt: report.openedAt,
-      status: report.status,
-      kanbanSubstatus: report.kanbanSubstatus ?? undefined,
-      groundCount: report.groundCount,
-      groundReason: report.groundReason ?? undefined,
+      assetId: persisted.assetId,
+      title: persisted.title ?? undefined,
+      category: persisted.category,
+      priority: persisted.priority,
+      description: persisted.description,
+      notes: persisted.notes ?? undefined,
+      aircraftSystem: persisted.aircraftSystem ?? undefined,
+      origin: persisted.origin,
+      openedBy: persisted.openedBy,
+      openedAt: persisted.openedAt,
+      status: persisted.status,
+      kanbanSubstatus: persisted.kanbanSubstatus ?? undefined,
+      groundCount: persisted.groundCount,
+      groundReason: persisted.groundReason ?? undefined,
       returnToServiceEta:
-        (report as Record<string, unknown>).returnToServiceEta instanceof Date
-          ? ((report as Record<string, unknown>).returnToServiceEta as Date)
+        (persisted as Record<string, unknown>).returnToServiceEta instanceof Date
+          ? ((persisted as Record<string, unknown>).returnToServiceEta as Date)
           : undefined
     };
   }
 
-  private resolveVisibleAssetIds(
-    actor: AccessActor,
-    requestedAssetIds?: string[]
-  ): string[] | undefined {
-    if (actor.role !== 'asset_field_team') {
-      return requestedAssetIds;
-    }
-
-    if (!requestedAssetIds?.length) {
-      return actor.assetIds;
-    }
-
-    return requestedAssetIds.filter((assetId) => actor.assetIds.includes(assetId));
+  private resolveVisibleAssetIds(actor: AccessActor, requestedAssetIds?: string[]): string[] | undefined {
+    if (actor.role !== 'asset_field_team') return requestedAssetIds;
+    if (!requestedAssetIds?.length) return actor.assetIds;
+    return requestedAssetIds.filter((id) => actor.assetIds.includes(id));
   }
 
-  private toQueueView(report: PersistedAviationReport): AviationReportQueueView {
+  private toQueueView(
+    report: PersistedAviationReport,
+    evidences: PersistedAviationEvidence[]
+  ): AviationReportQueueView {
     return {
       id: report.id,
       assetId: report.assetId,
-      title: report.title ?? undefined,
+      title: report.title?.trim() || report.description,
       category: report.category,
       priority: report.priority,
-      description: report.description,
-      notes: report.notes ?? undefined,
-      aircraftSystem: report.aircraftSystem ?? undefined,
       origin: report.origin,
       openedBy: report.openedBy,
       openedAt: report.openedAt,
@@ -387,7 +437,9 @@ export class AviationApplicationService {
       groundCount: report.groundCount,
       groundReason: report.groundReason ?? undefined,
       returnToServiceEta: report.returnToServiceEta ?? undefined,
-      updatedAt: report.updatedAt
+      updatedAt: report.updatedAt,
+      evidenceCount: evidences.length,
+      evidenceTypes: [...new Set(evidences.map((e) => e.type))]
     };
   }
 }

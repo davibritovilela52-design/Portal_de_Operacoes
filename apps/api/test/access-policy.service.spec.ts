@@ -501,6 +501,43 @@ describe('AccessPolicyService', () => {
     });
   });
 
+  it('aviation_operations can search, read, create and transition aviation reports', () => {
+    const actor = {
+      userId: 'u1',
+      tenantId: 'tenant-1',
+      role: 'aviation_operations' as const,
+      assetIds: []
+    };
+
+    expect(service.authorize?.({ actor, action: 'aviation.report.search', subject: { tenantId: 'tenant-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'a1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.transition', subject: { tenantId: 'tenant-1', assetId: 'a1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+  });
+
+  it('aviation_technical_coordination can search and transition aviation reports', () => {
+    const actor = {
+      userId: 'u2',
+      tenantId: 'tenant-1',
+      role: 'aviation_technical_coordination' as const,
+      assetIds: []
+    };
+
+    expect(service.authorize?.({ actor, action: 'aviation.report.search', subject: { tenantId: 'tenant-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.transition', subject: { tenantId: 'tenant-1', assetId: 'a1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+  });
+
+  it('asset_field_team can create and transition aviation reports for its own asset', () => {
+    const actor = {
+      userId: 'u3',
+      tenantId: 'tenant-1',
+      role: 'asset_field_team' as const,
+      assetIds: ['ac-1']
+    };
+
+    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'ac-2' } })).toEqual({ allowed: false, reason: 'ASSET_SCOPE_MISMATCH' });
+  });
+
   it('records an authorization failure metric when access is denied', () => {
     const metrics = new ObservabilityMetricsService();
     const instrumentedService = new AccessPolicyService(metrics) as AccessPolicyService & {

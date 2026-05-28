@@ -11,15 +11,19 @@ describe('portal shell navigation', () => {
       '/dashboard',
       '/agenda',
       '/maintenance',
+      '/aviation',
       '/improvements',
       '/access'
     ]);
   });
 
-  it('defines topbar tabs with navigation only for yachts', async () => {
+  it('defines topbar tabs with navigation for yachts and aviation', async () => {
     const portalDataModule = await import('../lib/portal-data');
 
-    expect(portalDataModule.topbarTabs).toEqual([{ href: '/dashboard', label: 'Yachts' }]);
+    expect(portalDataModule.topbarTabs).toEqual([
+      { href: '/dashboard', label: 'Yachts' },
+      { href: '/aviation', label: 'Aviation' }
+    ]);
   });
 
   it('renders shell navigation as plain anchors with href', () => {

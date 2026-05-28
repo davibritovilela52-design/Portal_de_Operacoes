@@ -5,6 +5,7 @@ import { AgendaModule } from './modules/agenda/agenda.module.js';
 import { AssetRegistryModule } from './modules/asset-registry/asset-registry.module.js';
 import { AuditModule } from './modules/audit/audit.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { AviationModule } from './modules/aviation/aviation.module.js';
 import { CutoverModule } from './modules/cutover/cutover.module.js';
 import { GovernanceModule } from './modules/governance/governance.module.js';
 import { MaintenanceModule } from './modules/maintenance/maintenance.module.js';
@@ -21,6 +22,7 @@ import { ObservabilityModule } from './modules/observability/observability.modul
     GovernanceModule,
     AgendaModule,
     MaintenanceModule,
+    AviationModule,
     NotificationModule,
     CutoverModule
   ]

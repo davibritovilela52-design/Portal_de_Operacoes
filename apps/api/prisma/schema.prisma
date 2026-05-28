@@ -287,6 +287,7 @@ model MaintenanceEvidence {
   tenantId            String
   maintenanceTicketId String
   type                MaintenanceEvidenceType
+  title               String?
   fileName            String
   mimeType            String
   fileSizeBytes       Int
@@ -569,4 +570,120 @@ model TwoFactor {
 
   @@index([userId])
   @@map("twoFactor")
+}
+
+enum AviationStatus {
+  pending
+  in_progress
+  grounded
+  return_check
+  returned
+  cancelled
+  reopened
+}
+
+enum AviationCategory {
+  preventive
+  corrective
+  emergency
+  inspection
+  airworthiness
+}
+
+enum AviationPriority {
+  P1
+  P2
+  P3
+  P4
+}
+
+enum AviationGroundReason {
+  awaiting_part
+  awaiting_authorization
+  awaiting_maintenance_crew
+  awaiting_operational_window
+}
+
+enum AviationEvidenceType {
+  diagnostic
+  technical_report
+  execution_evidence
+  airworthiness_release
+}
+
+enum AviationEvidenceAntivirusStatus {
+  pending
+  clean
+  flagged
+}
+
+enum AviationOrigin {
+  asset_field_team
+  aviation_technical_coordination
+  central_operations
+}
+
+model AviationReport {
+  id              String           @id @default(cuid())
+  tenantId        String
+  assetId         String
+  title           String?
+  category        AviationCategory
+  priority        AviationPriority
+  description     String
+  notes           String?
+  aircraftSystem  String?
+  origin          AviationOrigin
+  openedBy        String
+  openedAt        DateTime
+  status          AviationStatus
+  kanbanSubstatus String?
+  groundCount     Int              @default(0)
+  groundReason    AviationGroundReason?
+  returnToServiceEta DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  evidences         AviationEvidence[]
+  statusTransitions AviationStatusTransition[]
+
+  @@index([tenantId, assetId, status])
+  @@index([tenantId, openedAt])
+}
+
+model AviationStatusTransition {
+  id               String          @id @default(cuid())
+  tenantId         String
+  aviationReportId String
+  fromStatus       AviationStatus?
+  toStatus         AviationStatus
+  transitionedBy   String
+  at               DateTime
+  createdAt        DateTime        @default(now())
+
+  aviationReport AviationReport @relation(fields: [aviationReportId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, aviationReportId, at])
+  @@index([tenantId, toStatus, at])
+}
+
+model AviationEvidence {
+  id               String                          @id @default(cuid())
+  tenantId         String
+  aviationReportId String
+  type             AviationEvidenceType
+  fileName         String
+  mimeType         String
+  fileSizeBytes    Int
+  storageKey       String
+  sha256           String
+  antivirusStatus  AviationEvidenceAntivirusStatus
+  uploadedBy       String
+  uploadedAt       DateTime
+  createdAt        DateTime                        @default(now())
+
+  aviationReport AviationReport @relation(fields: [aviationReportId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, aviationReportId, type])
+  @@index([tenantId, uploadedAt])
 }

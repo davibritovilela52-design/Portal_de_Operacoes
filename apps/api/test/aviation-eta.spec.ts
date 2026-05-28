@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { AviationWorkflowService } from '../src/modules/aviation/aviation-workflow.service.js';
 
 describe('AviationWorkflowService - returnToServiceEta', () => {

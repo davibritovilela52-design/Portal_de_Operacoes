@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 
 import {
   attachMaintenanceEvidence,
+  createAviationReport,
   createDecisionMemo,
   createMaintenanceTicket,
   deleteAgendaEvent,
@@ -15,10 +16,12 @@ import {
   fetchPortalOperationsSnapshot,
   recordCutoverCheckpoint,
   recordCutoverDecision,
+  registerAviationComment,
   registerMaintenanceComment,
   revokeAccessAssignment,
   rescheduleAgendaEvent,
   scheduleAgendaEvent,
+  transitionAviationReport,
   transitionMaintenanceTicket,
   upsertCutoverRun,
   upsertAccessAssignment,
@@ -1368,5 +1371,179 @@ function resolveMaintenanceOriginForRole(role: FrontendActor['role']) {
       return 'yachts_technical_coordination' as const;
     case 'asset_field_team':
       return 'asset_field_team' as const;
+  }
+}
+
+// ─── Aviation actions ─────────────────────────────────────────────────────────
+
+export async function createAviationReportAction(formData: FormData) {
+  const redirectPath = readOptional(formData, 'returnTo') ?? '/aviation';
+  const assetId = readOptional(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+
+  try {
+    if (!assetId) {
+      throw new Error('Campo obrigatorio ausente: assetId');
+    }
+
+    const result = await createAviationReport({
+      actor: context.actor,
+      input: {
+        assetId,
+        title: readOptional(formData, 'title'),
+        category: readRequired(formData, 'category') as
+          | 'preventive'
+          | 'corrective'
+          | 'emergency'
+          | 'inspection'
+          | 'airworthiness',
+        priority: resolveAviationPriority(formData),
+        description: readRequired(formData, 'description'),
+        notes: readOptional(formData, 'notes'),
+        aircraftSystem: readOptional(formData, 'aircraftSystem'),
+        origin: resolveAviationOriginForRole(context.actor.role),
+        openedBy: context.operator,
+        openedAt: readDateTime(formData, 'openedAt')
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('created' in result) || !result.created) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateAviationPages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Reporte criado com sucesso.');
+}
+
+export async function transitionAviationReportAction(formData: FormData) {
+  const reportId = readRequired(formData, 'reportId');
+  const assetId = readRequired(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+  const redirectPath = readOptional(formData, 'returnTo') ?? `/aviation?reportId=${reportId}`;
+
+  try {
+    const result = await transitionAviationReport({
+      actor: context.actor,
+      reportId,
+      input: {
+        toStatus: readRequired(formData, 'toStatus') as
+          | 'pending'
+          | 'in_progress'
+          | 'grounded'
+          | 'return_check'
+          | 'returned'
+          | 'cancelled'
+          | 'reopened',
+        kanbanSubstatus: readOptional(formData, 'kanbanSubstatus') as
+          | 'report_open'
+          | 'report_qualification'
+          | 'technical_assessment'
+          | 'action_plan'
+          | 'service_execution'
+          | 'post_service_check'
+          | 'aog_hold'
+          | 'return_authorization'
+          | 'returned_to_service'
+          | 'cancelled'
+          | undefined,
+        justification: readOptional(formData, 'justification'),
+        groundReason: readOptional(formData, 'groundReason') as
+          | 'awaiting_part'
+          | 'awaiting_authorization'
+          | 'awaiting_maintenance_crew'
+          | 'awaiting_operational_window'
+          | undefined
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('allowed' in result) || !result.allowed) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateAviationPages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Status atualizado com sucesso.');
+}
+
+export async function registerAviationCommentAction(formData: FormData) {
+  const reportId = readRequired(formData, 'reportId');
+  const assetId = readRequired(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+  const redirectPath = readOptional(formData, 'returnTo') ?? `/aviation?reportId=${reportId}`;
+
+  try {
+    const result = await registerAviationComment({
+      actor: context.actor,
+      reportId,
+      input: {
+        message: readRequired(formData, 'comment'),
+        commentedBy: context.operator,
+        commentedAt: new Date()
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('registered' in result) || !result.registered) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateAviationPages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Comentário registrado com sucesso.');
+}
+
+function revalidateAviationPages(path: string) {
+  revalidatePath('/aviation');
+  revalidatePath('/dashboard');
+  revalidatePath(path);
+}
+
+function resolveAviationPriority(formData: FormData): 'P1' | 'P2' | 'P3' | 'P4' {
+  const explicit = readOptional(formData, 'priority');
+
+  if (explicit === 'P1' || explicit === 'P2' || explicit === 'P3' || explicit === 'P4') {
+    return explicit;
+  }
+
+  const urgency = readRequired(formData, 'urgency');
+
+  switch (urgency) {
+    case 'critical':
+      return 'P1';
+    case 'high':
+      return 'P2';
+    case 'medium':
+      return 'P3';
+    case 'low':
+      return 'P4';
+    default:
+      throw new Error(`Urgência inválida: ${urgency}`);
+  }
+}
+
+function resolveAviationOriginForRole(role: FrontendActor['role']): 'asset_field_team' | 'aviation_technical_coordination' | 'central_operations' {
+  switch (role) {
+    case 'portal_admin':
+    case 'central_operations':
+      return 'central_operations';
+    case 'aviation_operations':
+    case 'aviation_technical_coordination':
+      return 'aviation_technical_coordination';
+    case 'asset_field_team':
+      return 'asset_field_team';
+    default:
+      return 'central_operations';
   }
 }

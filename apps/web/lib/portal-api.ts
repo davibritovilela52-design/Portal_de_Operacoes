@@ -19,6 +19,11 @@ import {
   type AccessUserRecord,
   type AssetModality,
   type AgendaEventRecord,
+  type AviationCategory,
+  type AviationKanbanSubstatus,
+  type AviationPriority,
+  type AviationReportRecord,
+  type AviationStatus,
   type MaintenanceCategory,
   type MaintenanceCostRecord,
   type MaintenanceSystem,
@@ -2400,6 +2405,8 @@ function toPortalRole(value: string | undefined): PortalRole | undefined {
     case 'central_operations':
     case 'yachts_operations':
     case 'yachts_technical_coordination':
+    case 'aviation_operations':
+    case 'aviation_technical_coordination':
     case 'asset_field_team':
       return value;
     default:
@@ -2586,4 +2593,270 @@ function mergeSources(
   }
 
   return 'mixed';
+}
+
+// ─── Aviation ────────────────────────────────────────────────────────────────
+
+type AviationOriginApi =
+  | 'asset_field_team'
+  | 'aviation_technical_coordination'
+  | 'central_operations';
+
+type AviationGroundReasonApi =
+  | 'awaiting_part'
+  | 'awaiting_authorization'
+  | 'awaiting_maintenance_crew'
+  | 'awaiting_operational_window';
+
+type AviationReportQueueApiRecord = {
+  id: string;
+  assetId: string;
+  title: string;
+  category: AviationCategory;
+  priority: AviationPriority;
+  origin: AviationOriginApi;
+  openedBy: string;
+  openedAt: string | Date;
+  status: AviationStatus;
+  kanbanSubstatus?: AviationKanbanSubstatus | null;
+  groundCount: number;
+  groundReason?: AviationGroundReasonApi | null;
+  updatedAt: string | Date;
+  evidenceCount: number;
+  evidenceTypes: string[];
+};
+
+type AviationSearchApiResponse =
+  | { reports: AviationReportQueueApiRecord[] }
+  | { reports: []; reason: 'FORBIDDEN'; accessReason: string };
+
+export type CreateAviationReportRequest = {
+  actor: FrontendActor;
+  input: {
+    assetId: string;
+    title?: string;
+    category: AviationCategory;
+    priority: AviationPriority;
+    description: string;
+    notes?: string;
+    aircraftSystem?: string;
+    origin: AviationOriginApi;
+    openedBy: string;
+    openedAt: string | Date;
+  };
+};
+
+export type CreateAviationReportResponse =
+  | { created: true; reason: 'CREATED'; report: Record<string, unknown> }
+  | { created: false; reason: string; accessReason?: string; missingFields?: string[] };
+
+export type TransitionAviationReportRequest = {
+  actor: FrontendActor;
+  reportId: string;
+  input: {
+    toStatus: AviationStatus;
+    kanbanSubstatus?: AviationKanbanSubstatus;
+    justification?: string;
+    groundReason?: AviationGroundReasonApi;
+  };
+};
+
+export type TransitionAviationReportResponse =
+  | { allowed: true; reason: 'ALLOWED'; report: Record<string, unknown> }
+  | { allowed: false; reason: string; accessReason?: string; missingEvidenceTypes?: string[] };
+
+export type RegisterAviationCommentRequest = {
+  actor: FrontendActor;
+  reportId: string;
+  input: {
+    message: string;
+    commentedBy: string;
+    commentedAt: string | Date;
+  };
+};
+
+export type RegisterAviationCommentResponse =
+  | { registered: true; reason: 'REGISTERED'; notes?: string }
+  | { registered: false; reason: string; accessReason?: string };
+
+export type AviationSnapshot = {
+  source: 'api' | 'mock' | 'mixed';
+  aviationReports: AviationReportRecord[];
+  fleetAssets: AssetRecord[];
+};
+
+export function mapAviationReportsToRecords(
+  reports: AviationReportQueueApiRecord[],
+  fleetAssets: AssetRecord[]
+): AviationReportRecord[] {
+  return reports.map((report) => ({
+    id: report.id,
+    reportNumber: resolveAviationReportNumber(report.id),
+    assetId: report.assetId,
+    assetName: resolveAssetName(report.assetId, fleetAssets),
+    title: report.title,
+    category: report.category,
+    priority: report.priority,
+    status: report.status,
+    openedBy: report.openedBy,
+    openedAt: toIsoString(report.openedAt),
+    updatedAt: toIsoString(report.updatedAt),
+    groundCount: report.groundCount,
+    ...(report.groundReason ? { groundReason: report.groundReason } : {}),
+    ...(report.kanbanSubstatus ? { kanbanSubstatus: report.kanbanSubstatus } : {})
+  }));
+}
+
+export async function searchAviationReports(
+  request: { actor: FrontendActor; filters?: { assetIds?: string[]; statuses?: AviationStatus[] } },
+  options: PortalMutationOptions = {}
+): Promise<AviationSearchApiResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson('aviation/reports/search', {
+    actor: request.actor,
+    tenantId,
+    filters: request.filters
+  }, options);
+}
+
+export async function createAviationReport(
+  request: CreateAviationReportRequest,
+  options: PortalMutationOptions = {}
+): Promise<CreateAviationReportResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson('aviation/reports', {
+    actor: request.actor,
+    tenantId,
+    input: {
+      ...request.input,
+      openedAt: toIsoString(request.input.openedAt)
+    }
+  }, options);
+}
+
+export async function transitionAviationReport(
+  request: TransitionAviationReportRequest,
+  options: PortalMutationOptions = {}
+): Promise<TransitionAviationReportResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson(`aviation/reports/${request.reportId}/transitions`, {
+    actor: request.actor,
+    tenantId,
+    input: request.input
+  }, options);
+}
+
+export async function registerAviationComment(
+  request: RegisterAviationCommentRequest,
+  options: PortalMutationOptions = {}
+): Promise<RegisterAviationCommentResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson(`aviation/reports/${request.reportId}/comments`, {
+    actor: request.actor,
+    tenantId,
+    input: {
+      ...request.input,
+      commentedAt: toIsoString(request.input.commentedAt)
+    }
+  }, options);
+}
+
+export async function fetchAviationSnapshot(
+  options: PortalSnapshotOptions = {}
+): Promise<AviationSnapshot> {
+  const tenantId = options.tenantId ?? process.env.OPS_PORTAL_TENANT_ID ?? defaultTenantId;
+  const actor = options.actor ?? buildDefaultActor(tenantId);
+  const apiBaseUrl = normalizeApiBaseUrl(
+    options.apiBaseUrl ?? process.env.OPS_PORTAL_API_BASE_URL
+  );
+
+  if (!apiBaseUrl) {
+    ensurePortalReadFallbackAllowed(
+      options.sessionToken,
+      'OPS_PORTAL_API_BASE_URL is not configured for authenticated aviation reads.'
+    );
+
+    return { source: 'mock', aviationReports: [], fleetAssets: [] };
+  }
+
+  const fetchImpl = options.fetchImpl ?? fetch;
+
+  try {
+    const [reportsResponse, assetsResponse] = await Promise.all([
+      fetchImpl(`${apiBaseUrl}/aviation/reports/search`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: buildPortalHeaders(options.sessionToken),
+        body: JSON.stringify({ actor, tenantId })
+      }),
+      fetchImpl(`${apiBaseUrl}/asset-registry/assets/search`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: buildPortalHeaders(options.sessionToken),
+        body: JSON.stringify({ actor, tenantId, filters: { modality: 'aviation' } })
+      })
+    ]);
+
+    const assetsOk = assetsResponse.ok;
+    const reportsOk = reportsResponse.ok;
+
+    if (!reportsOk && !assetsOk) {
+      ensurePortalReadFallbackAllowed(
+        options.sessionToken,
+        `Portal API aviation snapshot failed: reports=${reportsResponse.status}, assets=${assetsResponse.status}.`
+      );
+
+      return { source: 'mock', aviationReports: [], fleetAssets: [] };
+    }
+
+    const fleetAssets = assetsOk
+      ? mergeAssetRegistryAssets(
+          ((await assetsResponse.json()) as AssetRegistryListResponse).assets ?? [],
+          options.fallbackAssets ?? []
+        )
+      : [];
+
+    if (!reportsOk) {
+      ensurePortalReadFallbackAllowed(
+        options.sessionToken,
+        `Portal API aviation reports read failed: ${reportsResponse.status}.`
+      );
+
+      return { source: 'mixed', aviationReports: [], fleetAssets };
+    }
+
+    const reportsPayload = (await reportsResponse.json()) as AviationSearchApiResponse;
+
+    if ('reason' in reportsPayload) {
+      return { source: 'api', aviationReports: [], fleetAssets };
+    }
+
+    return {
+      source: 'api',
+      aviationReports: mapAviationReportsToRecords(reportsPayload.reports, fleetAssets),
+      fleetAssets
+    };
+  } catch (error) {
+    rethrowAuthenticatedPortalReadFailure(
+      error,
+      options.sessionToken,
+      'Unable to load the authenticated aviation snapshot from the API.'
+    );
+
+    return { source: 'mock', aviationReports: [], fleetAssets: [] };
+  }
+}
+
+function resolveAviationReportNumber(id: string): string {
+  const numericId = id.replace(/\D+/g, '');
+
+  if (numericId.length > 0) {
+    return numericId;
+  }
+
+  return id.slice(0, 8).toUpperCase();
 }

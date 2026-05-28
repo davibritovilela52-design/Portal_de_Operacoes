@@ -7,6 +7,8 @@ export type PortalRole =
   | 'central_operations'
   | 'yachts_operations'
   | 'yachts_technical_coordination'
+  | 'aviation_operations'
+  | 'aviation_technical_coordination'
   | 'asset_field_team';
 
 export type AccessDecisionReason =
@@ -45,6 +47,13 @@ export type AccessAction =
   | 'audit.ledger.search'
   | 'audit.decision_memo.create'
   | 'audit.rectification.create'
+  | 'aviation.report.search'
+  | 'aviation.report.read'
+  | 'aviation.report.create'
+  | 'aviation.report.comment'
+  | 'aviation.report.transition'
+  | 'aviation.evidence.attach'
+  | 'aviation.evidence.read'
   | (string & {});
 
 export type AccessActor = {
@@ -105,7 +114,10 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'aviation.report.search',
     'aviation.report.read',
     'aviation.report.create',
+    'aviation.report.comment',
     'aviation.report.transition',
+    'aviation.evidence.attach',
+    'aviation.evidence.read',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -161,6 +173,38 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'audit.ledger.search',
     'audit.decision_memo.create'
   ]),
+  aviation_operations: new Set([
+    'structural_registry.manage',
+    'agenda.event.search',
+    'agenda.event.read',
+    'agenda.event.create',
+    'agenda.event.update',
+    'agenda.event.delete',
+    'agenda.conflict.override',
+    'aviation.report.search',
+    'aviation.report.read',
+    'aviation.report.create',
+    'aviation.report.comment',
+    'aviation.report.transition',
+    'aviation.evidence.attach',
+    'aviation.evidence.read',
+    'audit.ledger.search',
+    'audit.decision_memo.create',
+    'audit.rectification.create'
+  ]),
+  aviation_technical_coordination: new Set([
+    'agenda.event.search',
+    'agenda.event.read',
+    'aviation.report.search',
+    'aviation.report.read',
+    'aviation.report.create',
+    'aviation.report.comment',
+    'aviation.report.transition',
+    'aviation.evidence.attach',
+    'aviation.evidence.read',
+    'audit.ledger.search',
+    'audit.decision_memo.create'
+  ]),
   asset_field_team: new Set([
     'agenda.event.search',
     'agenda.event.read',
@@ -178,7 +222,10 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'aviation.report.search',
     'aviation.report.read',
     'aviation.report.create',
-    'aviation.report.transition'
+    'aviation.report.comment',
+    'aviation.report.transition',
+    'aviation.evidence.attach',
+    'aviation.evidence.read'
   ])
 };
 
@@ -199,7 +246,10 @@ const assetScopedActions = new Set([
   'maintenance.asset.release',
   'aviation.report.read',
   'aviation.report.create',
-  'aviation.report.transition'
+  'aviation.report.comment',
+  'aviation.report.transition',
+  'aviation.evidence.attach',
+  'aviation.evidence.read'
 ]);
 
 @Injectable()
