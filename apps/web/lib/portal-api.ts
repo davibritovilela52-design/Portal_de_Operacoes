@@ -2881,6 +2881,26 @@ export async function fetchAviationStats(
   }
 }
 
+export type AviationAgendaSnapshot = {
+  source: 'api' | 'mock' | 'mixed';
+  fleetAssets: AssetRecord[];
+  agendaEvents: AgendaEventRecord[];
+};
+
+export async function fetchAviationAgendaSnapshot(
+  options: PortalSnapshotOptions = {}
+): Promise<AviationAgendaSnapshot> {
+  const snapshot = await fetchPortalOperationsSnapshot(options);
+  const aviationAssets = snapshot.fleetAssets.filter((a) => a.modality === 'aviation');
+  const aviationAssetIds = new Set(aviationAssets.map((a) => a.id));
+
+  return {
+    source: snapshot.source,
+    fleetAssets: aviationAssets,
+    agendaEvents: snapshot.agendaEvents.filter((e) => aviationAssetIds.has(e.assetId))
+  };
+}
+
 function resolveAviationReportNumber(id: string): string {
   const numericId = id.replace(/\D+/g, '');
 

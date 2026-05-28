@@ -101,7 +101,9 @@ export const navigationItems: NavigationItem[] = [
   { href: '/dashboard', label: 'Painel', icon: 'dashboard', module: 'yachts' },
   { href: '/agenda', label: 'Agenda', icon: 'agenda', module: 'yachts' },
   { href: '/maintenance', label: 'Manutenção', icon: 'maintenance', module: 'yachts' },
-  { href: '/aviation', label: 'Aviation', icon: 'maintenance', module: 'aviation' },
+  { href: '/aviation', label: 'Painel', icon: 'dashboard', module: 'aviation' },
+  { href: '/aviation/agenda', label: 'Agenda', icon: 'agenda', module: 'aviation' },
+  { href: '/aviation/reports', label: 'Reportes', icon: 'maintenance', module: 'aviation' },
   { href: '/improvements', label: 'Melhorias', icon: 'maintenance', module: 'yachts' },
   { href: '/access', label: 'Acessos', icon: 'access' }
 ];

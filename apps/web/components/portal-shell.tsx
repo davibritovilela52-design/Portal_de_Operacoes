@@ -121,10 +121,10 @@ export function PortalShell({ children, session }: PortalShellProps) {
 
         <nav className="sidebar-nav" aria-label="Primary">
           {visibleNavigationItems.map((item) => {
-            const active =
-              item.href === '/dashboard'
-                ? pathname === item.href
-                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const exactMatch = item.href === '/dashboard' || item.href === '/aviation';
+            const active = exactMatch
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <a

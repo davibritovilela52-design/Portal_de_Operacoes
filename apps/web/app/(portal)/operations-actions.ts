@@ -811,6 +811,9 @@ function revalidateOperationalPages(path: string) {
   revalidatePath('/maintenance');
   revalidatePath('/improvements');
   revalidatePath('/agenda');
+  revalidatePath('/aviation');
+  revalidatePath('/aviation/agenda');
+  revalidatePath('/aviation/reports');
   revalidatePath('/audit-governance');
   revalidatePath('/access');
   revalidatePath('/cutover');
@@ -1208,6 +1211,7 @@ function buildCutoverEvidenceInput(formData: FormData) {
 }
 
 function buildAgendaRedirectPath(formData: FormData) {
+  const basePath = readOptional(formData, 'agendaBasePath') ?? '/agenda';
   const month = readOptional(formData, 'calendarMonth');
   const filterAssetId = readOptional(formData, 'filterAssetId');
 
@@ -1218,14 +1222,14 @@ function buildAgendaRedirectPath(formData: FormData) {
       params.set('assetId', filterAssetId);
     }
 
-    return `/agenda?${params.toString()}`;
+    return `${basePath}?${params.toString()}`;
   }
 
   if (filterAssetId) {
-    return `/agenda?assetId=${encodeURIComponent(filterAssetId)}`;
+    return `${basePath}?assetId=${encodeURIComponent(filterAssetId)}`;
   }
 
-  return '/agenda';
+  return basePath;
 }
 
 function redirectWithMessage(path: string, key: 'notice' | 'error', message: string): never {

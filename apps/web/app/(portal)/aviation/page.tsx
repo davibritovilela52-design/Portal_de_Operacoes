@@ -2,40 +2,19 @@ import Link from 'next/link';
 
 import { PageHeader, Panel } from '../../../components/portal-ui';
 import { fetchAviationSnapshot, fetchAviationStats } from '../../../lib/portal-api';
-import {
-  aviationCategoryLabels,
-  aviationStatusLabels,
-  buildAviationKanbanColumns,
-  type AviationCategory
-} from '../../../lib/portal-model';
+import { aviationStatusLabels } from '../../../lib/portal-model';
 import { requirePortalSession } from '../../../lib/portal-session';
-import { createAviationReportAction } from '../operations-actions';
-import { AviationKanbanBoard } from './aviation-kanban-board';
-import {
-  AviationTicketFilterForm,
-  filterAviationReportsByQuery,
-  readAviationTicketFilterQuery
-} from './aviation-ticket-filter';
 
-type AviationPageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+const assetStatusLabels: Record<string, string> = {
+  available: 'Disponível',
+  restricted: 'Restrito',
+  unavailable: 'Indisponível'
 };
 
-const aviationCategoryOptions: AviationCategory[] = [
-  'preventive',
-  'corrective',
-  'emergency',
-  'inspection',
-  'airworthiness'
-];
-
-const aviationUrgencyOptions = ['critical', 'high', 'medium', 'low'] as const;
-
-export default async function AviationPage({ searchParams }: AviationPageProps) {
+export default async function AviationDashboardPage() {
   const session = await requirePortalSession();
-  const openedAtValue = new Date().toISOString();
 
-  const [{ aviationReports, fleetAssets }, statsResult, resolvedSearchParams] = await Promise.all([
+  const [{ aviationReports, fleetAssets }, statsResult] = await Promise.all([
     fetchAviationSnapshot({
       tenantId: session.actor.tenantId,
       actor: session.actor,
@@ -45,55 +24,20 @@ export default async function AviationPage({ searchParams }: AviationPageProps) 
       actor: session.actor,
       tenantId: session.actor.tenantId,
       sessionToken: session.token
-    }),
-    searchParams ?? Promise.resolve({})
+    })
   ]);
 
   const stats = statsResult.found ? statsResult.stats : null;
-
-  const notice = readSearchMessage(resolvedSearchParams, 'notice');
-  const error = readSearchMessage(resolvedSearchParams, 'error');
-  const mode = resolvedSearchParams.mode === 'create' ? 'create' : null;
-  const filterQuery = readAviationTicketFilterQuery(resolvedSearchParams);
-  const selectedReportId =
-    typeof resolvedSearchParams.reportId === 'string' ? resolvedSearchParams.reportId : null;
-  const filteredReports = filterAviationReportsByQuery(aviationReports, filterQuery);
-  const kanbanColumns = buildAviationKanbanColumns(filteredReports);
-  const createPath = '/aviation?mode=create';
-  const listPath = '/aviation';
-  const selectedReport = selectedReportId
-    ? filteredReports.find((r) => r.id === selectedReportId) ?? null
-    : null;
+  const recentReports = [...aviationReports]
+    .sort((a, b) => Date.parse(b.openedAt) - Date.parse(a.openedAt))
+    .slice(0, 5);
 
   return (
     <div className="page">
       <PageHeader
-        title="Aviation"
-        description="Acompanhe o status das aeronaves, reportes técnicos e manutenções."
-        actions={
-          <Link className="action-button" href={createPath}>
-            Abrir reporte
-          </Link>
-        }
+        title="Painel Aviation"
+        description="Visão geral da frota de aeronaves, eventos AOG e reportes técnicos."
       />
-
-      {notice ? (
-        <Panel tone="highlight" className="status-banner">
-          <strong>Operação concluída</strong>
-          <p>{notice}</p>
-        </Panel>
-      ) : null}
-
-      {error ? (
-        <Panel tone="critical" className="status-banner">
-          <strong>Operação recusada</strong>
-          <p>{error}</p>
-        </Panel>
-      ) : null}
-
-      <Panel>
-        <AviationTicketFilterForm action="/aviation" query={filterQuery} />
-      </Panel>
 
       {stats ? (
         <div className="kpi-strip">
@@ -121,167 +65,85 @@ export default async function AviationPage({ searchParams }: AviationPageProps) 
       ) : null}
 
       <Panel>
-        <AviationKanbanBoard columns={kanbanColumns} returnTo={listPath} />
+        <div className="panel-title">
+          <span>Frota de aeronaves</span>
+        </div>
+
+        {fleetAssets.length === 0 ? (
+          <div className="signal-list">
+            <article className="signal-item">
+              <h3 className="signal-item__title">Nenhuma aeronave cadastrada</h3>
+              <p>Não há aeronaves visíveis para o papel autenticado nesta leitura.</p>
+            </article>
+          </div>
+        ) : (
+          <div className="table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Aeronave</th>
+                  <th>Status</th>
+                  <th>Localização</th>
+                  <th>Próxima janela</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fleetAssets.map((asset) => (
+                  <tr key={asset.id}>
+                    <td>{asset.name}</td>
+                    <td>{assetStatusLabels[asset.status] ?? asset.status}</td>
+                    <td>{asset.location}</td>
+                    <td>{asset.nextWindow}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Panel>
 
-      {selectedReport && mode !== 'create' ? (
-        <div className="modal-backdrop">
-          <div className="modal-card">
-            <div className="panel-title">
-              <span>Reporte</span>
-              <Link className="action-button action-button--ghost" href={listPath}>
-                Fechar
-              </Link>
-            </div>
-
-            <div className="maintenance-ticket-modal">
-              <div className="maintenance-ticket-modal__grid">
-                <ModalInfoItem label="ID" value={selectedReport.reportNumber} />
-                <ModalInfoItem label="Título" value={selectedReport.title} />
-                <ModalInfoItem
-                  label="Categoria"
-                  value={aviationCategoryLabels[selectedReport.category]}
-                />
-                <ModalInfoItem label="Aeronave" value={selectedReport.assetName} />
-                <ModalInfoItem
-                  label="Status"
-                  value={aviationStatusLabels[selectedReport.status]}
-                />
-                <ModalInfoItem
-                  label="Abertura"
-                  value={new Date(selectedReport.openedAt).toLocaleDateString('pt-BR')}
-                />
-                {selectedReport.groundCount > 0 ? (
-                  <ModalInfoItem
-                    label="Eventos AOG"
-                    value={String(selectedReport.groundCount)}
-                  />
-                ) : null}
-                {selectedReport.returnToServiceEta ? (
-                  <ModalInfoItem
-                    label="Previsão de retorno"
-                    value={new Date(selectedReport.returnToServiceEta).toLocaleDateString('pt-BR')}
-                  />
-                ) : null}
-              </div>
-              <div className="form-actions form-actions--end">
-                <Link className="action-button action-button--ghost" href={listPath}>
-                  Fechar
-                </Link>
-              </div>
-            </div>
-          </div>
+      <Panel>
+        <div className="panel-title">
+          <span>Reportes recentes</span>
+          <Link className="action-button action-button--ghost" href="/aviation/reports">
+            Ver todos
+          </Link>
         </div>
-      ) : null}
 
-      {mode === 'create' ? (
-        <div className="modal-backdrop">
-          <div className="modal-card">
-            <div className="panel-title">
-              <span>Abrir reporte</span>
-              <Link className="action-button action-button--ghost" href={listPath}>
-                Fechar
-              </Link>
-            </div>
-
-            <form action={createAviationReportAction} className="action-form">
-              <input name="operator" type="hidden" value={session.operatorLabel} />
-              <input name="returnTo" type="hidden" value={listPath} />
-              <input name="openedAt" type="hidden" value={openedAtValue} />
-
-              <div className="form-grid">
-                {fleetAssets.length > 0 ? (
-                  <label className="form-field form-field--full">
-                    <span>Aeronave</span>
-                    <select name="assetId" defaultValue={fleetAssets[0]?.id} required>
-                      {fleetAssets.map((asset) => (
-                        <option key={asset.id} value={asset.id}>
-                          {asset.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                ) : (
-                  <label className="form-field form-field--full">
-                    <span>ID da Aeronave</span>
-                    <input
-                      name="assetId"
-                      type="text"
-                      placeholder="ac-001"
-                      required
-                    />
-                  </label>
-                )}
-
-                <label className="form-field form-field--full">
-                  <span>Categoria</span>
-                  <select name="category" defaultValue="corrective">
-                    {aviationCategoryOptions.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {aviationCategoryLabels[cat]}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="form-field form-field--full">
-                  <span>Título</span>
-                  <input
-                    name="title"
-                    type="text"
-                    placeholder="Resumo do reporte técnico"
-                    required
-                  />
-                </label>
-
-                <label className="form-field form-field--full">
-                  <span>Urgência</span>
-                  <select name="urgency" defaultValue="medium">
-                    {aviationUrgencyOptions.map((u) => (
-                      <option key={u} value={u}>
-                        {u}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="form-field form-field--full">
-                  <span>Descrição</span>
-                  <textarea
-                    name="description"
-                    rows={4}
-                    placeholder="Descreva a ocorrência, sistema afetado e impacto operacional."
-                    required
-                  />
-                </label>
-              </div>
-
-              <div className="form-actions form-actions--end">
-                <button className="action-button" type="submit">
-                  Criar reporte
-                </button>
-              </div>
-            </form>
+        {recentReports.length === 0 ? (
+          <div className="signal-list">
+            <article className="signal-item">
+              <h3 className="signal-item__title">Nenhum reporte encontrado</h3>
+              <p>Não há reportes técnicos registrados para esta frota.</p>
+            </article>
           </div>
-        </div>
-      ) : null}
+        ) : (
+          <div className="table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Aeronave</th>
+                  <th>Título</th>
+                  <th>Status</th>
+                  <th>Abertura</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentReports.map((report) => (
+                  <tr key={report.id}>
+                    <td>{report.reportNumber}</td>
+                    <td>{report.assetName}</td>
+                    <td>{report.title}</td>
+                    <td>{aviationStatusLabels[report.status]}</td>
+                    <td>{new Date(report.openedAt).toLocaleDateString('pt-BR')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
     </div>
   );
-}
-
-function ModalInfoItem({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="maintenance-ticket-modal__item">
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function readSearchMessage(
-  params: Record<string, string | string[] | undefined>,
-  key: 'notice' | 'error'
-) {
-  const val = params[key];
-  return typeof val === 'string' ? val : undefined;
 }

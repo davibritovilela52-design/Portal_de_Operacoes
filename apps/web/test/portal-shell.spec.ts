@@ -12,6 +12,8 @@ describe('portal shell navigation', () => {
       '/agenda',
       '/maintenance',
       '/aviation',
+      '/aviation/agenda',
+      '/aviation/reports',
       '/improvements',
       '/access'
     ]);
