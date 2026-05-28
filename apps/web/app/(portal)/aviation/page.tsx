@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { PageHeader, Panel } from '../../../components/portal-ui';
-import { fetchAviationSnapshot } from '../../../lib/portal-api';
+import { fetchAviationSnapshot, fetchAviationStats } from '../../../lib/portal-api';
 import {
   aviationCategoryLabels,
   aviationStatusLabels,
@@ -35,14 +35,21 @@ export default async function AviationPage({ searchParams }: AviationPageProps) 
   const session = await requirePortalSession();
   const openedAtValue = new Date().toISOString();
 
-  const [{ aviationReports, fleetAssets }, resolvedSearchParams] = await Promise.all([
+  const [{ aviationReports, fleetAssets }, statsResult, resolvedSearchParams] = await Promise.all([
     fetchAviationSnapshot({
       tenantId: session.actor.tenantId,
       actor: session.actor,
       sessionToken: session.token
     }),
+    fetchAviationStats({
+      actor: session.actor,
+      tenantId: session.actor.tenantId,
+      sessionToken: session.token
+    }),
     searchParams ?? Promise.resolve({})
   ]);
+
+  const stats = statsResult.found ? statsResult.stats : null;
 
   const notice = readSearchMessage(resolvedSearchParams, 'notice');
   const error = readSearchMessage(resolvedSearchParams, 'error');
@@ -88,6 +95,31 @@ export default async function AviationPage({ searchParams }: AviationPageProps) 
         <AviationTicketFilterForm action="/aviation" query={filterQuery} />
       </Panel>
 
+      {stats ? (
+        <div className="kpi-strip">
+          <div className="kpi-card">
+            <span className="kpi-card__label">Reportes</span>
+            <strong className="kpi-card__value">{stats.totalReports}</strong>
+          </div>
+          <div className="kpi-card kpi-card--critical">
+            <span className="kpi-card__label">AOG ativo</span>
+            <strong className="kpi-card__value">{stats.activeAogCount}</strong>
+          </div>
+          <div className="kpi-card">
+            <span className="kpi-card__label">Eventos AOG total</span>
+            <strong className="kpi-card__value">{stats.totalAogEvents}</strong>
+          </div>
+          <div className="kpi-card">
+            <span className="kpi-card__label">Em andamento</span>
+            <strong className="kpi-card__value">{stats.byStatus.in_progress ?? 0}</strong>
+          </div>
+          <div className="kpi-card">
+            <span className="kpi-card__label">Retornadas</span>
+            <strong className="kpi-card__value">{stats.byStatus.returned ?? 0}</strong>
+          </div>
+        </div>
+      ) : null}
+
       <Panel>
         <AviationKanbanBoard columns={kanbanColumns} returnTo={listPath} />
       </Panel>
@@ -123,6 +155,12 @@ export default async function AviationPage({ searchParams }: AviationPageProps) 
                   <ModalInfoItem
                     label="Eventos AOG"
                     value={String(selectedReport.groundCount)}
+                  />
+                ) : null}
+                {selectedReport.returnToServiceEta ? (
+                  <ModalInfoItem
+                    label="Previsão de retorno"
+                    value={new Date(selectedReport.returnToServiceEta).toLocaleDateString('pt-BR')}
                   />
                 ) : null}
               </div>

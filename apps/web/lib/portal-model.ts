@@ -1102,6 +1102,7 @@ export type AviationReportRecord = {
   updatedAt?: string;
   groundCount: number;
   groundReason?: string;
+  returnToServiceEta?: string;
   kanbanSubstatus?: AviationKanbanSubstatus;
 };
 

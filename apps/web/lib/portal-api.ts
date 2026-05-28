@@ -2621,6 +2621,7 @@ type AviationReportQueueApiRecord = {
   kanbanSubstatus?: AviationKanbanSubstatus | null;
   groundCount: number;
   groundReason?: AviationGroundReasonApi | null;
+  returnToServiceEta?: string | Date | null;
   updatedAt: string | Date;
   evidenceCount: number;
   evidenceTypes: string[];
@@ -2703,7 +2704,8 @@ export function mapAviationReportsToRecords(
     updatedAt: toIsoString(report.updatedAt),
     groundCount: report.groundCount,
     ...(report.groundReason ? { groundReason: report.groundReason } : {}),
-    ...(report.kanbanSubstatus ? { kanbanSubstatus: report.kanbanSubstatus } : {})
+    ...(report.kanbanSubstatus ? { kanbanSubstatus: report.kanbanSubstatus } : {}),
+    ...(report.returnToServiceEta ? { returnToServiceEta: toIsoString(report.returnToServiceEta) } : {})
   }));
 }
 
@@ -2848,6 +2850,39 @@ export async function fetchAviationSnapshot(
     );
 
     return { source: 'mock', aviationReports: [], fleetAssets: [] };
+  }
+}
+
+export type AviationStatsResult = {
+  byStatus: Record<string, number>;
+  byPriority: Record<string, number>;
+  totalAogEvents: number;
+  activeAogCount: number;
+  totalReports: number;
+};
+
+type FetchAviationStatsOptions = {
+  actor: FrontendActor;
+  tenantId: string;
+  sessionToken?: string;
+};
+
+export async function fetchAviationStats(
+  options: FetchAviationStatsOptions
+): Promise<{ found: true; stats: AviationStatsResult } | { found: false; reason: string }> {
+  try {
+    return await postPortalJson<{ found: true; stats: AviationStatsResult } | { found: false; reason: string; accessReason?: string }>(
+      'aviation/stats',
+      { actor: options.actor, tenantId: options.tenantId },
+      { sessionToken: options.sessionToken }
+    );
+  } catch (error) {
+    rethrowAuthenticatedPortalReadFailure(
+      error,
+      options.sessionToken,
+      'Unable to load aviation stats from the API.'
+    );
+    return { found: false, reason: 'REQUEST_FAILED' };
   }
 }
 
