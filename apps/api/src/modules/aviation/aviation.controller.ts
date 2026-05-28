@@ -6,6 +6,7 @@ import {
   AviationApplicationService,
   CreateAviationReportCommand,
   GetAviationReportDetailCommand,
+  GetAviationTransitionHistoryCommand,
   RegisterAviationCommentCommand,
   SearchAviationReportsCommand,
   TransitionAviationReportCommand
@@ -57,6 +58,19 @@ export class AviationController {
     @Body() command: TransitionAviationReportCommand
   ) {
     return this.aviationApplicationService.transitionReport({
+      ...command,
+      actor: this.portalSessionService.resolveActor(command.actor, sessionToken),
+      reportId
+    });
+  }
+
+  @Post('reports/:reportId/transitions/history')
+  async getTransitionHistory(
+    @Param('reportId') reportId: string,
+    @Headers('x-ops-portal-session') sessionToken: string | undefined,
+    @Body() command: Omit<GetAviationTransitionHistoryCommand, 'reportId'>
+  ) {
+    return this.aviationApplicationService.getTransitionHistory({
       ...command,
       actor: this.portalSessionService.resolveActor(command.actor, sessionToken),
       reportId

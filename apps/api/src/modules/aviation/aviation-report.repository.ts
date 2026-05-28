@@ -15,6 +15,17 @@ export type AviationStatusTransitionWrite = {
   at: Date;
 };
 
+export type AviationStatusTransitionRecord = {
+  id: string;
+  tenantId: string;
+  aviationReportId: string;
+  fromStatus?: AviationReport['status'];
+  toStatus: AviationReport['status'];
+  transitionedBy: string;
+  at: Date;
+  createdAt: Date;
+};
+
 export type AviationReportWriter = {
   create(tenantId: string, report: AviationReport): Promise<PersistedAviationReport>;
   findById(tenantId: string, reportId: string): Promise<PersistedAviationReport | null>;
@@ -34,6 +45,7 @@ export type AviationReportWriter = {
     report: AviationReport,
     transition: AviationStatusTransitionWrite
   ): Promise<PersistedAviationReport>;
+  listTransitions(tenantId: string, reportId: string): Promise<AviationStatusTransitionRecord[]>;
 };
 
 type PrismaAviationReportDelegate = {
@@ -45,6 +57,7 @@ type PrismaAviationReportDelegate = {
 
 type PrismaAviationStatusTransitionDelegate = {
   create(args: { data: Record<string, unknown> }): Promise<Record<string, unknown>>;
+  findMany(args: { where: Record<string, unknown>; orderBy: Record<string, unknown> }): Promise<Record<string, unknown>[]>;
 };
 
 type PrismaAviationClient = {
@@ -138,6 +151,14 @@ export class PrismaAviationReportRepository implements AviationReportWriter {
       });
       return updated as PersistedAviationReport;
     })) as PersistedAviationReport;
+  }
+
+  async listTransitions(tenantId: string, reportId: string): Promise<AviationStatusTransitionRecord[]> {
+    const found = await this.prisma.aviationStatusTransition.findMany({
+      where: { tenantId, aviationReportId: reportId },
+      orderBy: { at: 'asc' }
+    });
+    return found as AviationStatusTransitionRecord[];
   }
 
   private buildReportData(report: AviationReport): Record<string, unknown> {
