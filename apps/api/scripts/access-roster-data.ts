@@ -76,6 +76,14 @@ export const requestedRoster: AccessRosterEntry[] = [
     assetNames: ['Fratelli']
   },
   {
+    email: 'dvilela@primeyou.com.br',
+    userId: 'operacoes-dvilela',
+    displayName: 'D. Vilela',
+    role: 'portal_admin',
+    mfaEnabled: true,
+    assetNames: []
+  },
+  {
     email: 'sfouyer@primeyou.com.br',
     userId: 'operacoes-yachts-sfouyer',
     displayName: 'S. Fouyer',
