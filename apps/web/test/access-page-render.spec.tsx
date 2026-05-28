@@ -4,6 +4,20 @@ import { describe, expect, it, vi } from 'vitest';
 
 globalThis.React = React;
 
+const accessUsersFixture = [
+  {
+    id: 'asg-central-ops',
+    userId: 'central-ops-01',
+    displayName: 'Operacoes Centrais',
+    email: 'central.ops@primeyou.com',
+    role: 'central_operations',
+    assetScopes: ['yacht-001'],
+    mfaEnabled: true,
+    status: 'active',
+    lastReviewedAt: '2026-05-17T12:00:00.000Z'
+  }
+] as const;
+
 vi.mock('next/link', () => ({
   default: ({
     href,
@@ -90,12 +104,14 @@ vi.mock('../lib/portal-session', () => ({
 
 vi.mock('../lib/portal-api', () => ({
   fetchPortalSnapshot: vi.fn(async () => ({
-    accessUsers: [],
+    accessUsers: accessUsersFixture,
     fleetAssets: []
   }))
 }));
 
 vi.mock('../app/(portal)/operations-actions', () => ({
+  registerAccessUserAction: vi.fn(),
+  revokeAccessAssignmentAction: vi.fn(),
   upsertAccessAssignmentAction: vi.fn()
 }));
 
@@ -113,5 +129,62 @@ describe('access page render', () => {
     expect(markup).toContain('<label class="form-field form-field--full"><span>MFA</span>');
     expect(markup).toContain('<label class="form-field form-field--full"><span>Última revisão</span>');
     expect(markup).toContain('<label class="form-field form-field--full"><span>Escopo</span>');
+    expect(markup).toContain('Cadastrar usuário');
+  });
+
+  it('renders edit and delete buttons in the access actions column', async () => {
+    const { default: AccessPage } = await import('../app/(portal)/access/page');
+    const markup = renderToStaticMarkup(
+      await AccessPage({
+        searchParams: Promise.resolve({})
+      })
+    );
+
+    expect(markup).toContain('href="/access?mode=edit&amp;assignmentId=asg-central-ops"');
+    expect(markup).toContain('aria-label="Editar acesso de central.ops@primeyou.com"');
+    expect(markup).toContain('Editar</a>');
+    expect(markup).toContain('name="assignmentId" value="asg-central-ops"');
+    expect(markup).toContain('name="requestedAt"');
+    expect(markup).toContain('aria-label="Excluir acesso de central.ops@primeyou.com"');
+    expect(markup).toContain('Excluir</button>');
+  });
+
+  it('lets central operations view access records without management actions', async () => {
+    const { requirePortalRoles } = await import('../lib/portal-session');
+    vi.mocked(requirePortalRoles).mockResolvedValueOnce({
+      token: 'test-session-token',
+      claims: {
+        version: 1,
+        userId: 'operacoes-real-estate-yachts',
+        tenantId: 'prime-you',
+        role: 'central_operations',
+        assetIds: [],
+        displayName: 'Operações - Real Estate e Yachts',
+        email: 'operacoes.realestate.yachts@primeyou.com',
+        mfaVerified: true,
+        expiresAt: '2026-05-18T08:49:25.591Z'
+      },
+      actor: {
+        userId: 'operacoes-real-estate-yachts',
+        tenantId: 'prime-you',
+        role: 'central_operations',
+        assetIds: []
+      },
+      operatorLabel: 'Operações - Real Estate e Yachts'
+    });
+
+    const { default: AccessPage } = await import('../app/(portal)/access/page');
+    const markup = renderToStaticMarkup(
+      await AccessPage({
+        searchParams: Promise.resolve({})
+      })
+    );
+
+    expect(markup).toContain('Acessos atuais');
+    expect(markup).toContain('central.ops@primeyou.com');
+    expect(markup).not.toContain('href="/access?mode=create"');
+    expect(markup).not.toContain('<th>Ações</th>');
+    expect(markup).not.toContain('Editar</a>');
+    expect(markup).not.toContain('Excluir</button>');
   });
 });

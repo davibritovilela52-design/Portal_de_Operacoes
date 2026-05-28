@@ -526,6 +526,52 @@ export async function upsertAccessAssignmentAction(formData: FormData) {
   redirectWithMessage('/access', 'notice', 'Acesso salvo com sucesso.');
 }
 
+export async function registerAccessUserAction(formData: FormData) {
+  const context = await resolveAccessManagementContext(formData);
+  const targetRole = readRequired(formData, 'targetRole') as FrontendActor['role'];
+  const email = readRequired(formData, 'email').toLowerCase();
+  const selectedAssetIds = formData
+    .getAll('assetIds')
+    .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+    .map((value) => value.trim());
+  const assetIds =
+    targetRole === 'portal_admin'
+      ? selectedAssetIds.includes('global') || selectedAssetIds.length === 0
+        ? ['global']
+        : selectedAssetIds
+      : selectedAssetIds;
+
+  if (targetRole === 'asset_field_team' && assetIds.length === 0) {
+    redirectWithMessage('/access', 'error', 'Selecione ao menos um ativo para o escopo.');
+  }
+
+  try {
+    const result = await upsertAccessAssignment({
+      actor: context.actor,
+      input: {
+        userId: buildAccessUserId(email),
+        displayName: readRequired(formData, 'displayName'),
+        email,
+        role: targetRole,
+        assetIds,
+        mfaEnabled: formData.get('mfaEnabled') === 'on',
+        lastReviewedAt: readDateTime(formData, 'lastReviewedAt')
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('updated' in result) || !result.updated) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage('/access', 'error', describeThrownError(error));
+  }
+
+  revalidateOperationalPages('/access');
+  redirectWithMessage('/access', 'notice', 'Usuário cadastrado com sucesso.');
+}
+
 export async function revokeAccessAssignmentAction(formData: FormData) {
   const context = await resolveAccessManagementContext(formData);
 
@@ -1016,6 +1062,20 @@ function normalizeProductLookupValue(value: string) {
     .replace(/^yacht(?:\s*-\s*|\s+)/i, '')
     .trim()
     .toLowerCase();
+}
+
+function buildAccessUserId(email: string): string {
+  const normalizedEmail = email.trim().toLowerCase();
+  const localPart = normalizedEmail.split('@')[0] ?? 'usuario';
+  const slug = localPart
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  const hash = createHash('sha256').update(normalizedEmail).digest('hex').slice(0, 8);
+
+  return `${slug || 'usuario'}-${hash}`;
 }
 
 function readTextCollection(formData: FormData, key: string): string[] {

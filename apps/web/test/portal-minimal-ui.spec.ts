@@ -189,8 +189,9 @@ describe('portal minimalista operacional', () => {
     expect(accessSource).toContain('fetchPortalSnapshot');
     expect(accessSource).toContain('accessUsers');
     expect(accessSource).toContain("requirePortalRoles(['portal_admin', 'central_operations'])");
+    expect(accessSource).toContain('canManageAccessModule(session.actor.role)');
     expect(accessSource).toContain('PageHeader');
-    expect(accessSource).toContain('Cadastrar acesso');
+    expect(accessSource).toContain('Cadastrar usuário');
     expect(accessSource).toContain('href="/access?mode=create"');
     expect(accessSource).toContain('Acessos atuais');
     expect(accessSource).toContain('<table');

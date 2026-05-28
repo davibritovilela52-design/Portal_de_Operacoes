@@ -76,9 +76,9 @@ export function PortalShell({ children, session }: PortalShellProps) {
     window.location.assign(href);
   };
 
-  const canManageAccess = canViewAccessModule(session.role);
+  const canViewAccess = canViewAccessModule(session.role);
   const visibleNavigationItems =
-    canManageAccess
+    canViewAccess
       ? navigationItems
       : navigationItems.filter((item) => item.href !== '/access');
 

@@ -33,6 +33,33 @@ export async function readPortalSession(): Promise<PortalSessionContext | null> 
     return resolvePortalSessionFromBetterAuth();
   }
 
+  const refreshedSession = await resolvePortalSessionFromClaims(claims);
+
+  if (!refreshedSession) {
+    return null;
+  }
+
+  return refreshedSession;
+}
+
+async function resolvePortalSessionFromClaims(
+  claims: PortalSessionClaims
+): Promise<PortalSessionContext | null> {
+  const resolved = await resolvePortalSessionForEmail(claims.tenantId, claims.email, {
+    mfaVerified: claims.mfaVerified
+  });
+
+  if (!resolved.authenticated) {
+    return null;
+  }
+
+  return toPortalSessionContext(resolved.token, resolved.session);
+}
+
+function toPortalSessionContext(
+  token: string,
+  claims: PortalSessionClaims
+): PortalSessionContext {
   return {
     token,
     claims,
@@ -67,17 +94,7 @@ async function resolvePortalSessionFromBetterAuth(): Promise<PortalSessionContex
     return null;
   }
 
-  return {
-    token: resolved.token,
-    claims: resolved.session,
-    actor: {
-      userId: resolved.session.userId,
-      tenantId: resolved.session.tenantId,
-      role: resolved.session.role,
-      assetIds: resolved.session.assetIds
-    },
-    operatorLabel: resolved.session.displayName || resolved.session.email || resolved.session.userId
-  };
+  return toPortalSessionContext(resolved.token, resolved.session);
 }
 
 export async function requirePortalSession(): Promise<PortalSessionContext> {

@@ -79,7 +79,7 @@ export const requestedRoster: AccessRosterEntry[] = [
     email: 'sfouyer@primeyou.com.br',
     userId: 'operacoes-yachts-sfouyer',
     displayName: 'S. Fouyer',
-    role: 'yachts_operations',
+    role: 'portal_admin',
     mfaEnabled: true,
     assetNames: []
   },

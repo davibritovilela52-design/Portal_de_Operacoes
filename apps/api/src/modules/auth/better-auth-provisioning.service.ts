@@ -122,11 +122,22 @@ export class BetterAuthProvisioningService {
 }
 
 function readBetterAuthBaseUrl(): string {
-  return (
+  const configuredBaseUrl =
     process.env.BETTER_AUTH_URL ??
     process.env.NEXT_PUBLIC_BETTER_AUTH_URL ??
-    'http://localhost:3000'
-  );
+    'http://localhost:3000';
+
+  return normalizeLoopbackBaseUrl(configuredBaseUrl);
+}
+
+function normalizeLoopbackBaseUrl(baseUrl: string): string {
+  const url = new URL(baseUrl);
+
+  if (url.hostname === '127.0.0.1') {
+    url.hostname = 'localhost';
+  }
+
+  return url.toString();
 }
 
 function cryptoRandomSegment(): string {

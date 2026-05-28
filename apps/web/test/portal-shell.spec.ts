@@ -78,14 +78,14 @@ describe('portal shell navigation', () => {
     expect(globalsSource).toContain('.sidebar-toggle');
   });
 
-  it('shows access navigation for portal admin and central operations only', () => {
+  it('shows access navigation for roles that can view the access module', () => {
     const shellSource = readFileSync(
       resolve(__dirname, '../components/portal-shell.tsx'),
       'utf8'
     );
 
     expect(shellSource).toContain('canViewAccessModule(session.role)');
-    expect(shellSource).not.toContain("session.role === 'portal_admin'");
+    expect(shellSource).not.toContain('canManageAccessModule(session.role)');
     expect(shellSource).toContain("item.href !== '/access'");
   });
 

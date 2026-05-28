@@ -444,6 +444,12 @@ select {
   border-color: rgba(142, 213, 255, 0.26);
 }
 
+.action-button svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
 .topbar-button--critical,
 .action-button--critical {
   background: rgba(255, 140, 140, 0.14);

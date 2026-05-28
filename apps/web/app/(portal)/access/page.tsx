@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { PortalIcon } from '../../../components/icons';
 import { PageHeader, Panel, Badge } from '../../../components/portal-ui';
 import { fetchPortalSnapshot } from '../../../lib/portal-api';
 import {
@@ -9,7 +10,11 @@ import {
   type PortalRole
 } from '../../../lib/portal-model';
 import { requirePortalRoles } from '../../../lib/portal-session';
-import { upsertAccessAssignmentAction } from '../operations-actions';
+import {
+  registerAccessUserAction,
+  revokeAccessAssignmentAction,
+  upsertAccessAssignmentAction
+} from '../operations-actions';
 
 type AccessPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -42,11 +47,11 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
   const notice = readSearchMessage(resolvedSearchParams, 'notice');
   const error = readSearchMessage(resolvedSearchParams, 'error');
   const mode = readAccessMode(resolvedSearchParams);
-  const assignmentId = readAccessAssignmentId(resolvedSearchParams);
   const canManageAccess = canManageAccessModule(session.actor.role);
+  const assignmentId = readAccessAssignmentId(resolvedSearchParams);
   const accessUsers = sortAccessUsers(snapshot.accessUsers.filter((user) => user.status !== 'revoked'));
   const selectedAssignment =
-    canManageAccess && mode === 'edit' && assignmentId
+    mode === 'edit' && assignmentId
       ? accessUsers.find((user) => user.id === assignmentId)
       : undefined;
   const activeCount = accessUsers.filter((user) => user.status === 'active').length;
@@ -59,8 +64,10 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
       : canManageAccess && mode === 'create'
         ? 'create'
         : null;
-  const modalTitle = modalMode === 'edit' ? 'Editar acesso' : 'Cadastrar acesso';
-  const modalSubmitLabel = modalMode === 'edit' ? 'Salvar alterações' : 'Salvar acesso';
+  const modalTitle = modalMode === 'edit' ? 'Editar acesso' : 'Cadastrar usuário';
+  const modalSubmitLabel = modalMode === 'edit' ? 'Salvar alterações' : 'Cadastrar usuário';
+  const modalFormAction =
+    modalMode === 'create' ? registerAccessUserAction : upsertAccessAssignmentAction;
   const modalUserIdDefault = selectedAssignment?.userId ?? '';
   const modalDisplayNameDefault = selectedAssignment?.displayName ?? '';
   const modalEmailDefault = selectedAssignment?.email ?? '';
@@ -84,9 +91,9 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
         actions={
           canManageAccess ? (
             <Link className="action-button" href="/access?mode=create">
-              Cadastrar acesso
+              Cadastrar usuário
             </Link>
-          ) : null
+          ) : undefined
         }
       />
 
@@ -104,7 +111,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
         </Panel>
       ) : null}
 
-      {canManageAccess && mode === 'edit' && assignmentId && !selectedAssignment ? (
+      {mode === 'edit' && assignmentId && !selectedAssignment ? (
         <Panel tone="critical" className="status-banner">
           <strong>Registro não encontrado</strong>
           <p>O acesso selecionado não pôde ser localizado para edição.</p>
@@ -124,12 +131,6 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
           {accessUsers.length} acessos cadastrados, {activeCount} ativos e {blockedCount} bloqueados.
         </p>
 
-        {!canManageAccess ? (
-          <p className="helper-text">
-            Este perfil possui leitura do diretÃ³rio de acessos. AlteraÃ§Ãµes continuam restritas ao admin do portal.
-          </p>
-        ) : null}
-
         {accessUsers.length === 0 ? (
           <div className="signal-list">
             <article className="signal-item">
@@ -145,7 +146,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
                   <th>Usuário</th>
                   <th>Papel</th>
                   <th>Status</th>
-                  <th>Ações</th>
+                  {canManageAccess ? <th>Ações</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -161,20 +162,32 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
                         tone={resolveAccessStatusTone(user.status)}
                       />
                     </td>
-                    <td>
-                      {canManageAccess ? (
+                    {canManageAccess ? (
+                      <td>
                         <div className="table-actions">
                           <Link
                             className="action-button action-button--ghost"
                             href={`/access?mode=edit&assignmentId=${encodeURIComponent(user.id)}`}
+                            aria-label={`Editar acesso de ${user.email}`}
                           >
+                            <PortalIcon name="edit" />
                             Editar
                           </Link>
+                          <form action={revokeAccessAssignmentAction}>
+                            <input name="assignmentId" type="hidden" value={user.id} readOnly />
+                            <input name="requestedAt" type="hidden" value={openedAtValue} readOnly />
+                            <button
+                              className="action-button action-button--critical"
+                              type="submit"
+                              aria-label={`Excluir acesso de ${user.email}`}
+                            >
+                              <PortalIcon name="trash" />
+                              Excluir
+                            </button>
+                          </form>
                         </div>
-                      ) : (
-                        <span className="helper-text">Somente leitura</span>
-                      )}
-                    </td>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -190,22 +203,24 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               <span>{modalTitle}</span>
             </div>
 
-            <form action={upsertAccessAssignmentAction} className="action-form">
+            <form action={modalFormAction} className="action-form">
               {modalMode === 'edit' ? (
                 <input name="assignmentId" type="hidden" value={selectedAssignment?.id ?? ''} readOnly />
               ) : null}
 
               <div className="form-grid">
-                <label className="form-field">
-                  <span>ID do usuário</span>
-                  <input
-                    name="userId"
-                    type="text"
-                    placeholder="Ex.: central-ops-01"
-                    defaultValue={modalUserIdDefault}
-                    required
-                  />
-                </label>
+                {modalMode === 'edit' ? (
+                  <label className="form-field">
+                    <span>ID do usuário</span>
+                    <input
+                      name="userId"
+                      type="text"
+                      placeholder="Ex.: central-ops-01"
+                      defaultValue={modalUserIdDefault}
+                      required
+                    />
+                  </label>
+                ) : null}
 
                 <label className="form-field">
                   <span>Nome do usuário</span>
