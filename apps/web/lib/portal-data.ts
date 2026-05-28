@@ -16,6 +16,7 @@ import type { MaintenanceCommentRecord } from './maintenance-comments';
 export type NavigationItem = {
   href: string;
   label: string;
+  module?: 'yachts' | 'aviation';
   icon:
     | 'dashboard'
     | 'agenda'
@@ -97,11 +98,11 @@ export const portalContext = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  { href: '/dashboard', label: 'Painel', icon: 'dashboard' },
-  { href: '/agenda', label: 'Agenda', icon: 'agenda' },
-  { href: '/maintenance', label: 'Manutenção', icon: 'maintenance' },
-  { href: '/aviation', label: 'Aviation', icon: 'maintenance' },
-  { href: '/improvements', label: 'Melhorias', icon: 'maintenance' },
+  { href: '/dashboard', label: 'Painel', icon: 'dashboard', module: 'yachts' },
+  { href: '/agenda', label: 'Agenda', icon: 'agenda', module: 'yachts' },
+  { href: '/maintenance', label: 'Manutenção', icon: 'maintenance', module: 'yachts' },
+  { href: '/aviation', label: 'Aviation', icon: 'maintenance', module: 'aviation' },
+  { href: '/improvements', label: 'Melhorias', icon: 'maintenance', module: 'yachts' },
   { href: '/access', label: 'Acessos', icon: 'access' }
 ];
 

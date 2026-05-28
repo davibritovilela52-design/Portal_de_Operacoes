@@ -2876,12 +2876,7 @@ export async function fetchAviationStats(
       { actor: options.actor, tenantId: options.tenantId },
       { sessionToken: options.sessionToken }
     );
-  } catch (error) {
-    rethrowAuthenticatedPortalReadFailure(
-      error,
-      options.sessionToken,
-      'Unable to load aviation stats from the API.'
-    );
+  } catch {
     return { found: false, reason: 'REQUEST_FAILED' };
   }
 }

@@ -90,7 +90,7 @@ describe('portal shell navigation', () => {
 
     expect(shellSource).toContain('canViewAccessModule(session.role)');
     expect(shellSource).not.toContain('canManageAccessModule(session.role)');
-    expect(shellSource).toContain("item.href !== '/access'");
+    expect(shellSource).toContain("item.href === '/access'");
   });
 
   it('does not render sidebar title text Portal de Operações', () => {

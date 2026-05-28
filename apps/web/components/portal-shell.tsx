@@ -77,10 +77,12 @@ export function PortalShell({ children, session }: PortalShellProps) {
   };
 
   const canViewAccess = canViewAccessModule(session.role);
-  const visibleNavigationItems =
-    canViewAccess
-      ? navigationItems
-      : navigationItems.filter((item) => item.href !== '/access');
+  const activeModule = pathname.startsWith('/aviation') ? 'aviation' : 'yachts';
+  const visibleNavigationItems = navigationItems.filter((item) => {
+    if (!canViewAccess && item.href === '/access') return false;
+    if (item.module && item.module !== activeModule) return false;
+    return true;
+  });
 
   const isTopbarTabActive = (href: string) => {
     switch (href) {
