@@ -10,7 +10,7 @@ import type { AviationEvidenceType, AviationReport, CreateAviationReportInput } 
 import { AviationWorkflowService } from './aviation-workflow.service.js';
 import type { AviationEvidenceWriter, PersistedAviationEvidence } from './aviation-evidence.repository.js';
 import { PrismaAviationEvidenceRepository } from './aviation-evidence.repository.js';
-import type { AviationReportWriter, PersistedAviationReport } from './aviation-report.repository.js';
+import type { AviationReportWriter, AviationStatsResult, PersistedAviationReport } from './aviation-report.repository.js';
 import { PrismaAviationReportRepository } from './aviation-report.repository.js';
 
 export type AviationReportQueueView = {
@@ -45,6 +45,15 @@ export type SearchAviationReportsCommand = {
 export type SearchAviationReportsCommandResult =
   | { reports: AviationReportQueueView[] }
   | { reports: []; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason };
+
+export type GetAviationStatsCommand = {
+  actor: AccessActor;
+  tenantId: string;
+};
+
+export type GetAviationStatsCommandResult =
+  | { found: true; stats: AviationStatsResult }
+  | { found: false; reason: 'FORBIDDEN'; accessReason: AccessDecisionReason };
 
 export type CreateAviationReportCommand = {
   actor: AccessActor;
@@ -164,6 +173,25 @@ export class AviationApplicationService {
     return {
       reports: reports.map((r) => this.toQueueView(r, evidencesByReportId.get(r.id) ?? []))
     };
+  }
+
+  async getStats(command: GetAviationStatsCommand): Promise<GetAviationStatsCommandResult> {
+    if (command.actor.role === 'asset_field_team') {
+      return { found: false, reason: 'FORBIDDEN', accessReason: 'ROLE_NOT_ALLOWED' };
+    }
+
+    const decision = this.accessPolicyService.authorize({
+      actor: command.actor,
+      action: 'aviation.report.search',
+      subject: { tenantId: command.tenantId }
+    });
+
+    if (!decision.allowed) {
+      return { found: false, reason: 'FORBIDDEN', accessReason: decision.reason };
+    }
+
+    const stats = await this.reportRepository.getStats(command.tenantId);
+    return { found: true, stats };
   }
 
   async createReport(command: CreateAviationReportCommand): Promise<CreateAviationReportCommandResult> {

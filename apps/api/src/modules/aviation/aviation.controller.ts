@@ -5,6 +5,7 @@ import {
   AttachAviationEvidenceCommand,
   AviationApplicationService,
   CreateAviationReportCommand,
+  GetAviationStatsCommand,
   GetAviationReportDetailCommand,
   RegisterAviationCommentCommand,
   SearchAviationReportsCommand,
@@ -25,6 +26,17 @@ export class AviationController {
   @Get('catalog')
   getCatalog() {
     return this.aviationApplicationService.getCatalog();
+  }
+
+  @Post('stats')
+  async getStats(
+    @Headers('x-ops-portal-session') sessionToken: string | undefined,
+    @Body() command: GetAviationStatsCommand
+  ) {
+    return this.aviationApplicationService.getStats({
+      ...command,
+      actor: this.portalSessionService.resolveActor(command.actor, sessionToken)
+    });
   }
 
   @Post('reports/search')
