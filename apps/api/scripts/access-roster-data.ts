@@ -2,6 +2,8 @@ export type PortalRole =
   | 'portal_admin'
   | 'central_operations'
   | 'yachts_operations'
+  | 'real_estate_operations'
+  | 'real_estate_technical_coordination'
   | 'asset_field_team';
 
 export type AccessRosterEntry = {
@@ -170,6 +172,14 @@ export const requestedRoster: AccessRosterEntry[] = [
     role: 'central_operations',
     mfaEnabled: true,
     assetNames: []
+  },
+  {
+    email: 'real007@primeyou.com.br',
+    userId: 'operacoes-real-estate-007',
+    displayName: 'Real Estate 007 Salvador',
+    role: 'real_estate_operations',
+    mfaEnabled: true,
+    assetNames: ['Duo 007 Salvador']
   }
 ];
 

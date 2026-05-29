@@ -266,6 +266,8 @@ function summarizeByRole(entries: Array<{ role: PortalRole }>): Record<PortalRol
       portal_admin: 0,
       central_operations: 0,
       yachts_operations: 0,
+      real_estate_operations: 0,
+      real_estate_technical_coordination: 0,
       asset_field_team: 0
     } satisfies Record<PortalRole, number>
   );
