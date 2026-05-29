@@ -15,7 +15,11 @@ export class AccessGovernanceService {
       role === 'portal_admin' ||
       role === 'central_operations' ||
       role === 'yachts_operations' ||
-      role === 'yachts_technical_coordination'
+      role === 'yachts_technical_coordination' ||
+      role === 'yachts_management' ||
+      role === 'aviation_management' ||
+      role === 'real_estate_management' ||
+      role === 'cars_management'
     );
   }
 

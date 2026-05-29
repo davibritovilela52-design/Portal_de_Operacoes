@@ -91,9 +91,6 @@ export default async function AuditGovernancePage({
                 <span>Papel operacional</span>
                 <select name="actorRole" defaultValue={session.actor.role} disabled>
                   <option value="central_operations">{portalRoleLabels.central_operations}</option>
-                  <option value="yachts_technical_coordination">
-                    {portalRoleLabels.yachts_technical_coordination}
-                  </option>
                   <option value="portal_admin">{portalRoleLabels.portal_admin}</option>
                 </select>
               </label>

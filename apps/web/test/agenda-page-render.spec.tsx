@@ -123,7 +123,7 @@ describe('agenda page render', () => {
           assetName: 'Yacht Boreal',
           type: 'utilization',
           title: 'Uso executivo',
-          owner: 'Operação central',
+          owner: 'Operação - Real Estate & Yachts',
           startsAt: '2026-05-06T10:00:00.000Z',
           endsAt: '2026-05-06T14:00:00.000Z'
         }

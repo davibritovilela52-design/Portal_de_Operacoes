@@ -371,12 +371,6 @@ export function AviationKanbanBoard({
     <>
       <div className="kanban-board-shell">
         <div className="kanban-board-head">
-          <div className="kanban-board-head__copy">
-            <span className="kanban-board-head__eyebrow">Quadro operacional</span>
-            <strong>Kanban de aeronaves</strong>
-            <p>Arraste os cards entre substatus ou use a rolagem lateral do quadro</p>
-          </div>
-
           <div className="kanban-board-head__actions">
             <Badge
               label={`${effectiveColumns.reduce((total, column) => total + column.count, 0)} reportes`}

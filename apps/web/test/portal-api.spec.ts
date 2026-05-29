@@ -1245,7 +1245,7 @@ describe('portal-api', () => {
         priority: 'P2',
         maintenanceSystem: 'mechanical',
         status: 'pending',
-        owner: 'Equipe de campo - Embarcações',
+        owner: 'Embarcações',
         openedBy: 'field-1',
         openedAt: '2026-05-14T09:00:00.000Z',
         updatedAt: '2026-05-14T12:00:00.000Z',
@@ -1351,7 +1351,7 @@ describe('portal-api', () => {
         type: 'operational_block',
         title: 'Dry dock gate blocked',
         description: undefined,
-        owner: 'Coordenação técnica - Embarcações',
+        owner: 'Operação - Real Estate & Yachts',
         startsAt: '2026-05-14T10:00:00.000Z',
         endsAt: '2026-05-14T13:00:00.000Z',
         provisional: true,
@@ -1365,7 +1365,7 @@ describe('portal-api', () => {
         type: 'crew_rest',
         title: 'Folga da tripulação - mínimo seguro',
         description: undefined,
-        owner: 'Operações Centrais',
+        owner: 'Operação - Real Estate & Yachts',
         startsAt: '2026-05-14T13:00:00.000Z',
         endsAt: '2026-05-14T16:00:00.000Z',
         provisional: false,
@@ -1528,7 +1528,7 @@ describe('portal-api', () => {
           category: 'inspection',
           priority: 'P1',
           status: 'frozen',
-          owner: 'Operações Centrais',
+          owner: 'Operação - Real Estate & Yachts',
           openedBy: 'central-1',
           openedAt: '2026-05-14T08:00:00.000Z',
           updatedAt: '2026-05-14T12:00:00.000Z',
@@ -1558,7 +1558,7 @@ describe('portal-api', () => {
           type: 'utilization',
           title: 'Owners weekend',
           description: undefined,
-          owner: 'Operações Centrais',
+          owner: 'Operação - Real Estate & Yachts',
           startsAt: '2026-05-14T09:00:00.000Z',
           endsAt: '2026-05-14T12:00:00.000Z',
           provisional: false,
@@ -1823,7 +1823,7 @@ describe('portal-api', () => {
       maintenanceSystem: 'electrical',
       openedBy: 'field-1',
       notes: 'Contexto do chamado aberto pela tripulação.',
-      owner: 'Equipe de campo - Embarcações',
+      owner: 'Embarcações',
       status: 'frozen',
       evidenceChecklist: [
         { label: 'Evidencia diagnostica', status: 'complete' },
@@ -1841,7 +1841,7 @@ describe('portal-api', () => {
       {
         reason: 'Aguardando resposta do fornecedor',
         at: '2026-05-14T13:30:00.000Z',
-        by: 'Equipe de campo - Embarcações'
+        by: 'Embarcações'
       }
     ]);
     expect(detail.auditTrail).toEqual([
@@ -1866,7 +1866,7 @@ describe('portal-api', () => {
       {
         title: 'Ultima atualizacao',
         at: '2026-05-14T13:30:00.000Z',
-        actor: 'Equipe de campo - Embarcações',
+        actor: 'Embarcações',
         note: 'Status atual: frozen'
       }
     ]);
@@ -1991,7 +1991,7 @@ describe('portal-api', () => {
       id: 'mt-1',
       assetName: 'Yacht Aurora',
       title: 'Critical inspection before release',
-      owner: 'Operações Centrais',
+      owner: 'Operação - Real Estate & Yachts',
       status: 'payment'
     });
     expect(fetchImpl).toHaveBeenCalledTimes(3);

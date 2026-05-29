@@ -14,6 +14,7 @@ import {
   buildMaintenanceStatusSummary,
   buildMTTA,
   buildMTTR,
+  canViewAccessModule,
   filterAgendaEventsByAsset,
   filterAgendaEventsByWindow,
   resolveMaintenanceKanbanSubstatus,
@@ -124,6 +125,12 @@ describe('portal-model', () => {
       reviewDue: 1,
       overdue: 1
     });
+  });
+
+  it('restricts access module visibility to portal admins', () => {
+    expect(canViewAccessModule('portal_admin')).toBe(true);
+    expect(canViewAccessModule('central_operations')).toBe(false);
+    expect(canViewAccessModule('asset_field_team')).toBe(false);
   });
 
   it('filters agenda events to the operational window before rendering the day board or conflict queue', () => {
@@ -294,15 +301,29 @@ describe('portal-model', () => {
     ).toEqual([]);
   });
 
-  it('keeps the access edit modal limited to the three supported roles', () => {
+  it('keeps the access edit modal labels aligned with supported roles', () => {
     const labels = [
-      'Operações Centrais',
+      'Operação - Real Estate & Yachts',
       'Operações - Yachts',
-      'Equipe de campo - Embarcações'
+      'Gestão - Yachts',
+      'Pilotos - Aviaion',
+      'Operações - Avition',
+      'Tripulantes - Aviation',
+      'CTM - Aviation',
+      'Gestão - Aviation',
+      'Operações - Real Estate',
+      'Projetos - Real Estate',
+      'Casas - Real Estate',
+      'GTA - Real Estate',
+      'Gestão - Real Estate',
+      'Operações - Cars',
+      'Mototista - Cars',
+      'Gestão - Cars',
+      'Embarcações'
     ];
 
-    expect(labels).toHaveLength(3);
-    expect(new Set(labels).size).toBe(3);
+    expect(labels).toHaveLength(17);
+    expect(new Set(labels).size).toBe(17);
   });
 
   it('builds asset rows for the dashboard with event and open-ticket counts per asset', () => {

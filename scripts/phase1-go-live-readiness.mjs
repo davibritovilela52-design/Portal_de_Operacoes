@@ -16,7 +16,6 @@ export const phase1RequiredActiveRoles = [
   'portal_admin',
   'central_operations',
   'yachts_operations',
-  'yachts_technical_coordination',
   'asset_field_team'
 ];
 

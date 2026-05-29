@@ -34,10 +34,7 @@ export default async function AviationDashboardPage() {
 
   return (
     <div className="page">
-      <PageHeader
-        title="Painel Aviation"
-        description="Visão geral da frota de aeronaves, eventos AOG e reportes técnicos."
-      />
+      <PageHeader title="Painel Operacional" />
 
       {stats ? (
         <div className="kpi-strip">

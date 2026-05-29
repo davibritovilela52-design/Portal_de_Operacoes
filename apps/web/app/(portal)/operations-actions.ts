@@ -514,7 +514,7 @@ export async function upsertAccessAssignmentAction(formData: FormData) {
         email: readRequired(formData, 'email'),
         role: targetRole,
         assetIds,
-        mfaEnabled: formData.get('mfaEnabled') === 'on',
+        mfaEnabled: readAccessMfaEnabled(formData),
         lastReviewedAt: readDateTime(formData, 'lastReviewedAt')
       }
     }, {
@@ -560,7 +560,7 @@ export async function registerAccessUserAction(formData: FormData) {
         email,
         role: targetRole,
         assetIds,
-        mfaEnabled: formData.get('mfaEnabled') === 'on',
+        mfaEnabled: readAccessMfaEnabled(formData),
         lastReviewedAt: readDateTime(formData, 'lastReviewedAt')
       }
     }, {
@@ -894,6 +894,11 @@ function readOptional(formData: FormData, key: string): string | undefined {
   }
 
   return value.trim();
+}
+
+function readAccessMfaEnabled(formData: FormData): boolean {
+  const value = readOptional(formData, 'mfaEnabled');
+  return value ? value === 'on' : true;
 }
 
 function buildMaintenanceTicketTitle(formData: FormData) {
@@ -1544,10 +1549,13 @@ function resolveAviationOriginForRole(role: FrontendActor['role']): 'asset_field
   switch (role) {
     case 'portal_admin':
     case 'central_operations':
+    case 'aviation_management':
       return 'central_operations';
     case 'aviation_operations':
     case 'aviation_technical_coordination':
       return 'aviation_technical_coordination';
+    case 'aviation_pilots':
+    case 'aviation_crew':
     case 'asset_field_team':
       return 'asset_field_team';
     default:

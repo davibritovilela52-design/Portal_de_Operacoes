@@ -5,6 +5,7 @@ import {
   type AviationReportRecord
 } from '../lib/portal-model';
 import {
+  buildAviationTicketPath,
   filterAviationReportsByQuery,
   readAviationTicketFilterQuery
 } from '../app/(portal)/aviation/aviation-ticket-filter';
@@ -67,31 +68,34 @@ describe('Aviation page model', () => {
     expect(allGroundedReports.some((r) => r.id === 'rpt-002')).toBe(true);
   });
 
-  it('readAviationTicketFilterQuery parses status and category from search params', () => {
+  it('readAviationTicketFilterQuery parses the free-text query from search params', () => {
     const query = readAviationTicketFilterQuery({
-      status: 'grounded',
-      category: 'emergency'
+      query: ' rpt 002 '
     });
 
-    expect(query.status).toBe('grounded');
-    expect(query.category).toBe('emergency');
-    expect(query.assetId).toBeUndefined();
+    expect(query).toBe('rpt 002');
   });
 
-  it('filterAviationReportsByQuery filters by status', () => {
-    const filtered = filterAviationReportsByQuery(mockReports, { status: 'grounded' });
+  it('filterAviationReportsByQuery filters by compact report ID', () => {
+    const filtered = filterAviationReportsByQuery(mockReports, 'rpt002');
     expect(filtered).toHaveLength(1);
     expect(filtered[0].id).toBe('rpt-002');
   });
 
-  it('filterAviationReportsByQuery filters by category', () => {
-    const filtered = filterAviationReportsByQuery(mockReports, { category: 'emergency' });
+  it('filterAviationReportsByQuery filters by title ignoring accents and casing', () => {
+    const filtered = filterAviationReportsByQuery(mockReports, 'HYDRAULIC');
     expect(filtered).toHaveLength(1);
-    expect(filtered[0].id).toBe('rpt-001');
+    expect(filtered[0].id).toBe('rpt-002');
   });
 
   it('filterAviationReportsByQuery with no filters returns all reports', () => {
-    const filtered = filterAviationReportsByQuery(mockReports, {});
+    const filtered = filterAviationReportsByQuery(mockReports, '');
     expect(filtered).toHaveLength(2);
+  });
+
+  it('buildAviationTicketPath preserves query and extra modal parameters', () => {
+    expect(
+      buildAviationTicketPath('/aviation/reports', 'rpt 002', { reportId: 'rpt-002' })
+    ).toBe('/aviation/reports?query=rpt+002&reportId=rpt-002');
   });
 });

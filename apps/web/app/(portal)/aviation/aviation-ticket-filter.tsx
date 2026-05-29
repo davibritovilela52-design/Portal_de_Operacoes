@@ -1,74 +1,124 @@
+import Link from 'next/link';
+
 import {
-  aviationCategoryLabels,
-  aviationStatusLabels,
-  type AviationCategory,
-  type AviationReportRecord,
-  type AviationStatus
+  type AviationReportRecord
 } from '../../../lib/portal-model';
 
-export type AviationTicketFilterQuery = {
-  status?: AviationStatus;
-  category?: AviationCategory;
-  assetId?: string;
-};
+type SearchParamsRecord = Record<string, string | string[] | undefined>;
+
+type FilterableAviationReport = Pick<AviationReportRecord, 'id' | 'reportNumber' | 'title'>;
+
+export type AviationTicketFilterBasePath = '/aviation/reports';
 
 export function readAviationTicketFilterQuery(
-  searchParams: Record<string, string | string[] | undefined>
-): AviationTicketFilterQuery {
-  return {
-    status:
-      typeof searchParams.status === 'string'
-        ? (searchParams.status as AviationStatus)
-        : undefined,
-    category:
-      typeof searchParams.category === 'string'
-        ? (searchParams.category as AviationCategory)
-        : undefined,
-    assetId: typeof searchParams.assetId === 'string' ? searchParams.assetId : undefined
-  };
+  searchParams: SearchParamsRecord
+) {
+  const value = searchParams.query;
+
+  return typeof value === 'string' ? value.trim() : '';
 }
 
-export function filterAviationReportsByQuery(
-  reports: AviationReportRecord[],
-  query: AviationTicketFilterQuery
-): AviationReportRecord[] {
-  return reports.filter((report) => {
-    if (query.status && report.status !== query.status) return false;
-    if (query.category && report.category !== query.category) return false;
-    if (query.assetId && report.assetId !== query.assetId) return false;
-    return true;
-  });
+export function filterAviationReportsByQuery<T extends FilterableAviationReport>(
+  reports: T[],
+  query: string
+) {
+  const trimmedQuery = query.trim();
+
+  if (!trimmedQuery) {
+    return reports;
+  }
+
+  const normalizedQuery = normalizeSearchValue(trimmedQuery);
+  const compactQuery = compactSearchValue(trimmedQuery);
+
+  return reports.filter((report) =>
+    [report.id, report.reportNumber, report.title].some((value) =>
+      matchesSearchQuery(value, normalizedQuery, compactQuery)
+    )
+  );
 }
 
 type AviationTicketFilterFormProps = {
-  action: string;
-  query: AviationTicketFilterQuery;
+  action: AviationTicketFilterBasePath;
+  query: string;
 };
 
 export function AviationTicketFilterForm({ action, query }: AviationTicketFilterFormProps) {
   return (
-    <form action={action} method="GET" className="filter-form">
-      <select name="status" defaultValue={query.status ?? ''}>
-        <option value="">Todos os status</option>
-        {(Object.keys(aviationStatusLabels) as AviationStatus[]).map((status) => (
-          <option key={status} value={status}>
-            {aviationStatusLabels[status]}
-          </option>
-        ))}
-      </select>
+    <form action={action} method="get" className="maintenance-ticket-filter">
+      <label className="form-field maintenance-ticket-filter__field">
+        <span>Filtrar reportes</span>
+        <input
+          aria-label="Buscar por ID ou titulo do reporte"
+          defaultValue={query}
+          name="query"
+          placeholder="Buscar por ID ou titulo do reporte"
+          type="search"
+        />
+      </label>
 
-      <select name="category" defaultValue={query.category ?? ''}>
-        <option value="">Todas as categorias</option>
-        {(Object.keys(aviationCategoryLabels) as AviationCategory[]).map((cat) => (
-          <option key={cat} value={cat}>
-            {aviationCategoryLabels[cat]}
-          </option>
-        ))}
-      </select>
+      <div className="maintenance-ticket-filter__actions">
+        <button className="action-button action-button--ghost" type="submit">
+          Filtrar
+        </button>
 
-      <button type="submit" className="action-button action-button--ghost">
-        Filtrar
-      </button>
+        {query ? (
+          <Link
+            className="action-button action-button--ghost"
+            href={buildAviationTicketPath(action)}
+          >
+            Limpar
+          </Link>
+        ) : null}
+      </div>
     </form>
   );
+}
+
+export function buildAviationTicketPath(
+  basePath: AviationTicketFilterBasePath,
+  query?: string,
+  extraQueryParams?: Record<string, string | undefined | null>
+) {
+  const params = new URLSearchParams();
+
+  if (query?.trim()) {
+    params.set('query', query.trim());
+  }
+
+  for (const [key, value] of Object.entries(extraQueryParams ?? {})) {
+    if (value?.trim()) {
+      params.set(key, value.trim());
+    }
+  }
+
+  const queryString = params.toString();
+  return queryString ? `${basePath}?${queryString}` : basePath;
+}
+
+function matchesSearchQuery(value: string, normalizedQuery: string, compactQuery: string) {
+  const normalizedValue = normalizeSearchValue(value);
+
+  if (normalizedValue.includes(normalizedQuery)) {
+    return true;
+  }
+
+  if (!compactQuery) {
+    return false;
+  }
+
+  return compactSearchValue(value).includes(compactQuery);
+}
+
+function normalizeSearchValue(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function compactSearchValue(value: string) {
+  return normalizeSearchValue(value).replace(/[^a-z0-9]/g, '');
 }

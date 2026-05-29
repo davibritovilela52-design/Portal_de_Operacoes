@@ -526,7 +526,7 @@ describe('AccessPolicyService', () => {
     expect(service.authorize?.({ actor, action: 'aviation.report.transition', subject: { tenantId: 'tenant-1', assetId: 'a1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
   });
 
-  it('asset_field_team can create and transition aviation reports for its own asset', () => {
+  it('asset_field_team can only read aviation reports and evidence within aviation scope', () => {
     const actor = {
       userId: 'u3',
       tenantId: 'tenant-1',
@@ -534,8 +534,13 @@ describe('AccessPolicyService', () => {
       assetIds: ['ac-1']
     };
 
-    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
-    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'ac-2' } })).toEqual({ allowed: false, reason: 'ASSET_SCOPE_MISMATCH' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.search', subject: { tenantId: 'tenant-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.read', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.evidence.read', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: true, reason: 'ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.create', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: false, reason: 'ROLE_NOT_ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.comment', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: false, reason: 'ROLE_NOT_ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.report.transition', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: false, reason: 'ROLE_NOT_ALLOWED' });
+    expect(service.authorize?.({ actor, action: 'aviation.evidence.attach', subject: { tenantId: 'tenant-1', assetId: 'ac-1' } })).toEqual({ allowed: false, reason: 'ROLE_NOT_ALLOWED' });
   });
 
   it('records an authorization failure metric when access is denied', () => {

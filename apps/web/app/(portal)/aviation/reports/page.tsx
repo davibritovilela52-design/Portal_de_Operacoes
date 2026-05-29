@@ -13,6 +13,7 @@ import { createAviationReportAction } from '../../operations-actions';
 import { AviationKanbanBoard } from '../aviation-kanban-board';
 import {
   AviationTicketFilterForm,
+  buildAviationTicketPath,
   filterAviationReportsByQuery,
   readAviationTicketFilterQuery
 } from '../aviation-ticket-filter';
@@ -52,8 +53,10 @@ export default async function AviationReportsPage({ searchParams }: AviationRepo
     typeof resolvedSearchParams.reportId === 'string' ? resolvedSearchParams.reportId : null;
   const filteredReports = filterAviationReportsByQuery(aviationReports, filterQuery);
   const kanbanColumns = buildAviationKanbanColumns(filteredReports);
-  const createPath = '/aviation/reports?mode=create';
-  const listPath = '/aviation/reports';
+  const listPath = buildAviationTicketPath('/aviation/reports', filterQuery);
+  const createPath = buildAviationTicketPath('/aviation/reports', filterQuery, {
+    mode: 'create'
+  });
   const selectedReport = selectedReportId
     ? filteredReports.find((r) => r.id === selectedReportId) ?? null
     : null;

@@ -17,7 +17,6 @@ describe('phase 1 go-live readiness assets', () => {
       'portal_admin',
       'central_operations',
       'yachts_operations',
-      'yachts_technical_coordination',
       'asset_field_team'
     ]);
   });

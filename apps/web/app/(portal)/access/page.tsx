@@ -9,7 +9,7 @@ import {
   type AccessUserRecord,
   type PortalRole
 } from '../../../lib/portal-model';
-import { requirePortalRoles } from '../../../lib/portal-session';
+import { requirePortalRole } from '../../../lib/portal-session';
 import {
   registerAccessUserAction,
   revokeAccessAssignmentAction,
@@ -26,15 +26,25 @@ const accessModalRoleOptions: Array<{ value: PortalRole; label: string }> = [
   { value: 'portal_admin', label: portalRoleLabels.portal_admin },
   { value: 'central_operations', label: portalRoleLabels.central_operations },
   { value: 'yachts_operations', label: portalRoleLabels.yachts_operations },
-  {
-    value: 'yachts_technical_coordination',
-    label: portalRoleLabels.yachts_technical_coordination
-  },
+  { value: 'yachts_management', label: portalRoleLabels.yachts_management },
+  { value: 'aviation_pilots', label: portalRoleLabels.aviation_pilots },
+  { value: 'aviation_operations', label: portalRoleLabels.aviation_operations },
+  { value: 'aviation_technical_coordination', label: portalRoleLabels.aviation_technical_coordination },
+  { value: 'aviation_crew', label: portalRoleLabels.aviation_crew },
+  { value: 'aviation_management', label: portalRoleLabels.aviation_management },
+  { value: 'real_estate_operations', label: portalRoleLabels.real_estate_operations },
+  { value: 'real_estate_projects', label: portalRoleLabels.real_estate_projects },
+  { value: 'real_estate_houses', label: portalRoleLabels.real_estate_houses },
+  { value: 'real_estate_gta', label: portalRoleLabels.real_estate_gta },
+  { value: 'real_estate_management', label: portalRoleLabels.real_estate_management },
+  { value: 'cars_operations', label: portalRoleLabels.cars_operations },
+  { value: 'cars_driver', label: portalRoleLabels.cars_driver },
+  { value: 'cars_management', label: portalRoleLabels.cars_management },
   { value: 'asset_field_team', label: portalRoleLabels.asset_field_team }
 ];
 
 export default async function AccessPage({ searchParams }: AccessPageProps) {
-  const session = await requirePortalRoles(['portal_admin', 'central_operations']);
+  const session = await requirePortalRole('portal_admin');
   const [snapshot, resolvedSearchParams] = await Promise.all([
     fetchPortalSnapshot({
       tenantId: session.actor.tenantId,
@@ -57,7 +67,6 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
   const activeCount = accessUsers.filter((user) => user.status === 'active').length;
   const blockedCount = accessUsers.filter((user) => user.status === 'blocked').length;
   const openedAtValue = toDatetimeLocalValue(new Date());
-  const assetScopeDefault: string[] = [];
   const modalMode =
     canManageAccess && mode === 'edit' && selectedAssignment
       ? 'edit'
@@ -76,7 +85,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
     ? selectedAssignment.assetScopes.includes('global')
       ? []
       : selectedAssignment.assetScopes
-    : assetScopeDefault;
+    : [];
   const modalMfaDefault = selectedAssignment ? (selectedAssignment.mfaEnabled ? 'on' : 'off') : 'on';
   const modalReviewedAtDefault = selectedAssignment
     ? toDatetimeLocalValue(new Date(selectedAssignment.lastReviewedAt))
@@ -87,7 +96,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
       <PageHeader
         eyebrow="Governança de acesso"
         title="Acessos e administração"
-        description="Controle papéis, escopos e MFA dos usuários do portal."
+        description="Controle papéis e usuários do portal."
         actions={
           canManageAccess ? (
             <Link className="action-button" href="/access?mode=create">
@@ -207,6 +216,11 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               {modalMode === 'edit' ? (
                 <input name="assignmentId" type="hidden" value={selectedAssignment?.id ?? ''} readOnly />
               ) : null}
+              {modalAssetIdsDefault.map((assetId) => (
+                <input key={assetId} name="assetIds" type="hidden" value={assetId} readOnly />
+              ))}
+              <input name="mfaEnabled" type="hidden" value={modalMfaDefault} readOnly />
+              <input name="lastReviewedAt" type="hidden" value={modalReviewedAtDefault} readOnly />
 
               <div className="form-grid">
                 {modalMode === 'edit' ? (
@@ -255,44 +269,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
                   </select>
                 </label>
 
-                <label className="form-field form-field--full">
-                  <span>Escopo</span>
-                  <select
-                    name="assetIds"
-                    multiple
-                    size={Math.min(Math.max(snapshot.fleetAssets.length + 1, 3), 6)}
-                    defaultValue={modalAssetIdsDefault}
-                  >
-                    {snapshot.fleetAssets.map((asset) => (
-                      <option key={asset.id} value={asset.id}>
-                        {formatAssetName(asset.name)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="form-field form-field--full">
-                  <span>MFA</span>
-                  <select name="mfaEnabled" defaultValue={modalMfaDefault}>
-                    <option value="on">Ativo</option>
-                    <option value="off">Inativo</option>
-                  </select>
-                </label>
-
-                <label className="form-field form-field--full">
-                  <span>Última revisão</span>
-                  <input
-                    name="lastReviewedAt"
-                    type="datetime-local"
-                    defaultValue={modalReviewedAtDefault}
-                    required
-                  />
-                </label>
               </div>
-
-              <p className="helper-text">
-                Para acesso global de admin, deixe o escopo vazio. Os ativos podem ser selecionados em mais de uma posição.
-              </p>
 
               <div className="form-actions form-actions--end">
                 <Link className="action-button action-button--ghost" href="/access">
@@ -375,10 +352,6 @@ function resolveAccessStatusTone(status: AccessUserRecord['status']) {
     default:
       return 'critical' as const;
   }
-}
-
-function formatAssetName(value: string) {
-  return value.replace(/^yacht(?:\s*-\s*|\s+)/i, '').trim();
 }
 
 function toDatetimeLocalValue(date: Date) {

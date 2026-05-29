@@ -116,7 +116,7 @@ vi.mock('../app/(portal)/operations-actions', () => ({
 }));
 
 describe('access page render', () => {
-  it('renders the access modal with full-width select fields', async () => {
+  it('renders the access modal without scope and MFA fields', async () => {
     const { default: AccessPage } = await import('../app/(portal)/access/page');
     const markup = renderToStaticMarkup(
       await AccessPage({
@@ -126,9 +126,28 @@ describe('access page render', () => {
 
     expect(markup).toContain('<label class="form-field form-field--full"><span>Papel</span>');
     expect(markup).toContain('value="portal_admin"');
-    expect(markup).toContain('<label class="form-field form-field--full"><span>MFA</span>');
-    expect(markup).toContain('<label class="form-field form-field--full"><span>Última revisão</span>');
-    expect(markup).toContain('<label class="form-field form-field--full"><span>Escopo</span>');
+    expect(markup).toContain('Operação - Real Estate &amp; Yachts');
+    expect(markup).toContain('Pilotos - Aviaion');
+    expect(markup).toContain('Operações - Avition');
+    expect(markup).toContain('Tripulantes - Aviation');
+    expect(markup).toContain('CTM - Aviation');
+    expect(markup).toContain('Gestão - Aviation');
+    expect(markup).toContain('Gestão - Yachts');
+    expect(markup).toContain('Operações - Real Estate');
+    expect(markup).toContain('Projetos - Real Estate');
+    expect(markup).toContain('Casas - Real Estate');
+    expect(markup).toContain('GTA - Real Estate');
+    expect(markup).toContain('Gestão - Real Estate');
+    expect(markup).toContain('Operações - Cars');
+    expect(markup).toContain('Mototista - Cars');
+    expect(markup).toContain('Gestão - Cars');
+    expect(markup).toContain('Embarcações');
+    expect(markup).not.toContain('Coordenação técnica - Embarcações');
+    expect(markup).not.toContain('<label class="form-field form-field--full"><span>MFA</span>');
+    expect(markup).not.toContain('<label class="form-field form-field--full"><span>Última revisão</span>');
+    expect(markup).toContain('type="hidden" readOnly="" name="lastReviewedAt"');
+    expect(markup).not.toContain('<label class="form-field form-field--full"><span>Escopo</span>');
+    expect(markup).not.toContain('Para acesso global de admin, deixe o escopo vazio.');
     expect(markup).toContain('Cadastrar usuário');
   });
 
@@ -149,29 +168,8 @@ describe('access page render', () => {
     expect(markup).toContain('Excluir</button>');
   });
 
-  it('lets central operations view access records without management actions', async () => {
-    const { requirePortalRoles } = await import('../lib/portal-session');
-    vi.mocked(requirePortalRoles).mockResolvedValueOnce({
-      token: 'test-session-token',
-      claims: {
-        version: 1,
-        userId: 'operacoes-real-estate-yachts',
-        tenantId: 'prime-you',
-        role: 'central_operations',
-        assetIds: [],
-        displayName: 'Operações - Real Estate e Yachts',
-        email: 'operacoes.realestate.yachts@primeyou.com',
-        mfaVerified: true,
-        expiresAt: '2026-05-18T08:49:25.591Z'
-      },
-      actor: {
-        userId: 'operacoes-real-estate-yachts',
-        tenantId: 'prime-you',
-        role: 'central_operations',
-        assetIds: []
-      },
-      operatorLabel: 'Operações - Real Estate e Yachts'
-    });
+  it('requires portal admin before rendering access records', async () => {
+    const { requirePortalRole } = await import('../lib/portal-session');
 
     const { default: AccessPage } = await import('../app/(portal)/access/page');
     const markup = renderToStaticMarkup(
@@ -180,11 +178,12 @@ describe('access page render', () => {
       })
     );
 
+    expect(requirePortalRole).toHaveBeenCalledWith('portal_admin');
     expect(markup).toContain('Acessos atuais');
     expect(markup).toContain('central.ops@primeyou.com');
-    expect(markup).not.toContain('href="/access?mode=create"');
-    expect(markup).not.toContain('<th>Ações</th>');
-    expect(markup).not.toContain('Editar</a>');
-    expect(markup).not.toContain('Excluir</button>');
+    expect(markup).toContain('href="/access?mode=create"');
+    expect(markup).toContain('<th>Ações</th>');
+    expect(markup).toContain('Editar</a>');
+    expect(markup).toContain('Excluir</button>');
   });
 });

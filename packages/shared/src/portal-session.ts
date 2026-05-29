@@ -5,6 +5,20 @@ export type PortalSessionRole =
   | 'central_operations'
   | 'yachts_operations'
   | 'yachts_technical_coordination'
+  | 'yachts_management'
+  | 'aviation_pilots'
+  | 'aviation_operations'
+  | 'aviation_technical_coordination'
+  | 'aviation_crew'
+  | 'aviation_management'
+  | 'cars_operations'
+  | 'cars_driver'
+  | 'cars_management'
+  | 'real_estate_operations'
+  | 'real_estate_projects'
+  | 'real_estate_houses'
+  | 'real_estate_gta'
+  | 'real_estate_management'
   | 'asset_field_team';
 
 export type PortalSessionClaims = {
@@ -111,6 +125,20 @@ function isPortalSessionRole(value: unknown): value is PortalSessionRole {
     value === 'central_operations' ||
     value === 'yachts_operations' ||
     value === 'yachts_technical_coordination' ||
+    value === 'yachts_management' ||
+    value === 'aviation_pilots' ||
+    value === 'aviation_operations' ||
+    value === 'aviation_technical_coordination' ||
+    value === 'aviation_crew' ||
+    value === 'aviation_management' ||
+    value === 'cars_operations' ||
+    value === 'cars_driver' ||
+    value === 'cars_management' ||
+    value === 'real_estate_operations' ||
+    value === 'real_estate_projects' ||
+    value === 'real_estate_houses' ||
+    value === 'real_estate_gta' ||
+    value === 'real_estate_management' ||
     value === 'asset_field_team'
   );
 }

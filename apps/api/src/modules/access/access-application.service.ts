@@ -111,7 +111,20 @@ const portalRoles: PortalRole[] = [
   'portal_admin',
   'central_operations',
   'yachts_operations',
-  'yachts_technical_coordination',
+  'yachts_management',
+  'aviation_pilots',
+  'aviation_operations',
+  'aviation_technical_coordination',
+  'aviation_crew',
+  'aviation_management',
+  'cars_operations',
+  'cars_driver',
+  'cars_management',
+  'real_estate_operations',
+  'real_estate_projects',
+  'real_estate_houses',
+  'real_estate_gta',
+  'real_estate_management',
   'asset_field_team'
 ];
 

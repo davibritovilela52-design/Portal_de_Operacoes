@@ -1470,7 +1470,7 @@ select {
 
 .dashboard-indicator-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1494,6 +1494,41 @@ select {
 .dashboard-indicator-card__value strong {
   font-size: 1.6rem;
   line-height: 1;
+}
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.kpi-card {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+}
+
+.kpi-card__label {
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.kpi-card__value {
+  color: var(--text);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.kpi-card--critical .kpi-card__value {
+  color: var(--danger);
 }
 
 .kanban-board-shell {
@@ -2361,6 +2396,7 @@ select {
 
 @media (max-width: 1200px) {
   .metric-grid,
+  .dashboard-indicator-grid,
   .triple-grid,
   .split-grid,
   .detail-layout {

@@ -57,14 +57,37 @@ describe('portal minimalista operacional', () => {
     expect(dashboardSource).not.toContain('Trilha de auditoria');
     expect(dashboardSource).not.toContain('Notas operacionais');
     expect(dashboardSource).not.toContain('portalContext.phase');
-    expect(dashboardSource).toContain('Painel operacional');
-    expect(dashboardSource).toContain('Indicadores');
+    expect(dashboardSource).toContain('Painel Operacional');
+    expect(dashboardSource).toContain('Indicadores Operacionais');
     expect(dashboardSource).toContain('buildDashboardOverview');
     expect(dashboardSource).toContain('buildDashboardAssetRows');
+    expect(dashboardSource).toContain('buildBacklogAging');
+    expect(dashboardSource).toContain("bucket.key !== 'lt7'");
+    expect(dashboardSource).not.toContain('buildAssetAvailability');
     expect(dashboardSource).toContain('Chamados abertos');
     expect(dashboardSource).toContain('dashboard-indicator-grid');
     expect(dashboardSource).toContain('<table');
+    expect(dashboardSource).not.toContain('availability-');
+    expect(dashboardSource).not.toContain('Inteligência Operacional');
+    expect(dashboardSource).not.toContain('Disponibilidade 30d');
+    expect(dashboardSource).not.toContain('Dias bloqueados');
     expect(dashboardSource).not.toContain('description=');
+  });
+
+  it('styles aviation indicators as separated KPI cards', () => {
+    const aviationSource = readFileSync(
+      resolve(__dirname, '../app/(portal)/aviation/page.tsx'),
+      'utf8'
+    );
+    const stylesSource = readFileSync(resolve(__dirname, '../app/globals.css'), 'utf8');
+
+    expect(stylesSource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));');
+    expect(aviationSource).toContain('className="kpi-strip"');
+    expect(aviationSource).toContain('className="kpi-card__label"');
+    expect(aviationSource).toContain('className="kpi-card__value"');
+    expect(stylesSource).toContain('.kpi-strip');
+    expect(stylesSource).toContain('.kpi-card__label');
+    expect(stylesSource).toContain('.kpi-card__value');
   });
 
   it('reduces agenda to a calendar-first screen with only create and edit actions', () => {
@@ -188,7 +211,7 @@ describe('portal minimalista operacional', () => {
     expect(accessSource).toContain('upsertAccessAssignmentAction');
     expect(accessSource).toContain('fetchPortalSnapshot');
     expect(accessSource).toContain('accessUsers');
-    expect(accessSource).toContain("requirePortalRoles(['portal_admin', 'central_operations'])");
+    expect(accessSource).toContain("requirePortalRole('portal_admin')");
     expect(accessSource).toContain('canManageAccessModule(session.actor.role)');
     expect(accessSource).toContain('PageHeader');
     expect(accessSource).toContain('Cadastrar usuário');

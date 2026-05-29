@@ -60,7 +60,22 @@ function isPortalSessionClaims(value) {
 function isPortalSessionRole(value) {
     return (value === 'portal_admin' ||
         value === 'central_operations' ||
+        value === 'yachts_operations' ||
         value === 'yachts_technical_coordination' ||
+        value === 'yachts_management' ||
+        value === 'aviation_pilots' ||
+        value === 'aviation_operations' ||
+        value === 'aviation_technical_coordination' ||
+        value === 'aviation_crew' ||
+        value === 'aviation_management' ||
+        value === 'cars_operations' ||
+        value === 'cars_driver' ||
+        value === 'cars_management' ||
+        value === 'real_estate_operations' ||
+        value === 'real_estate_projects' ||
+        value === 'real_estate_houses' ||
+        value === 'real_estate_gta' ||
+        value === 'real_estate_management' ||
         value === 'asset_field_team');
 }
 //# sourceMappingURL=portal-session.js.map
