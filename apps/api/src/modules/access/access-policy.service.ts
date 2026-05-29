@@ -9,6 +9,8 @@ export type PortalRole =
   | 'yachts_technical_coordination'
   | 'aviation_operations'
   | 'aviation_technical_coordination'
+  | 'real_estate_operations'
+  | 'real_estate_technical_coordination'
   | 'asset_field_team';
 
 export type AccessDecisionReason =
@@ -54,6 +56,13 @@ export type AccessAction =
   | 'aviation.report.transition'
   | 'aviation.evidence.attach'
   | 'aviation.evidence.read'
+  | 'real-estate.report.search'
+  | 'real-estate.report.read'
+  | 'real-estate.report.create'
+  | 'real-estate.report.comment'
+  | 'real-estate.report.transition'
+  | 'real-estate.evidence.attach'
+  | 'real-estate.evidence.read'
   | (string & {});
 
 export type AccessActor = {
@@ -88,6 +97,8 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'maintenance.ticket.comment',
     'aviation.report.search',
     'aviation.report.read',
+    'real-estate.report.search',
+    'real-estate.report.read',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -118,6 +129,13 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'aviation.report.transition',
     'aviation.evidence.attach',
     'aviation.evidence.read',
+    'real-estate.report.search',
+    'real-estate.report.read',
+    'real-estate.report.create',
+    'real-estate.report.comment',
+    'real-estate.report.transition',
+    'real-estate.evidence.attach',
+    'real-estate.evidence.read',
     'cutover.run.read',
     'cutover.run.manage',
     'cutover.run.evaluate',
@@ -225,7 +243,46 @@ const rolePermissions: Record<PortalRole, ReadonlySet<string>> = {
     'aviation.report.comment',
     'aviation.report.transition',
     'aviation.evidence.attach',
-    'aviation.evidence.read'
+    'aviation.evidence.read',
+    'real-estate.report.search',
+    'real-estate.report.read',
+    'real-estate.report.create',
+    'real-estate.report.comment',
+    'real-estate.report.transition',
+    'real-estate.evidence.attach',
+    'real-estate.evidence.read'
+  ]),
+  real_estate_operations: new Set([
+    'structural_registry.manage',
+    'agenda.event.search',
+    'agenda.event.read',
+    'agenda.event.create',
+    'agenda.event.update',
+    'agenda.event.delete',
+    'agenda.conflict.override',
+    'real-estate.report.search',
+    'real-estate.report.read',
+    'real-estate.report.create',
+    'real-estate.report.comment',
+    'real-estate.report.transition',
+    'real-estate.evidence.attach',
+    'real-estate.evidence.read',
+    'audit.ledger.search',
+    'audit.decision_memo.create',
+    'audit.rectification.create'
+  ]),
+  real_estate_technical_coordination: new Set([
+    'agenda.event.search',
+    'agenda.event.read',
+    'real-estate.report.search',
+    'real-estate.report.read',
+    'real-estate.report.create',
+    'real-estate.report.comment',
+    'real-estate.report.transition',
+    'real-estate.evidence.attach',
+    'real-estate.evidence.read',
+    'audit.ledger.search',
+    'audit.decision_memo.create'
   ])
 };
 
@@ -249,7 +306,13 @@ const assetScopedActions = new Set([
   'aviation.report.comment',
   'aviation.report.transition',
   'aviation.evidence.attach',
-  'aviation.evidence.read'
+  'aviation.evidence.read',
+  'real-estate.report.read',
+  'real-estate.report.create',
+  'real-estate.report.comment',
+  'real-estate.report.transition',
+  'real-estate.evidence.attach',
+  'real-estate.evidence.read'
 ]);
 
 @Injectable()

@@ -68,6 +68,8 @@ export type PortalRole =
   | 'yachts_technical_coordination'
   | 'aviation_operations'
   | 'aviation_technical_coordination'
+  | 'real_estate_operations'
+  | 'real_estate_technical_coordination'
   | 'asset_field_team';
 
 export type MaintenanceStatusTransitionRecord = {
@@ -324,6 +326,8 @@ export const portalRoleLabels: Record<PortalRole, string> = {
   yachts_technical_coordination: 'Coordenação técnica - Embarcações',
   aviation_operations: 'Operações - Aviation',
   aviation_technical_coordination: 'Coordenação técnica - Aviation',
+  real_estate_operations: 'Operações - Real Estate',
+  real_estate_technical_coordination: 'Coordenação técnica - Real Estate',
   asset_field_team: 'Equipe de campo - Embarcações'
 };
 
@@ -1204,4 +1208,155 @@ export function isAviationKanbanSubstatusCompatible(
 
 export function canViewAviationModule(role: PortalRole): boolean {
   return ['portal_admin', 'central_operations', 'aviation_operations', 'aviation_technical_coordination'].includes(role);
+}
+
+// ─── Real Estate ─────────────────────────────────────────────────────────────
+
+export type RealEstateStatus =
+  | 'pending'
+  | 'in_progress'
+  | 'blocked'
+  | 'under_review'
+  | 'resolved'
+  | 'cancelled'
+  | 'reopened';
+
+export type RealEstateCategory =
+  | 'preventive'
+  | 'corrective'
+  | 'emergency'
+  | 'inspection'
+  | 'legal'
+  | 'renovation';
+
+export type RealEstatePriority = 'P1' | 'P2' | 'P3' | 'P4';
+
+export type RealEstateKanbanSubstatus =
+  | 'report_open'
+  | 'report_qualification'
+  | 'technical_assessment'
+  | 'action_plan'
+  | 'service_execution'
+  | 'post_service_check'
+  | 'property_blocked'
+  | 'return_authorization'
+  | 'resolved'
+  | 'cancelled';
+
+export type RealEstateReportRecord = {
+  id: string;
+  reportNumber: string;
+  assetId: string;
+  assetName: string;
+  title: string;
+  category: RealEstateCategory;
+  priority: RealEstatePriority;
+  origin: string;
+  openedBy: string;
+  openedAt: string;
+  status: RealEstateStatus;
+  kanbanSubstatus?: RealEstateKanbanSubstatus;
+  blockCount: number;
+  blockReason?: string;
+  returnToServiceEta?: string;
+  updatedAt: string;
+  evidenceCount: number;
+};
+
+export type RealEstateKanbanColumn = {
+  key: RealEstateKanbanSubstatus;
+  label: string;
+  status: RealEstateStatus;
+  tickets: RealEstateReportRecord[];
+};
+
+type RealEstateKanbanSubstatusDefinition = {
+  key: RealEstateKanbanSubstatus;
+  label: string;
+  status: RealEstateStatus;
+};
+
+export const realEstateStatusLabels: Record<RealEstateStatus, string> = {
+  pending: 'Pendente',
+  in_progress: 'Em andamento',
+  blocked: 'Bloqueado',
+  under_review: 'Em análise',
+  resolved: 'Resolvido',
+  cancelled: 'Cancelado',
+  reopened: 'Reaberto'
+};
+
+export const realEstateCategoryLabels: Record<RealEstateCategory, string> = {
+  preventive: 'Preventiva',
+  corrective: 'Corretiva',
+  emergency: 'Emergencial',
+  inspection: 'Inspeção',
+  legal: 'Jurídico',
+  renovation: 'Reforma'
+};
+
+export const realEstateKanbanSubstatusDefinitions: RealEstateKanbanSubstatusDefinition[] = [
+  { key: 'report_open', label: 'Abertura do chamado', status: 'pending' },
+  { key: 'report_qualification', label: 'Qualificação', status: 'in_progress' },
+  { key: 'technical_assessment', label: 'Avaliação técnica', status: 'in_progress' },
+  { key: 'action_plan', label: 'Plano de ação', status: 'in_progress' },
+  { key: 'service_execution', label: 'Execução', status: 'in_progress' },
+  { key: 'post_service_check', label: 'Verificação pós-serviço', status: 'in_progress' },
+  { key: 'property_blocked', label: 'Imóvel bloqueado', status: 'blocked' },
+  { key: 'return_authorization', label: 'Autorização de retorno', status: 'under_review' },
+  { key: 'resolved', label: 'Resolvido', status: 'resolved' },
+  { key: 'cancelled', label: 'Cancelado', status: 'cancelled' }
+];
+
+export function buildRealEstateKanbanColumns(
+  reports: RealEstateReportRecord[],
+  overrides: Partial<Record<string, RealEstateKanbanSubstatus>> = {}
+): RealEstateKanbanColumn[] {
+  const columns: RealEstateKanbanColumn[] = realEstateKanbanSubstatusDefinitions.map((def) => ({
+    key: def.key,
+    label: def.label,
+    status: def.status,
+    tickets: []
+  }));
+
+  for (const report of reports) {
+    const substatus =
+      overrides[report.id] ?? report.kanbanSubstatus ?? resolveRealEstateDefaultKanbanSubstatus(report.status);
+    const column = columns.find((c) => c.key === substatus);
+    if (column) column.tickets.push(report);
+  }
+
+  return columns;
+}
+
+function resolveRealEstateDefaultKanbanSubstatus(status: RealEstateStatus): RealEstateKanbanSubstatus {
+  const map: Record<RealEstateStatus, RealEstateKanbanSubstatus> = {
+    pending: 'report_open',
+    in_progress: 'report_qualification',
+    blocked: 'property_blocked',
+    under_review: 'return_authorization',
+    resolved: 'resolved',
+    cancelled: 'cancelled',
+    reopened: 'report_qualification'
+  };
+  return map[status];
+}
+
+export function isRealEstateKanbanSubstatusCompatible(
+  substatus: RealEstateKanbanSubstatus,
+  status: RealEstateStatus
+): boolean {
+  const def = realEstateKanbanSubstatusDefinitions.find((d) => d.key === substatus);
+  if (!def) return false;
+  const compatibleStatus = status === 'reopened' ? 'in_progress' : status;
+  return def.status === compatibleStatus;
+}
+
+export function canViewRealEstateModule(role: PortalRole): boolean {
+  return [
+    'portal_admin',
+    'central_operations',
+    'real_estate_operations',
+    'real_estate_technical_coordination'
+  ].includes(role);
 }

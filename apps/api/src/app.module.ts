@@ -7,6 +7,7 @@ import { AuditModule } from './modules/audit/audit.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { AviationModule } from './modules/aviation/aviation.module.js';
 import { CutoverModule } from './modules/cutover/cutover.module.js';
+import { RealEstateModule } from './modules/real-estate/real-estate.module.js';
 import { GovernanceModule } from './modules/governance/governance.module.js';
 import { MaintenanceModule } from './modules/maintenance/maintenance.module.js';
 import { NotificationModule } from './modules/notifications/notification.module.js';
@@ -23,6 +24,7 @@ import { ObservabilityModule } from './modules/observability/observability.modul
     AgendaModule,
     MaintenanceModule,
     AviationModule,
+    RealEstateModule,
     NotificationModule,
     CutoverModule
   ]

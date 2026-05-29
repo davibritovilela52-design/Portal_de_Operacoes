@@ -5,7 +5,7 @@ import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 
 import { logoutAction } from '../app/login/actions';
 import { navigationItems, portalContext, topbarTabs } from '../lib/portal-data';
-import { canViewAccessModule, type PortalRole } from '../lib/portal-model';
+import { canViewAccessModule, canViewRealEstateModule, type PortalRole } from '../lib/portal-model';
 import { PortalIcon } from './icons';
 
 type PortalShellProps = {
@@ -78,18 +78,23 @@ export function PortalShell({ children, session }: PortalShellProps) {
   };
 
   const canViewAccess = canViewAccessModule(session.role);
+  const canViewRealEstate = canViewRealEstateModule(session.role);
   const isNeutralPath =
     pathname === '/access' ||
     pathname.startsWith('/access/') ||
     pathname === '/security' ||
     pathname.startsWith('/security/');
-  const pathModule: 'aviation' | 'yachts' = pathname.startsWith('/aviation') ? 'aviation' : 'yachts';
-  const [activeModule, setActiveModule] = useState<'aviation' | 'yachts'>(pathModule);
+  const pathModule: 'aviation' | 'yachts' | 'real_estate' = pathname.startsWith('/aviation')
+    ? 'aviation'
+    : pathname.startsWith('/real-estate')
+      ? 'real_estate'
+      : 'yachts';
+  const [activeModule, setActiveModule] = useState<'aviation' | 'yachts' | 'real_estate'>(pathModule);
 
   useEffect(() => {
     if (isNeutralPath) {
       const stored = window.localStorage.getItem(ACTIVE_MODULE_STORAGE_KEY);
-      if (stored === 'aviation' || stored === 'yachts') {
+      if (stored === 'aviation' || stored === 'yachts' || stored === 'real_estate') {
         setActiveModule(stored);
       }
     } else {
@@ -100,6 +105,7 @@ export function PortalShell({ children, session }: PortalShellProps) {
 
   const visibleNavigationItems = navigationItems.filter((item) => {
     if (!canViewAccess && item.href === '/access') return false;
+    if (!canViewRealEstate && item.module === 'real_estate') return false;
     if (item.module && item.module !== activeModule) return false;
     return true;
   });
@@ -115,6 +121,8 @@ export function PortalShell({ children, session }: PortalShellProps) {
         );
       case '/aviation':
         return pathname === '/aviation' || pathname.startsWith('/aviation/');
+      case '/real-estate':
+        return pathname === '/real-estate' || pathname.startsWith('/real-estate/');
       case '/audit-governance':
         return pathname === '/audit-governance' || pathname.startsWith('/access');
       case '/cutover':

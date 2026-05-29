@@ -24,6 +24,11 @@ import {
   type AviationPriority,
   type AviationReportRecord,
   type AviationStatus,
+  type RealEstateCategory,
+  type RealEstateKanbanSubstatus,
+  type RealEstatePriority,
+  type RealEstateReportRecord,
+  type RealEstateStatus,
   type MaintenanceCategory,
   type MaintenanceCostRecord,
   type MaintenanceSystem,
@@ -2893,4 +2898,284 @@ function resolveAviationReportNumber(id: string): string {
   }
 
   return id.slice(0, 8).toUpperCase();
+}
+
+// ─── Real Estate ─────────────────────────────────────────────────────────────
+
+type RealEstateReportQueueApiRecord = {
+  id: string;
+  assetId: string;
+  title: string;
+  category: RealEstateCategory;
+  priority: RealEstatePriority;
+  origin: string;
+  openedBy: string;
+  openedAt: string | Date;
+  status: RealEstateStatus;
+  kanbanSubstatus?: RealEstateKanbanSubstatus;
+  blockCount: number;
+  blockReason?: string;
+  returnToServiceEta?: string | Date;
+  updatedAt: string | Date;
+  evidenceCount: number;
+};
+
+type RealEstateSearchApiResponse =
+  | { reports: RealEstateReportQueueApiRecord[] }
+  | { reports: []; reason: 'FORBIDDEN'; accessReason: string };
+
+export type RealEstateSnapshot = {
+  source: 'api' | 'mock' | 'mixed';
+  realEstateReports: RealEstateReportRecord[];
+  fleetAssets: AssetRecord[];
+};
+
+export function mapRealEstateReportsToRecords(
+  reports: RealEstateReportQueueApiRecord[],
+  fleetAssets: AssetRecord[]
+): RealEstateReportRecord[] {
+  return reports.map((report) => ({
+    id: report.id,
+    reportNumber: report.id.replace(/\D+/g, '').slice(0, 8) || report.id.slice(0, 8).toUpperCase(),
+    assetId: report.assetId,
+    assetName: resolveAssetName(report.assetId, fleetAssets),
+    title: report.title,
+    category: report.category,
+    priority: report.priority,
+    origin: report.origin,
+    openedBy: report.openedBy,
+    openedAt: toIsoString(report.openedAt),
+    status: report.status,
+    blockCount: report.blockCount,
+    evidenceCount: report.evidenceCount,
+    updatedAt: toIsoString(report.updatedAt),
+    ...(report.blockReason ? { blockReason: report.blockReason } : {}),
+    ...(report.kanbanSubstatus ? { kanbanSubstatus: report.kanbanSubstatus } : {}),
+    ...(report.returnToServiceEta ? { returnToServiceEta: toIsoString(report.returnToServiceEta) } : {})
+  }));
+}
+
+export async function fetchRealEstateSnapshot(
+  options: PortalSnapshotOptions = {}
+): Promise<RealEstateSnapshot> {
+  const tenantId = options.tenantId ?? process.env.OPS_PORTAL_TENANT_ID ?? defaultTenantId;
+  const actor = options.actor ?? buildDefaultActor(tenantId);
+  const apiBaseUrl = normalizeApiBaseUrl(
+    options.apiBaseUrl ?? process.env.OPS_PORTAL_API_BASE_URL
+  );
+
+  if (!apiBaseUrl) {
+    ensurePortalReadFallbackAllowed(
+      options.sessionToken,
+      'OPS_PORTAL_API_BASE_URL is not configured for authenticated real-estate reads.'
+    );
+
+    return { source: 'mock', realEstateReports: [], fleetAssets: [] };
+  }
+
+  const fetchImpl = options.fetchImpl ?? fetch;
+
+  try {
+    const [reportsResponse, assetsResponse] = await Promise.all([
+      fetchImpl(`${apiBaseUrl}/real-estate/reports/search`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: buildPortalHeaders(options.sessionToken),
+        body: JSON.stringify({ actor, tenantId })
+      }),
+      fetchImpl(`${apiBaseUrl}/asset-registry/assets/search`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: buildPortalHeaders(options.sessionToken),
+        body: JSON.stringify({ actor, tenantId, filters: { modality: 'real_estate' } })
+      })
+    ]);
+
+    const assetsOk = assetsResponse.ok;
+    const reportsOk = reportsResponse.ok;
+
+    if (!reportsOk && !assetsOk) {
+      return { source: 'mock', realEstateReports: [], fleetAssets: [] };
+    }
+
+    const fleetAssets = assetsOk
+      ? mergeAssetRegistryAssets(
+          ((await assetsResponse.json()) as AssetRegistryListResponse).assets ?? [],
+          options.fallbackAssets ?? []
+        )
+      : [];
+
+    if (!reportsOk) {
+      return { source: 'mixed', realEstateReports: [], fleetAssets };
+    }
+
+    const reportsPayload = (await reportsResponse.json()) as RealEstateSearchApiResponse;
+
+    if ('reason' in reportsPayload) {
+      return { source: 'api', realEstateReports: [], fleetAssets };
+    }
+
+    return {
+      source: 'api',
+      realEstateReports: mapRealEstateReportsToRecords(reportsPayload.reports, fleetAssets),
+      fleetAssets
+    };
+  } catch {
+    return { source: 'mock', realEstateReports: [], fleetAssets: [] };
+  }
+}
+
+export type RealEstateStatsResult = {
+  byStatus: Record<string, number>;
+  byPriority: Record<string, number>;
+  totalBlockEvents: number;
+  activeBlockCount: number;
+  totalReports: number;
+};
+
+type FetchRealEstateStatsOptions = {
+  actor: FrontendActor;
+  tenantId: string;
+  sessionToken?: string;
+};
+
+export async function fetchRealEstateStats(
+  options: FetchRealEstateStatsOptions
+): Promise<{ found: true; stats: RealEstateStatsResult } | { found: false; reason: string }> {
+  try {
+    return await postPortalJson<{ found: true; stats: RealEstateStatsResult } | { found: false; reason: string; accessReason?: string }>(
+      'real-estate/stats',
+      { actor: options.actor, tenantId: options.tenantId },
+      { sessionToken: options.sessionToken }
+    );
+  } catch {
+    return { found: false, reason: 'REQUEST_FAILED' };
+  }
+}
+
+export type RealEstateAgendaSnapshot = {
+  source: 'api' | 'mock' | 'mixed';
+  fleetAssets: AssetRecord[];
+  agendaEvents: AgendaEventRecord[];
+};
+
+export async function fetchRealEstateAgendaSnapshot(
+  options: PortalSnapshotOptions = {}
+): Promise<RealEstateAgendaSnapshot> {
+  const snapshot = await fetchPortalOperationsSnapshot(options);
+  const realEstateAssets = snapshot.fleetAssets.filter((a) => a.modality === 'real_estate');
+  const realEstateAssetIds = new Set(realEstateAssets.map((a) => a.id));
+
+  return {
+    source: snapshot.source,
+    fleetAssets: realEstateAssets,
+    agendaEvents: snapshot.agendaEvents.filter((e) => realEstateAssetIds.has(e.assetId))
+  };
+}
+
+export type CreateRealEstateReportRequest = {
+  actor: FrontendActor;
+  input: {
+    assetId: string;
+    title?: string;
+    category: RealEstateCategory;
+    priority: RealEstatePriority;
+    description: string;
+    notes?: string;
+    propertySystem?: string;
+    origin: string;
+    openedBy: string;
+    openedAt: string | Date;
+  };
+};
+
+export type CreateRealEstateReportResponse =
+  | { created: true; reason: 'CREATED'; report: Record<string, unknown> }
+  | { created: false; reason: string; accessReason?: string; missingFields?: string[] };
+
+export type TransitionRealEstateReportRequest = {
+  actor: FrontendActor;
+  reportId: string;
+  input: {
+    toStatus: RealEstateStatus;
+    kanbanSubstatus?: RealEstateKanbanSubstatus;
+    justification?: string;
+    blockReason?: string;
+  };
+};
+
+export type TransitionRealEstateReportResponse =
+  | { allowed: true; reason: 'ALLOWED'; report: Record<string, unknown> }
+  | { allowed: false; reason: string; accessReason?: string; missingEvidenceTypes?: string[] };
+
+export type RegisterRealEstateCommentRequest = {
+  actor: FrontendActor;
+  reportId: string;
+  input: {
+    message: string;
+    commentedBy: string;
+    commentedAt: string | Date;
+  };
+};
+
+export type RegisterRealEstateCommentResponse =
+  | { registered: true; reason: 'REGISTERED'; notes?: string }
+  | { registered: false; reason: string; accessReason?: string };
+
+export async function searchRealEstateReports(
+  request: { actor: FrontendActor; filters?: { assetIds?: string[]; statuses?: RealEstateStatus[] } },
+  options: PortalMutationOptions = {}
+): Promise<RealEstateSearchApiResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson('real-estate/reports/search', {
+    actor: request.actor,
+    tenantId,
+    filters: request.filters
+  }, options);
+}
+
+export async function createRealEstateReport(
+  request: CreateRealEstateReportRequest,
+  options: PortalMutationOptions = {}
+): Promise<CreateRealEstateReportResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson('real-estate/reports', {
+    actor: request.actor,
+    tenantId,
+    input: {
+      ...request.input,
+      openedAt: toIsoString(request.input.openedAt)
+    }
+  }, options);
+}
+
+export async function transitionRealEstateReport(
+  request: TransitionRealEstateReportRequest,
+  options: PortalMutationOptions = {}
+): Promise<TransitionRealEstateReportResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson(`real-estate/reports/${request.reportId}/transitions`, {
+    actor: request.actor,
+    tenantId,
+    input: request.input
+  }, options);
+}
+
+export async function registerRealEstateComment(
+  request: RegisterRealEstateCommentRequest,
+  options: PortalMutationOptions = {}
+): Promise<RegisterRealEstateCommentResponse> {
+  const tenantId = resolveTenantId(options.tenantId, request.actor);
+
+  return await postPortalJson(`real-estate/reports/${request.reportId}/comments`, {
+    actor: request.actor,
+    tenantId,
+    input: {
+      ...request.input,
+      commentedAt: toIsoString(request.input.commentedAt)
+    }
+  }, options);
 }

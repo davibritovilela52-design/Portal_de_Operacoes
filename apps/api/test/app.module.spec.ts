@@ -10,6 +10,7 @@ import { AuditModule } from '../src/modules/audit/audit.module.js';
 import { AuthModule } from '../src/modules/auth/auth.module.js';
 import { AviationModule } from '../src/modules/aviation/aviation.module.js';
 import { CutoverModule } from '../src/modules/cutover/cutover.module.js';
+import { RealEstateModule } from '../src/modules/real-estate/real-estate.module.js';
 import { GovernanceModule } from '../src/modules/governance/governance.module.js';
 import { MaintenanceModule } from '../src/modules/maintenance/maintenance.module.js';
 import { NotificationModule } from '../src/modules/notifications/notification.module.js';
@@ -29,6 +30,7 @@ describe('AppModule', () => {
       AgendaModule,
       MaintenanceModule,
       AviationModule,
+      RealEstateModule,
       NotificationModule,
       CutoverModule
     ]);

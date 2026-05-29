@@ -16,7 +16,7 @@ import type { MaintenanceCommentRecord } from './maintenance-comments';
 export type NavigationItem = {
   href: string;
   label: string;
-  module?: 'yachts' | 'aviation';
+  module?: 'yachts' | 'aviation' | 'real_estate';
   icon:
     | 'dashboard'
     | 'agenda'
@@ -104,13 +104,18 @@ export const navigationItems: NavigationItem[] = [
   { href: '/aviation', label: 'Painel', icon: 'dashboard', module: 'aviation' },
   { href: '/aviation/agenda', label: 'Agenda', icon: 'agenda', module: 'aviation' },
   { href: '/aviation/reports', label: 'Reportes', icon: 'maintenance', module: 'aviation' },
+  { href: '/real-estate', label: 'Painel', icon: 'dashboard', module: 'real_estate' },
+  { href: '/real-estate/agenda', label: 'Agenda', icon: 'agenda', module: 'real_estate' },
+  { href: '/real-estate/reports', label: 'Manutenção', icon: 'maintenance', module: 'real_estate' },
+  { href: '/real-estate/improvements', label: 'Melhorias', icon: 'maintenance', module: 'real_estate' },
   { href: '/improvements', label: 'Melhorias', icon: 'maintenance', module: 'yachts' },
   { href: '/access', label: 'Acessos', icon: 'access' }
 ];
 
 export const topbarTabs: TopbarTab[] = [
   { href: '/dashboard', label: 'Yachts' },
-  { href: '/aviation', label: 'Aviation' }
+  { href: '/aviation', label: 'Aviation' },
+  { href: '/real-estate', label: 'Real Estate' }
 ];
 
 export const fleetAssets: AssetRecord[] = [

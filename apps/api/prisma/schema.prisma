@@ -267,6 +267,124 @@ model AviationEvidence {
   @@index([tenantId, uploadedAt])
 }
 
+enum RealEstateStatus {
+  pending
+  in_progress
+  blocked
+  under_review
+  resolved
+  cancelled
+  reopened
+}
+
+enum RealEstateCategory {
+  preventive
+  corrective
+  emergency
+  inspection
+  legal
+  renovation
+}
+
+enum RealEstatePriority {
+  P1
+  P2
+  P3
+  P4
+}
+
+enum RealEstateOrigin {
+  asset_field_team
+  real_estate_technical_coordination
+  central_operations
+}
+
+enum RealEstateBlockReason {
+  awaiting_contractor
+  awaiting_authorization
+  awaiting_inspection
+  awaiting_legal
+}
+
+enum RealEstateEvidenceAntivirusStatus {
+  pending
+  clean
+  flagged
+}
+
+enum RealEstateEvidenceType {
+  diagnostic
+  technical_report
+  execution_evidence
+  legal_document
+  inspection_release
+}
+
+model RealEstateReport {
+  id                 String                    @id @default(cuid())
+  tenantId           String
+  assetId            String
+  title              String?
+  category           RealEstateCategory
+  priority           RealEstatePriority
+  description        String
+  notes              String?
+  propertySystem     String?
+  origin             RealEstateOrigin
+  openedBy           String
+  openedAt           DateTime
+  status             RealEstateStatus
+  kanbanSubstatus    String?
+  blockCount         Int                       @default(0)
+  blockReason        RealEstateBlockReason?
+  returnToServiceEta DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  evidences         RealEstateEvidence[]
+  statusTransitions RealEstateStatusTransition[]
+
+  @@index([tenantId, assetId, status])
+  @@index([tenantId, openedAt])
+}
+
+model RealEstateStatusTransition {
+  id                 String             @id @default(cuid())
+  tenantId           String
+  realEstateReportId String
+  fromStatus         RealEstateStatus?
+  toStatus           RealEstateStatus
+  transitionedBy     String
+  at                 DateTime
+  createdAt          DateTime           @default(now())
+
+  realEstateReport RealEstateReport @relation(fields: [realEstateReportId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, realEstateReportId, at])
+  @@index([tenantId, toStatus, at])
+}
+
+model RealEstateEvidence {
+  id                 String                            @id @default(cuid())
+  tenantId           String
+  realEstateReportId String
+  type               RealEstateEvidenceType
+  fileName           String
+  mimeType           String
+  fileSizeBytes      Int
+  storageKey         String
+  sha256             String
+  antivirusStatus    RealEstateEvidenceAntivirusStatus
+  uploadedBy         String
+  uploadedAt         DateTime
+  createdAt          DateTime                          @default(now())
+
+  realEstateReport RealEstateReport @relation(fields: [realEstateReportId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, realEstateReportId, type])
+  @@index([tenantId, uploadedAt])
+}
+
 model Supplier {
   id        String   @id @default(cuid())
   tenantId  String

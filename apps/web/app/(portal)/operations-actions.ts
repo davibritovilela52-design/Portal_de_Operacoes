@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import {
   attachMaintenanceEvidence,
   createAviationReport,
+  createRealEstateReport,
   createDecisionMemo,
   createMaintenanceTicket,
   deleteAgendaEvent,
@@ -17,11 +18,13 @@ import {
   recordCutoverCheckpoint,
   recordCutoverDecision,
   registerAviationComment,
+  registerRealEstateComment,
   registerMaintenanceComment,
   revokeAccessAssignment,
   rescheduleAgendaEvent,
   scheduleAgendaEvent,
   transitionAviationReport,
+  transitionRealEstateReport,
   transitionMaintenanceTicket,
   upsertCutoverRun,
   upsertAccessAssignment,
@@ -1550,4 +1553,155 @@ function resolveAviationOriginForRole(role: FrontendActor['role']): 'asset_field
     default:
       return 'central_operations';
   }
+}
+
+// ─── Real Estate actions ──────────────────────────────────────────────────────
+
+function revalidateRealEstatePages(path: string) {
+  revalidatePath('/real-estate');
+  revalidatePath(path);
+}
+
+function resolveRealEstateOriginForRole(role: FrontendActor['role']): string {
+  switch (role) {
+    case 'portal_admin':
+    case 'central_operations':
+      return 'central_operations';
+    case 'real_estate_operations':
+    case 'real_estate_technical_coordination':
+      return 'real_estate_technical_coordination';
+    case 'asset_field_team':
+      return 'asset_field_team';
+    default:
+      return 'central_operations';
+  }
+}
+
+export async function createRealEstateReportAction(formData: FormData) {
+  const redirectPath = readOptional(formData, 'returnTo') ?? '/real-estate';
+  const assetId = readOptional(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+
+  try {
+    if (!assetId) {
+      throw new Error('Campo obrigatorio ausente: assetId');
+    }
+
+    const result = await createRealEstateReport({
+      actor: context.actor,
+      input: {
+        assetId,
+        title: readOptional(formData, 'title'),
+        category: readRequired(formData, 'category') as
+          | 'preventive'
+          | 'corrective'
+          | 'emergency'
+          | 'inspection'
+          | 'legal'
+          | 'renovation',
+        priority: resolveAviationPriority(formData),
+        description: readRequired(formData, 'description'),
+        notes: readOptional(formData, 'notes'),
+        propertySystem: readOptional(formData, 'propertySystem'),
+        origin: resolveRealEstateOriginForRole(context.actor.role),
+        openedBy: context.operator,
+        openedAt: readDateTime(formData, 'openedAt')
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('created' in result) || !result.created) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateRealEstatePages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Reporte criado com sucesso.');
+}
+
+export async function transitionRealEstateReportAction(formData: FormData) {
+  const reportId = readRequired(formData, 'reportId');
+  const assetId = readRequired(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+  const redirectPath = readOptional(formData, 'returnTo') ?? `/real-estate?reportId=${reportId}`;
+
+  try {
+    const result = await transitionRealEstateReport({
+      actor: context.actor,
+      reportId,
+      input: {
+        toStatus: readRequired(formData, 'toStatus') as
+          | 'pending'
+          | 'in_progress'
+          | 'blocked'
+          | 'under_review'
+          | 'resolved'
+          | 'cancelled'
+          | 'reopened',
+        kanbanSubstatus: readOptional(formData, 'kanbanSubstatus') as
+          | 'report_open'
+          | 'report_qualification'
+          | 'technical_assessment'
+          | 'action_plan'
+          | 'service_execution'
+          | 'post_service_check'
+          | 'property_blocked'
+          | 'return_authorization'
+          | 'resolved'
+          | 'cancelled'
+          | undefined,
+        justification: readOptional(formData, 'justification'),
+        blockReason: readOptional(formData, 'blockReason') as
+          | 'awaiting_contractor'
+          | 'awaiting_authorization'
+          | 'awaiting_inspection'
+          | 'awaiting_legal'
+          | undefined
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('allowed' in result) || !result.allowed) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateRealEstatePages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Status atualizado com sucesso.');
+}
+
+export async function registerRealEstateCommentAction(formData: FormData) {
+  const reportId = readRequired(formData, 'reportId');
+  const assetId = readRequired(formData, 'assetId');
+  const context = await resolveOperationalContext(formData, assetId);
+  const redirectPath = readOptional(formData, 'returnTo') ?? `/real-estate?reportId=${reportId}`;
+
+  try {
+    const result = await registerRealEstateComment({
+      actor: context.actor,
+      reportId,
+      input: {
+        message: readRequired(formData, 'comment'),
+        commentedBy: context.operator,
+        commentedAt: new Date()
+      }
+    }, {
+      sessionToken: context.sessionToken
+    });
+
+    if (!('registered' in result) || !result.registered) {
+      throw new Error(describeMutationFailure(result.reason));
+    }
+  } catch (error) {
+    redirectWithMessage(redirectPath, 'error', describeThrownError(error));
+  }
+
+  revalidateRealEstatePages(redirectPath);
+  redirectWithMessage(redirectPath, 'notice', 'Comentário registrado com sucesso.');
 }
